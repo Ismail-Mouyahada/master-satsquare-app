@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,141 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// Define the user model
+model Utilisateur {
+  id             Int              @id @default(autoincrement())
+  pseudo         String           @unique
+  role           Role?            @relation(fields: [role_id], references: [id])
+  role_id        Int?
+  mot_de_passe   String
+  association    Association?     @relation(fields: [association_id], references: [id])
+  association_id Int?
+  statut_compte  Boolean
+  sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id])
+  sponsor_id     Int?
+  cree_le        DateTime         @default(now())
+  mis_a_jour_le  DateTime         @updatedAt
+  EvenementsQuiz EvenementsQuiz[]
+  Evenement      Evenement[]
+  Quiz           Quiz[]
+}
+
+// Define the association model
+model Association {
+  id                Int              @id @default(autoincrement())
+  nom               String
+  adresse_eclairage String
+  valide            Int
+  est_confirme      Boolean
+  cree_le           DateTime         @default(now())
+  mis_a_jour_le     DateTime         @updatedAt
+  Utilisateurs      Utilisateur[]
+  AssociationDons   AssociationDon[]
+}
+
+// Define the sponsor model
+model Sponsor {
+  id                Int           @id @default(autoincrement())
+  nom               String
+  valide            Int
+  adresse_eclairage String
+  est_confirme      Boolean
+  cree_le           DateTime      @default(now())
+  mis_a_jour_le     DateTime      @updatedAt
+  Utilisateurs      Utilisateur[]
+  Dons              Don[]
+}
+
+// Define the role model
+model Role {
+  id           Int           @id @default(autoincrement())
+  nom          String
+  utilisateurs Utilisateur[]
+}
+
+// Define the event model
+model Evenement {
+  id             Int              @id @default(autoincrement())
+  nom            String
+  description    String
+  utilisateur    Utilisateur      @relation(fields: [user_id], references: [id])
+  user_id        Int
+  commence_a     DateTime
+  termine_a      DateTime
+  est_public     Boolean
+  cree_le        DateTime         @default(now())
+  mis_a_jour_le  DateTime         @updatedAt
+  Dons           Don[]
+  EvenementsQuiz EvenementsQuiz[]
+}
+
+// Define the donation model
+model Don {
+  id              Int              @id @default(autoincrement())
+  sponsor         Sponsor          @relation(fields: [sponsor_id], references: [id])
+  sponsor_id      Int
+  evenement       Evenement        @relation(fields: [evenement_id], references: [id])
+  evenement_id    Int
+  montant         Float
+  cree_le         DateTime         @default(now())
+  mis_a_jour_le   DateTime         @updatedAt
+  AssociationDons AssociationDon[]
+}
+
+// Define the association_don model
+model AssociationDon {
+  id             Int         @id @default(autoincrement())
+  don            Don         @relation(fields: [don_id], references: [id])
+  don_id         Int
+  association    Association @relation(fields: [association_id], references: [id])
+  association_id Int
+}
+
+// Define the quiz model
+model Quiz {
+  id             Int              @id @default(autoincrement())
+  titre          String
+  utilisateur    Utilisateur      @relation(fields: [user_id], references: [id])
+  user_id        Int
+  categorie      String
+  cree_le        DateTime         @default(now())
+  mis_a_jour_le  DateTime         @updatedAt
+  EvenementsQuiz EvenementsQuiz[]
+  Questions      Question[]
+}
+
+// Define the events_quizzes model
+model EvenementsQuiz {
+  id           Int         @id @default(autoincrement())
+  score        Int
+  evenement    Evenement   @relation(fields: [evenement_id], references: [id])
+  evenement_id Int
+  quiz         Quiz        @relation(fields: [quiz_id], references: [id])
+  quiz_id      Int
+  question_id  Int
+  reponse_id   Int
+  utilisateur  Utilisateur @relation(fields: [user_id], references: [id])
+  user_id      Int
+
+  @@unique([evenement_id, quiz_id, question_id, reponse_id, user_id], name: "unique_event_quiz_question_response_user")
+}
+
+// Define the question model
+model Question {
+  id             Int       @id @default(autoincrement())
+  quiz           Quiz      @relation(fields: [quiz_id], references: [id])
+  quiz_id        Int
+  texte_question String
+  Reponses       Reponse[]
+}
+
+// Define the answer model
+model Reponse {
+  id            Int      @id @default(autoincrement())
+  question      Question @relation(fields: [question_id], references: [id])
+  question_id   Int
+  texte_reponse String
+  est_correcte  Boolean
 }

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+# Commenter Nextjs si vous souhaitez developer avec Prostgres en local
+  nextjs:
+    build: .
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://satsquare_user:satsquare_password@db:5432/satsquare_db
+    
+
+  db:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: satsquare_user
+      POSTGRES_PASSWORD: satsquare_password
+      POSTGRES_DB: satsquare_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
