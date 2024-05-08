@@ -26,6 +26,10 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.survey-main {
+  background-image: linear-gradient(to bottom, #60A2FF, #301BAF) !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

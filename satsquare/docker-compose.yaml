@@ -10,8 +10,7 @@ services:
       - db
     environment:
       - DATABASE_URL=postgresql://satsquare_user:satsquare_password@db:5432/satsquare_db
-    
-
+      
   db:
     image: postgres:latest
     ports:
