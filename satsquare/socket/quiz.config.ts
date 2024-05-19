@@ -1,0 +1,1 @@
+export const GAME_STATE_INIT = async () => await fetch("https://api.npoint.io/56c0df1861e25efada1a").then(response => response.json());

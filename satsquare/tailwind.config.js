@@ -11,7 +11,14 @@ module.exports = {
     flowbite.content(),
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#3037ce",
+        secondary: "#001473",
+      },
+    },
   },
+  safelist: ["grid-cols-4", "grid-cols-3", "grid-cols-2", {
+    pattern: /bg-(red|blue|yellow|green)/}],
   plugins: [flowbite.plugin()],
 }

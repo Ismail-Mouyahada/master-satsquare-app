@@ -1,12 +1,31 @@
-/* eslint-disable react/no-unescaped-entities */
-import { Button, Card, FloatingLabel } from "flowbite-react";
-import Logo from "./components/Logo/Logo";
+"use client"
+
+import { Button, Card, FloatingLabel, } from "flowbite-react";
+import Logo from "../components/Logo/Logo";
 import { FaBeer, FaGamepad, FaLightbulb } from "react-icons/fa";
-import LogoHeader from "./components/LogoHeader/LogoHeader";
+import LogoHeader from "../components/LogoHeader/LogoHeader";
+import { usePlayerContext } from "@/context/player";
+import { useSocketContext } from "@/context/socket";
+import { useEffect } from "react";
+import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 
 
 
 export default function Home() {
+
+  const { player, dispatch }  = usePlayerContext()
+  const { socket }  = useSocketContext()
+
+  useEffect(() => {
+    socket.on("game:errorMessage", (message: Renderable | ValueFunction<Renderable, Toast>) => {
+      toast.error(message)
+    })
+
+    return () => {
+      socket.off("game:errorMessage")
+    }
+  }, [socket])
+
   return (
     <main className="flex flex-col h-screen px-10 pt-10 survey-main">
       <div className="w-full h-1/4">

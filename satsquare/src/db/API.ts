@@ -1,10 +1,10 @@
 import { shuffleArray } from "@/utils/utils";
 
-
+ 
 export type Question = {
   category: string;
   type: string;
-  difficulty: string;
+  difficulty: any;
   question: string;
   correct_answer: string;
   incorrect_answers: string[];
@@ -13,11 +13,11 @@ export type Question = {
 export type QuestionState = Question & { answers: string[] };
 
 export enum Difficulty {
-  EASY = "easy",
-  MEDIUM = "medium",
-  HARD = "hard",
-  Easy = "Easy"
+  Easy,
+  Medium,
+  Hard,
 }
+
 
 export const fetchQuestions = async (
   amount: number,

@@ -122,3 +122,67 @@ export interface Reponse {
     texte_reponse: string;
     est_correcte: boolean;
 }
+
+
+export interface Game {
+    started: any;
+    manager: any;
+    room: any;
+    currentQuestion: number;
+    roundStartTime: number;
+    manager: string;
+    questions: Question[];
+    players: Player[];
+    playersAnswer: PlayerAnswer[];
+}
+
+
+
+export interface Player {
+    id: string;
+    username: string;
+    points: number;
+}
+
+export interface QuestionScoket {
+    question: string;
+    image?: string;
+    answers: string[];
+    solution: string;
+    cooldown: number;
+    time: number;
+}
+
+export interface PlayerAnswer {
+    id: string;
+    answer: string;
+    points: number;
+}
+
+export interface ShowRoomProps {
+    data: { /* Define appropriate props for SHOW_ROOM */ }
+}
+
+interface ShowResponsesProps {
+    data: {
+        question: string;
+        answers: string[];
+        image: string;
+        time: number;
+        responses: string[];
+        correct: string;
+    };
+}
+
+export interface ShowLeaderboardProps {
+    data: {
+        leaderboard: any;
+    };
+}
+
+export interface FinishProps {
+    data: {
+        subject: string;
+        top: string;
+    };
+}

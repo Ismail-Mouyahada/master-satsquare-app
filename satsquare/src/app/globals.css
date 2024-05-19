@@ -35,3 +35,98 @@ body {
     text-wrap: balance;
   }
 }
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+  padding: 3em;
+
+  background-image: linear-gradient(to bottom, #60A2FF, #301BAF) !important;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-image: linear-gradient(to bottom, #60A2FF, #301BAF) !important;
+  height: 100%;
+  background-size: cover;
+  margin: 0;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.score {
+  font-size: 1.2rem;
+  background: #e6e6e6;
+  width: 100%;
+  text-align: center;
+  color: #c88a8a;
+  padding: 2em;
+  border-radius: 0.3em;
+  margin: 1em;
+}
+
+h1 {
+  font-family: Poppins;
+  background: #83a4d4;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #b6fbff, #83a4d4);
+  background: linear-gradient(to right, #b6fbff, #83a4d4);
+  background-size: 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(1px 2px #0085a3);
+  font-size: 35px;
+  font-weight: 400;
+  text-align: center;
+  margin: 20px;
+}
+
+.start,
+.next {
+  cursor: pointer;
+  background: #6dbad4;
+  width: 50%;
+  color: #fff;
+  border: none;
+  padding: 5px;
+  margin: 20px 0px;
+  font-weight: bold;
+  box-shadow: 1px 3px #0085a3;
+  max-width: 300px;
+}
+
+.complete {
+ 
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #109c54;
+}
+
+.btn-primary {
+  background-color: #F8D99B !important;
+  padding: 1em 5em;
+  margin: 1em;
+  color: #717077;
+  font-weight: 600;
+  border-radius: 5px;
+}

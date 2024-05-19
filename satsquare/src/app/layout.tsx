@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeModeScript } from "flowbite-react";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { SocketContextProvider } from "@/context/socket";
+import { PlayerContextProvider } from "@/context/player";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -10,15 +12,22 @@ export const metadata: Metadata = {
   description: "Application dedié pour aider les associations",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+export default function RootLayout({ children, Component, pageProps }: Readonly<{ children: React.ReactNode; Component: React.ReactNode;pageProps: React.ReactNode; }>) {
   return (
     <html>
       <head>
         <ThemeModeScript />
       </head>
-      <AppRouterCacheProvider>
-         <body>{children}</body>
-      </AppRouterCacheProvider>
+      <SocketContextProvider>
+        <PlayerContextProvider>
+          <AppRouterCacheProvider>
+
+            <body>{children}</body>
+          </AppRouterCacheProvider>
+        </PlayerContextProvider>
+      </SocketContextProvider>
     </html>
   );
 }
+
+
