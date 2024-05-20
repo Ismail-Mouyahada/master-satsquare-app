@@ -64,8 +64,8 @@ model Evenement {
   id             Int              @id @default(autoincrement())
   nom            String
   description    String
-  utilisateur    Utilisateur      @relation(fields: [user_id], references: [id])
-  user_id        Int
+  utilisateur    Utilisateur?      @relation(fields: [user_id], references: [id])
+  user_id        Int?
   commence_a     DateTime
   termine_a      DateTime
   est_public     Boolean
