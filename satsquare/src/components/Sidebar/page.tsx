@@ -29,7 +29,7 @@ const Sidebar: React.FC = () => {
         <>
             <div className={styles.sidebar}>
                 <div className={`${styles.sidebar} ${isOpen ? 'open' : ''}`}>
-                    <div className='flex items-center justify-center w-full h-16 bg-[#12095c]'  ><FaBtc className=' scale-[2]' /></div>
+                    <div className='flex items-center justify-center p-[1em] rounded-full bg-[#4a34f1]'  ><FaBtc className=' scale-[1.8]' /></div>
                     <div className={styles.main}>
                         {links.map((link, index) => (
                             <Tooltip key={index} showArrow={true} placement='right' className='px-2 mr-1 rounded-md bg-[#352B5B]' content={link.tooltip}>
@@ -37,7 +37,7 @@ const Sidebar: React.FC = () => {
                             </Tooltip>
                         ))}
                     </div>
-                    <div className='flex items-center justify-center w-10 h-10 text-red-500 bg-opacity-75 rounded-full hover:bg-opacity-90 bg-slate-100'  ><FaSignOutAlt className=' scale-[1.2]' /></div>
+                    <div className='flex items-center justify-center w-10 h-10 text-red-400 rounded-full bg-opacity-85 hover:bg-opacity-90 bg-slate-100'  ><FaSignOutAlt className=' scale-[1.2]' /></div>
                 </div>
             </div>
         </>

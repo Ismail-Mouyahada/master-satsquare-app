@@ -1,5 +1,4 @@
 "use client"
-
 import { Button, Card, FloatingLabel, } from "flowbite-react";
 import Logo from "../components/Logo/Logo";
 import { FaBeer, FaGamepad, FaLightbulb } from "react-icons/fa";
@@ -27,8 +26,8 @@ export default function Home() {
   }, [socket])
 
   return (
-    <main className="flex flex-col h-screen px-10 pt-10 survey-main">
-      <div className="w-full h-1/4">
+    <main className="flex flex-col w-full h-screen px-10 pt-10 survey-main">
+      <div className="w-full h-1/8">
         <Logo />
       </div>
       <div className="flex flex-col items-center justify-center w-full h-full gap-4">
@@ -42,7 +41,7 @@ export default function Home() {
               </div>
             </div>
 
-            <FloatingLabel className="w-full bg-white border-none" variant="outlined" label="Code de la session" />
+            <FloatingLabel className="w-full bg-white border-none text-slate-400" variant="outlined" label="Code de la session" />
             <Button className="outline-none ring-[#6a6b74!important] bg-[#F8D99B] hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1">Rejoindre</Button>
           </Card>
           {/* Registration Form */}
