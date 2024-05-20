@@ -13,6 +13,7 @@ var io = new socket_io_1.Server({
     },
     path: "/ws/",
 });
+ 
 io.listen(5157);
 io.on("connection", function (socket) {
     console.log("Un utilisateur connect\u00E9 ".concat(socket.id));

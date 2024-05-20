@@ -6,6 +6,7 @@ import SponsorSearchBar from "@/components/Sponsor/SponsorSearchBar";
 import SponsorHeader from "@/components/Sponsor/SponsorHeader";
 import SponsorModal from "@/components/Sponsor/SponsorModal";
 import Sidebar from "@/components/Sidebar/page";
+import Loader from "@/components/Loader";
 
 const SponsorsPage: FC = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
@@ -77,14 +78,14 @@ const SponsorsPage: FC = () => {
     fetchSponsors(name);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader/>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="flex flex-row w-full">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="bg-white rounded-lg p-4 shadow-md">
+        <div className="p-4 bg-white rounded-lg shadow-md">
           <SponsorHeader />
           <SponsorSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <SponsorTable
@@ -100,23 +101,23 @@ const SponsorsPage: FC = () => {
           onSave={handleSave}
         />
         {isDeleteModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-2xl mb-4">Confirmer la suppression</h2>
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="p-6 bg-white rounded-lg shadow-lg">
+              <h2 className="mb-4 text-2xl">Confirmer la suppression</h2>
               <p>
                 Êtes-vous sûr de vouloir supprimer le sponsor "
                 {sponsorToDelete?.nom}" ?
               </p>
-              <div className="flex justify-end space-x-4 mt-4">
+              <div className="flex justify-end mt-4 space-x-4">
                 <button
                   onClick={closeDeleteModal}
-                  className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md"
+                  className="px-4 py-2 text-gray-700 bg-gray-300 rounded-md"
                 >
                   Annuler
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="bg-red-500 text-white py-2 px-4 rounded-md"
+                  className="px-4 py-2 text-white bg-red-500 rounded-md"
                 >
                   Supprimer
                 </button>
