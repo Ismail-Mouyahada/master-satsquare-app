@@ -7,6 +7,8 @@ import SponsorHeader from "@/components/Sponsor/SponsorHeader";
 import SponsorModal from "@/components/Sponsor/SponsorModal";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
+import EventHeader from "@/components/Event/EventHeader";
+import { FaDonate } from "react-icons/fa";
 
 const SponsorsPage: FC = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
@@ -86,7 +88,7 @@ const SponsorsPage: FC = () => {
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
         <div className="p-4 bg-white rounded-lg shadow-md">
-          <SponsorHeader />
+        <EventHeader title="Sponsors"  icon={<FaDonate className="scale-[1.5]" color="#6D6B81" />}/>
           <SponsorSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <SponsorTable
             sponsors={sponsors}

@@ -7,6 +7,7 @@ import EventModal from "@/components/Event/EventModal";
 import EventHeader from "@/components/Event/EventHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
+import { FaCalculator } from "react-icons/fa";
 
 const EventsPage: FC = () => {
   const [events, setEvents] = useState<Evenement[]>([]);
@@ -86,7 +87,7 @@ const EventsPage: FC = () => {
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
         <div className="p-4 bg-white rounded-lg shadow-md">
-          <EventHeader />
+          <EventHeader title="Evenements"  icon={<FaCalculator className="scale-[1.5]" color="#6D6B81" />}/>
           <EventSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <EventTable
             events={events}
