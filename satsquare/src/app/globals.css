@@ -29,6 +29,9 @@ body {
 .survey-main {
   background-image: linear-gradient(to bottom, #60A2FF, #301BAF) !important;
 }
+.sidebar {
+  background-image: linear-gradient(to bottom, #5694ED, #301BAF) !important;
+}
 
 @layer utilities {
   .text-balance {
@@ -61,7 +64,7 @@ body {
   height: 100%;
   background-size: cover;
   margin: 0;
-  padding: 0 20px;
+
   display: flex;
   justify-content: center;
   align-items: center;

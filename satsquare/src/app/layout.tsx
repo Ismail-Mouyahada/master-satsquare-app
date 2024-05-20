@@ -5,6 +5,7 @@ import { ThemeModeScript } from "flowbite-react";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { SocketContextProvider } from "@/context/socket";
 import { PlayerContextProvider } from "@/context/player";
+import { Toaster } from "react-hot-toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   description: "Application dedié pour aider les associations",
 };
 
-export default function RootLayout({ children, Component, pageProps }: Readonly<{ children: React.ReactNode; Component: React.ReactNode;pageProps: React.ReactNode; }>) {
+export default function RootLayout({ children, Component, pageProps }: Readonly<{ children: React.ReactNode; Component: React.ReactNode; pageProps: React.ReactNode; }>) {
   return (
     <html>
       <head>
@@ -21,8 +22,10 @@ export default function RootLayout({ children, Component, pageProps }: Readonly<
       <SocketContextProvider>
         <PlayerContextProvider>
           <AppRouterCacheProvider>
-
-            <body>{children}</body>
+            <body className="survey-main">
+              {children}
+              <Toaster />
+            </body>
           </AppRouterCacheProvider>
         </PlayerContextProvider>
       </SocketContextProvider>

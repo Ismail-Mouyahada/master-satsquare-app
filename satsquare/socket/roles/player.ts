@@ -1,3 +1,4 @@
+import { Server, Socket } from "socket.io";
 import { abortCooldown } from "../utils/cooldown";
 import { inviteCodeValidator, usernameValidator } from "../validator";
 import convertTimeToPoint from "../utils/convertTimeToPoint";
@@ -9,8 +10,19 @@ interface PlayerData {
   points: number;
 }
 
+interface Game {
+  room?: string;
+  started?: boolean;
+  players: PlayerData[];
+  questions: any[];
+  currentQuestion: number;
+  playersAnswer: { id: string; answer: any; points: number }[];
+  roundStartTime: number;
+  [key: string]: any;
+}
+
 const Player = {
-  checkRoom: async (game: { room: any }, _io: any, socket: any, roomId: any): Promise<void> => {
+  checkRoom: async (game: Game, _io: Server, socket: Socket, roomId: string): Promise<void> => {
     try {
       await inviteCodeValidator.validate(roomId);
     } catch (error: any) {
@@ -26,7 +38,7 @@ const Player = {
     socket.emit("game:successRoom", roomId);
   },
 
-  join: async (game: { room: any; players: PlayerData[]; started: any }, _io: any, socket: any, player: { username: any; room: any }): Promise<void> => {
+  join: async (game: Game, _io: Server, socket: Socket, player: { username: string; room: string }): Promise<void> => {
     try {
       await usernameValidator.validate(player.username);
     } catch (error: any) {
@@ -53,7 +65,7 @@ const Player = {
 
     socket.join(player.room);
 
-    let playerData: PlayerData = {
+    const playerData: PlayerData = {
       username: player.username,
       room: player.room,
       id: socket.id,
@@ -66,7 +78,12 @@ const Player = {
     socket.emit("game:successJoin");
   },
 
-  selectedAnswer: (game: { players: PlayerData[]; questions: { [x: string]: any }; currentQuestion: string | number; playersAnswer: { id: any; answer: any; points: number }[]; roundStartTime: number; room: any }, _io: any, socket: { id: any; emit: (arg0: string, arg1: { name: string; data: { text: string } }) => void; to: (arg0: any) => { (): any; new(): any; emit: { (arg0: string, arg1: any): void; new(): any } } }, answerKey: any): void => {
+  selectedAnswer: (
+    game: Game,
+    _io: Server,
+    socket: Socket,
+    answerKey: any
+  ): void => {
     const player = game.players.find((player) => player.id === socket.id);
     const question = game.questions[game.currentQuestion];
 
@@ -88,7 +105,7 @@ const Player = {
       name: "WAIT",
       data: { text: "En attente des réponses des autres joueurs" },
     });
-    socket.to(game.room).emit("game:playerAnswer", game.playersAnswer.length);
+    socket.to(game.room!).emit("game:playerAnswer", game.playersAnswer.length);
 
     if (game.playersAnswer.length === game.players.length) {
       abortCooldown();

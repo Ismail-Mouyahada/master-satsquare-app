@@ -79,9 +79,9 @@ export default function Manager() {
   return (
     <>
       {!state.created ? (
-        <div>
+        < >
           <ManagerPassword />
-        </div>
+        </>
       ) : (
         <>
           <GameWrapper textNext={nextText} onNext={handleSkip} manager>

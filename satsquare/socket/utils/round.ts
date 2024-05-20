@@ -1,43 +1,81 @@
-import { cooldown, sleep } from "./cooldown.js"
+import { cooldown, sleep } from "./cooldown.js";
 
-export const startRound = async (game: { started: any; room?: any; manager?: any; questions?: any; currentQuestion?: any; roundStartTime?: any; players?: any; playersAnswer?: any }, io: { to: any }, socket: any) => {
-  const question = game.questions[game.currentQuestion]
+interface Question {
+  question: string;
+  image?: string;
+  cooldown: number;
+  time: number;
+  answers: string[];
+  solution: string;
+}
 
-  if (!game.started) return
+interface Player {
+  id: string;
+  username: string;
+  points: number;
+}
 
-  io.to(game.room).emit("game:updateQuestion", {
+interface PlayerAnswer {
+  id: string;
+  answer: string;
+  points: number;
+}
+
+interface Game {
+  started: boolean;
+  room?: string;
+  manager?: string;
+  questions: Question[];
+  currentQuestion: number;
+  roundStartTime?: number;
+  players: Player[];
+  playersAnswer: PlayerAnswer[];
+}
+
+interface IO {
+  to: (room: string) => {
+    emit: (event: string, data: any) => void;
+  };
+}
+
+export const startRound = async (game: Game, io: IO, socket: any): Promise<void> => {
+  const question = game.questions[game.currentQuestion];
+
+  if (!game.started) return;
+
+  io.to(game.room!).emit("game:updateQuestion", {
     current: game.currentQuestion + 1,
     total: game.questions.length,
-  })
+  });
 
-  io.to(game.room).emit("game:status", {
+  io.to(game.room!).emit("game:status", {
     name: "SHOW_PREPARED",
     data: {
-      totalAnswers: game.questions[game.currentQuestion].answers.length,
+      totalAnswers: question.answers.length,
       questionNumber: game.currentQuestion + 1,
     },
-  })
+  });
 
-  await sleep(2)
+  await sleep(2);
 
-  if (!game.started) return
+  if (!game.started) return;
 
-  io.to(game.room).emit("game:status", {
+  io.to(game.room!).emit("game:status", {
     name: "SHOW_QUESTION",
     data: {
       question: question.question,
       image: question.image,
       cooldown: question.cooldown,
     },
-  })
+  });
 
-  await sleep(question.cooldown)
+  await sleep(question.cooldown);
 
-  if (!game.started) return
+  if (!game.started) return;
 
-  game.roundStartTime = Date.now()
+  game.roundStartTime = Date.now();
 
-  io.to(game.room).emit("game:status", {
+  io.to(game.room!).emit("game:status", {
     name: "SELECT_ANSWER",
     data: {
       question: question.question,
@@ -46,28 +84,22 @@ export const startRound = async (game: { started: any; room?: any; manager?: any
       time: question.time,
       totalPlayer: game.players.length,
     },
-  })
+  });
 
-  await cooldown(question.time, io, game.room)
+  await cooldown(question.time, io, game.room!);
 
-  if (!game.started) return
+  if (!game.started) return;
 
-  game.players.map(async (player: { id: any; points: number }) => {
-    let playerAnswer = await game.playersAnswer.find((p: { id: any }) => p.id === player.id)
+  game.players.forEach((player) => {
+    const playerAnswer = game.playersAnswer.find((p) => p.id === player.id);
+    const isCorrect = playerAnswer ? playerAnswer.answer === question.solution : false;
+    const points = isCorrect ? Math.round(playerAnswer!.points) : 0;
 
-    let isCorrect = playerAnswer
-      ? playerAnswer.answer === question.solution
-      : false
+    player.points += points;
 
-    let points =
-      (isCorrect && Math.round(playerAnswer && playerAnswer.points)) || 0
-
-    player.points += points
-
-    let sortPlayers = game.players.sort((a: { points: number }, b: { points: number }) => b.points - a.points)
-
-    let rank = sortPlayers.findIndex((p: { id: any }) => p.id === player.id) + 1
-    let aheadPlayer = sortPlayers[rank - 2]
+    const sortedPlayers = [...game.players].sort((a, b) => b.points - a.points);
+    const rank = sortedPlayers.findIndex((p) => p.id === player.id) + 1;
+    const aheadPlayer = sortedPlayers[rank - 2];
 
     io.to(player.id).emit("game:status", {
       name: "SHOW_RESULT",
@@ -79,26 +111,25 @@ export const startRound = async (game: { started: any; room?: any; manager?: any
         rank,
         aheadOfMe: aheadPlayer ? aheadPlayer.username : null,
       },
-    })
-  })
+    });
+  });
 
-  let totalType : any = {}
-
-  game.playersAnswer.forEach(({ answer } : any) => {
-    totalType[answer] = (totalType[answer] || 0) + 1
-  })
+  const totalType: { [key: string]: number } = {};
+  game.playersAnswer.forEach(({ answer }) => {
+    totalType[answer] = (totalType[answer] || 0) + 1;
+  });
 
   // Manager
-  io.to(game.manager).emit("game:status", {
+  io.to(game.manager!).emit("game:status", {
     name: "SHOW_RESPONSES",
     data: {
-      question: game.questions[game.currentQuestion].question,
+      question: question.question,
       responses: totalType,
-      correct: game.questions[game.currentQuestion].solution,
-      answers: game.questions[game.currentQuestion].answers,
-      image: game.questions[game.currentQuestion].image,
+      correct: question.solution,
+      answers: question.answers,
+      image: question.image,
     },
-  })
+  });
 
-  game.playersAnswer = []
-}
+  game.playersAnswer = [];
+};

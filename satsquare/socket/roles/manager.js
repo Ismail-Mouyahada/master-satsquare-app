@@ -63,10 +63,12 @@ var Manager = {
             return;
         }
         var player = game.players.find(function (p) { return p.id === playerId; });
-        game.players = game.players.filter(function (p) { return p.id !== playerId; });
-        io.in(playerId).socketsLeave(game.room);
-        io.to(player.id).emit("game:kick");
-        io.to(game.manager).emit("manager:playerKicked", player.id);
+        if (player) {
+            game.players = game.players.filter(function (p) { return p.id !== playerId; });
+            io.in(playerId).socketsLeave(game.room);
+            io.to(player.id).emit("game:kick");
+            io.to(game.manager).emit("manager:playerKicked", player.id);
+        }
     },
     startGame: function (game, io, socket) { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -96,37 +98,30 @@ var Manager = {
         });
     }); },
     nextQuestion: function (game, io, socket) {
-        if (!game.started) {
-            return;
-        }
-        if (socket.id !== game.manager) {
-            return;
-        }
-        if (!game.questions[game.currentQuestion + 1]) {
+        if (!game.started || socket.id !== game.manager || !game.questions[game.currentQuestion + 1]) {
             return;
         }
         game.currentQuestion++;
         (0, round_js_1.startRound)(game, io, socket);
     },
     abortQuiz: function (game, io, socket) {
-        if (!game.started) {
-            return;
-        }
-        if (socket.id !== game.manager) {
+        if (!game.started || socket.id !== game.manager) {
             return;
         }
         (0, cooldown_js_1.abortCooldown)();
     },
-    showLoaderboard: function (game, io, socket) {
+    showLeaderboard: function (game, io, socket) {
         if (!game.questions[game.currentQuestion + 1]) {
             socket.emit("game:status", {
                 name: "FINISH",
                 data: {
                     subject: game.subject,
-                    top: game.players.slice(0, 3).sort(function (a, b) { return b.points - a.points; }),
+                    top: game.players
+                        .slice(0, 3)
+                        .sort(function (a, b) { return b.points - a.points; }),
                 },
             });
-            game = (0, deepClone_js_1.default)(quiz_config_js_1.GAME_STATE_INIT);
+            Object.assign(game, (0, deepClone_js_1.default)(quiz_config_js_1.GAME_STATE_INIT));
             return;
         }
         socket.emit("game:status", {

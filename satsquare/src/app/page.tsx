@@ -32,7 +32,7 @@ export default function Home() {
         <Logo />
       </div>
       <div className="flex flex-col items-center justify-center w-full h-full gap-4">
-        <div className="mb-5">    <LogoHeader /></div>
+        <div className="mb-5">  <LogoHeader /></div>
         <div className="flex flex-row gap-4">
           {/* Game Form */}
           <Card className="p-6 bg-opacity-90 ">

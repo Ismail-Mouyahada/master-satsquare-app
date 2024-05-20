@@ -66,7 +66,7 @@ io.on("connection", (socket: any) => {
   );
 
   socket.on("manager:showLeaderboard", () =>
-    Manager.showLoaderboard(gameState, io, socket)
+    Manager.showLeaderboard(gameState, io, socket)
   );
 
   socket.on("disconnect", () => {

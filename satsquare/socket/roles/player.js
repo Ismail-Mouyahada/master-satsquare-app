@@ -51,7 +51,7 @@ var cooldown_1 = require("../utils/cooldown");
 var validator_1 = require("../validator");
 var convertTimeToPoint_1 = require("../utils/convertTimeToPoint");
 var Player = {
-    checkRoom: function (game, io, socket, roomId) { return __awaiter(void 0, void 0, void 0, function () {
+    checkRoom: function (game, _io, socket, roomId) { return __awaiter(void 0, void 0, void 0, function () {
         var error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -75,7 +75,7 @@ var Player = {
             }
         });
     }); },
-    join: function (game, io, socket, player) { return __awaiter(void 0, void 0, void 0, function () {
+    join: function (game, _io, socket, player) { return __awaiter(void 0, void 0, void 0, function () {
         var error_2, playerData;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -117,7 +117,7 @@ var Player = {
             }
         });
     }); },
-    selectedAnswer: function (game, io, socket, answerKey) {
+    selectedAnswer: function (game, _io, socket, answerKey) {
         var player = game.players.find(function (player) { return player.id === socket.id; });
         var question = game.questions[game.currentQuestion];
         if (!player) {

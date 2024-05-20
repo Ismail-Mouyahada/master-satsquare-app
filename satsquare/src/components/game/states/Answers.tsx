@@ -1,6 +1,6 @@
 import AnswerButton from "../../AnswerButton";
 import { useSocketContext } from "@/context/socket";
-import { SetStateAction, Key, useEffect, useState } from "react";
+import { useEffect, useState, Key } from "react";
 import clsx from "clsx";
 import useSound from "use-sound";
 import { usePlayerContext } from "@/context/player";
@@ -13,32 +13,43 @@ import {
 } from "@/constants/db";
 import Image from "next/image";
 
-const calculatePercentages = (objectResponses: any) => {
+interface AnswerData {
+  question: string;
+  answers: string[];
+  image?: string;
+  time: number;
+  responses: Record<number, number> | null;
+  correct: number;
+}
+
+interface Props {
+  data: AnswerData;
+}
+
+const calculatePercentages = (objectResponses: Record<number, number>) => {
   const keys = Object.keys(objectResponses);
   const values = Object.values(objectResponses);
 
   if (!values.length) {
-    return [];
+    return {};
   }
 
-  const totalSum: any = values.reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+  const totalSum = values.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  let result: any = {};
+  let result: Record<number, string> = {};
 
-  keys.map((key: any) => {
-    result[key] = ((objectResponses[key] / totalSum) * 100).toFixed() + "%";
+  keys.forEach((key) => {
+    result[Number(key)] = ((objectResponses[Number(key)] / totalSum) * 100).toFixed() + "%";
   });
 
   return result;
 };
 
-export default function Answers({
-  data: { question, answers, image, time, responses, correct },
-}: any) {
+export default function Answers({ data: { question, answers, image, time, responses, correct } }: Props) {
   const { socket } = useSocketContext();
   const { player } = usePlayerContext();
 
-  const [percentages, setPercentages] = useState([]);
+  const [percentages, setPercentages] = useState<Record<number, string>>({});
   const [cooldown, setCooldown] = useState(time);
   const [totalAnswer, setTotalAnswer] = useState(0);
 
@@ -50,11 +61,11 @@ export default function Answers({
     volume: 0.2,
   });
 
-  const [playMusic, { stop: stopMusic, isPlaying }] : any = useSound(SFX_ANSWERS_MUSIC, {
+  const [playMusic, { stop: stopMusic, sound: musicSound }] = useSound(SFX_ANSWERS_MUSIC, {
     volume: 0.2,
   });
 
-  const handleAnswer = (answer: any) => {
+  const handleAnswer = (answer: number) => {
     if (!player) {
       return;
     }
@@ -76,10 +87,10 @@ export default function Answers({
   }, [responses, playMusic, stopMusic, sfxResults]);
 
   useEffect(() => {
-    if (!isPlaying) {
+    if (!musicSound?.playing()) {
       playMusic();
     }
-  }, [isPlaying, playMusic]);
+  }, [musicSound, playMusic]);
 
   useEffect(() => {
     return () => {
@@ -88,11 +99,11 @@ export default function Answers({
   }, [stopMusic]);
 
   useEffect(() => {
-    socket.on("game:cooldown", (sec: any) => {
+    socket.on("game:cooldown", (sec: number) => {
       setCooldown(sec);
     });
 
-    socket.on("game:playerAnswer", (count: SetStateAction<number>) => {
+    socket.on("game:playerAnswer", (count: number) => {
       setTotalAnswer(count);
       sfxPop();
     });
@@ -111,12 +122,12 @@ export default function Answers({
         </h2>
 
         {!!image && !responses && (
-          <Image    width={undefined} height={undefined}  src={image} className="w-auto h-48 rounded-md max-h-60" alt={"Question related"} />
+          <Image width={undefined} height={undefined} src={image} className="w-auto h-48 rounded-md max-h-60" alt={"Question related"} />
         )}
 
         {responses && (
           <div className={`grid w-full gap-4 grid-cols-${answers.length} mt-8 h-40 max-w-3xl px-2`}>
-            {answers.map((_: any, key: Key | any | undefined) => (
+            {answers.map((_, key) => (
               <div
                 key={key}
                 className={clsx("flex flex-col justify-end self-end overflow-hidden rounded-md", ANSWERS_COLORS[key])}
@@ -146,7 +157,7 @@ export default function Answers({
         )}
 
         <div className="grid w-full grid-cols-2 gap-1 px-2 mx-auto mb-4 text-lg font-bold text-white rounded-full max-w-7xl md:text-xl">
-          {answers.map((answer: any, key: any) => (
+          {answers.map((answer, key) => (
             <AnswerButton
               key={key}
               className={clsx(ANSWERS_COLORS[key], { "opacity-65": responses && correct !== key })}

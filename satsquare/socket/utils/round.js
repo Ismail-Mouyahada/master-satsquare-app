@@ -35,6 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.startRound = void 0;
 var cooldown_js_1 = require("./cooldown.js");
@@ -53,7 +62,7 @@ var startRound = function (game, io, socket) { return __awaiter(void 0, void 0, 
                 io.to(game.room).emit("game:status", {
                     name: "SHOW_PREPARED",
                     data: {
-                        totalAnswers: game.questions[game.currentQuestion].answers.length,
+                        totalAnswers: question.answers.length,
                         questionNumber: game.currentQuestion + 1,
                     },
                 });
@@ -91,36 +100,26 @@ var startRound = function (game, io, socket) { return __awaiter(void 0, void 0, 
                 _a.sent();
                 if (!game.started)
                     return [2 /*return*/];
-                game.players.map(function (player) { return __awaiter(void 0, void 0, void 0, function () {
-                    var playerAnswer, isCorrect, points, sortPlayers, rank, aheadPlayer;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, game.playersAnswer.find(function (p) { return p.id === player.id; })];
-                            case 1:
-                                playerAnswer = _a.sent();
-                                isCorrect = playerAnswer
-                                    ? playerAnswer.answer === question.solution
-                                    : false;
-                                points = (isCorrect && Math.round(playerAnswer && playerAnswer.points)) || 0;
-                                player.points += points;
-                                sortPlayers = game.players.sort(function (a, b) { return b.points - a.points; });
-                                rank = sortPlayers.findIndex(function (p) { return p.id === player.id; }) + 1;
-                                aheadPlayer = sortPlayers[rank - 2];
-                                io.to(player.id).emit("game:status", {
-                                    name: "SHOW_RESULT",
-                                    data: {
-                                        correct: isCorrect,
-                                        message: isCorrect ? "Bien joué !" : "Dommage",
-                                        points: points,
-                                        myPoints: player.points,
-                                        rank: rank,
-                                        aheadOfMe: aheadPlayer ? aheadPlayer.username : null,
-                                    },
-                                });
-                                return [2 /*return*/];
-                        }
+                game.players.forEach(function (player) {
+                    var playerAnswer = game.playersAnswer.find(function (p) { return p.id === player.id; });
+                    var isCorrect = playerAnswer ? playerAnswer.answer === question.solution : false;
+                    var points = isCorrect ? Math.round(playerAnswer.points) : 0;
+                    player.points += points;
+                    var sortedPlayers = __spreadArray([], game.players, true).sort(function (a, b) { return b.points - a.points; });
+                    var rank = sortedPlayers.findIndex(function (p) { return p.id === player.id; }) + 1;
+                    var aheadPlayer = sortedPlayers[rank - 2];
+                    io.to(player.id).emit("game:status", {
+                        name: "SHOW_RESULT",
+                        data: {
+                            correct: isCorrect,
+                            message: isCorrect ? "Bien joué !" : "Dommage",
+                            points: points,
+                            myPoints: player.points,
+                            rank: rank,
+                            aheadOfMe: aheadPlayer ? aheadPlayer.username : null,
+                        },
                     });
-                }); });
+                });
                 totalType = {};
                 game.playersAnswer.forEach(function (_a) {
                     var answer = _a.answer;
@@ -130,11 +129,11 @@ var startRound = function (game, io, socket) { return __awaiter(void 0, void 0, 
                 io.to(game.manager).emit("game:status", {
                     name: "SHOW_RESPONSES",
                     data: {
-                        question: game.questions[game.currentQuestion].question,
+                        question: question.question,
                         responses: totalType,
-                        correct: game.questions[game.currentQuestion].solution,
-                        answers: game.questions[game.currentQuestion].answers,
-                        image: game.questions[game.currentQuestion].image,
+                        correct: question.solution,
+                        answers: question.answers,
+                        image: question.image,
                     },
                 });
                 game.playersAnswer = [];

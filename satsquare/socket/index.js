@@ -41,7 +41,7 @@ io.on("connection", function (socket) {
         return manager_1.default.nextQuestion(gameState, io, socket);
     });
     socket.on("manager:showLeaderboard", function () {
-        return manager_1.default.showLoaderboard(gameState, io, socket);
+        return manager_1.default.showLeaderboard(gameState, io, socket);
     });
     socket.on("disconnect", function () {
         console.log("Utilisateur d\u00E9connect\u00E9 ".concat(socket.id));
