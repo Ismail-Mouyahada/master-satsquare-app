@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-const Header: FC = () => {
+const SponsorHeader: FC = () => {
   return (
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center space-x-2">
@@ -13,4 +13,4 @@ const Header: FC = () => {
   );
 };
 
-export default Header;
+export default SponsorHeader;
