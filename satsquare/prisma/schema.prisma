@@ -11,6 +11,7 @@ datasource db {
 model Utilisateur {
   id             Int              @id @default(autoincrement())
   pseudo         String           @unique
+  email          String           @unique
   role           Role?            @relation(fields: [role_id], references: [id])
   role_id        Int?
   mot_de_passe   String
