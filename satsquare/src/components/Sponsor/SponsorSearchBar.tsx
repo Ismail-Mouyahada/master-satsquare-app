@@ -23,7 +23,7 @@ const SponsorSearchBar: FC<SponsorSearchBarProps> = ({ onAdd, onSearch }) => {
     <div className='bg-[#EEEEEF] w-1/2 flex  p-1.3  pl-2 rounded-md shadow-md '>
       <input
         type="text"
-        placeholder="Chercher un événement ..."
+        placeholder="Chercher un sponsor ..."
         className="border-none p-2 rounded-md  w-full bg-[#EEEEEF]"
         value={searchTerm}
         onChange={handleSearchChange}
