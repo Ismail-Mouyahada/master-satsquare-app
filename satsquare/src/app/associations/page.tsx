@@ -1,36 +1,38 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Evenement } from "@prisma/client";
-import EventTable from "@/components/Event/EventTable";
-import EventSearchBar from "@/components/Event/EventSearchBar";
-import EventModal from "@/components/Event/EventModal";
+import { Association } from "@prisma/client";
+import AssociationTable from "@/components/Association/AssociationTable";
+import AssociationSearchBar from "@/components/Association/AssociationSearchBar";
+import AssociationModal from "@/components/Association/AssociationModal";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
-import { FaCalculator } from "react-icons/fa";
+import { FaHandsHelping } from "react-icons/fa";
 
-const EventsPage: FC = () => {
-  const [events, setEvents] = useState<Evenement[]>([]);
+const AssociationsPage: FC = () => {
+  const [associations, setAssociations] = useState<Association[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [selectedEvent, setSelectedEvent] = useState<Evenement | null>(null);
+  const [selectedAssociation, setSelectedAssociation] =
+    useState<Association | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  const [eventToDelete, setEventToDelete] = useState<Evenement | null>(null);
+  const [associationToDelete, setAssociationToDelete] =
+    useState<Association | null>(null);
 
   useEffect(() => {
-    fetchEvents();
+    fetchAssociations();
   }, []);
 
-  const fetchEvents = async (name: string = "") => {
+  const fetchAssociations = async (name: string = "") => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/events?name=${name}`);
+      const response = await fetch(`/api/associations?name=${name}`);
       if (!response.ok) {
-        throw new Error("Failed to fetch events");
+        throw new Error("Failed to fetch associations");
       }
-      const data: Evenement[] = await response.json();
-      setEvents(data);
+      const data: Association[] = await response.json();
+      setAssociations(data);
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -39,32 +41,32 @@ const EventsPage: FC = () => {
   };
 
   const handleSave = async () => {
-    await fetchEvents();
+    await fetchAssociations();
   };
 
-  const openModal = (event: Evenement | null = null) => {
-    setSelectedEvent(event);
+  const openModal = (association: Association | null = null) => {
+    setSelectedAssociation(association);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedEvent(null);
+    setSelectedAssociation(null);
   };
 
-  const openDeleteModal = (event: Evenement) => {
-    setEventToDelete(event);
+  const openDeleteModal = (association: Association) => {
+    setAssociationToDelete(association);
     setIsDeleteModalOpen(true);
   };
 
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setEventToDelete(null);
+    setAssociationToDelete(null);
   };
 
   const handleDelete = async () => {
-    if (eventToDelete) {
-      await fetch(`/api/events/${eventToDelete.id}`, {
+    if (associationToDelete) {
+      await fetch(`/api/associations/${associationToDelete.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +78,7 @@ const EventsPage: FC = () => {
   };
 
   const handleSearch = (name: string) => {
-    fetchEvents(name);
+    fetchAssociations(name);
   };
 
   if (loading) return <Loader />;
@@ -88,18 +90,21 @@ const EventsPage: FC = () => {
       <div className="bg-[#F3F3FF] w-full">
         <div className="p-4 bg-white rounded-lg shadow-md">
           <PageHeader
-            title="Evenements"
-            icon={<FaCalculator className="scale-[1.5]" color="#6D6B81" />}
+            title="Associations"
+            icon={<FaHandsHelping className="scale-[1.5]" color="#6D6B81" />}
           />
-          <EventSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
-          <EventTable
-            events={events}
+          <AssociationSearchBar
+            onAdd={() => openModal()}
+            onSearch={handleSearch}
+          />
+          <AssociationTable
+            associations={associations}
             onEdit={openModal}
             onDelete={openDeleteModal}
           />
         </div>
-        <EventModal
-          event={selectedEvent}
+        <AssociationModal
+          association={selectedAssociation}
           isOpen={isModalOpen}
           onClose={closeModal}
           onSave={handleSave}
@@ -109,8 +114,8 @@ const EventsPage: FC = () => {
             <div className="p-6 bg-white rounded-lg shadow-lg">
               <h2 className="mb-4 text-2xl">Confirmer la suppression</h2>
               <p>
-                Êtes-vous sûr de vouloir supprimer l'événement "
-                {eventToDelete?.nom}" ?
+                Êtes-vous sûr de vouloir supprimer l'association "
+                {associationToDelete?.nom}" ?
               </p>
               <div className="flex justify-end mt-4 space-x-4">
                 <button
@@ -134,4 +139,4 @@ const EventsPage: FC = () => {
   );
 };
 
-export default EventsPage;
+export default AssociationsPage;

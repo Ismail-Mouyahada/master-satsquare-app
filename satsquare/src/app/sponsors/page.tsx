@@ -3,11 +3,10 @@ import { FC, useEffect, useState } from "react";
 import { Sponsor } from "@prisma/client";
 import SponsorTable from "@/components/Sponsor/SponsorTable";
 import SponsorSearchBar from "@/components/Sponsor/SponsorSearchBar";
-import SponsorHeader from "@/components/Sponsor/SponsorHeader";
 import SponsorModal from "@/components/Sponsor/SponsorModal";
+import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
-import EventHeader from "@/components/Event/EventHeader";
 import { FaDonate } from "react-icons/fa";
 
 const SponsorsPage: FC = () => {
@@ -80,7 +79,7 @@ const SponsorsPage: FC = () => {
     fetchSponsors(name);
   };
 
-  if (loading) return <Loader/>;
+  if (loading) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -88,7 +87,10 @@ const SponsorsPage: FC = () => {
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
         <div className="p-4 bg-white rounded-lg shadow-md">
-        <EventHeader title="Sponsors"  icon={<FaDonate className="scale-[1.5]" color="#6D6B81" />}/>
+          <PageHeader
+            title="Sponsors"
+            icon={<FaDonate className="scale-[1.5]" color="#6D6B81" />}
+          />
           <SponsorSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <SponsorTable
             sponsors={sponsors}
