@@ -6,6 +6,7 @@ var manager_1 = require("./roles/manager");
 var player_1 = require("./roles/player");
 var cooldown_1 = require("./utils/cooldown");
 var deepClone_1 = require("./utils/deepClone");
+// Initialiser gameState avec la structure correcte
 var gameState = (0, deepClone_1.default)(quiz_config_1.GAME_STATE_INIT);
 var io = new socket_io_1.Server({
     cors: {
@@ -48,14 +49,13 @@ io.on("connection", function (socket) {
         if (gameState.manager === socket.id) {
             console.log("Réinitialisation du jeu");
             io.to(gameState.room).emit("game:reset");
-            gameState.started = false;
-            (0, deepClone_1.default)(quiz_config_1.GAME_STATE_INIT);
+            gameState = (0, deepClone_1.default)(quiz_config_1.GAME_STATE_INIT);
             (0, cooldown_1.abortCooldown)();
             return;
         }
-        var player = gameState.players.find(function (p) { return p.id === socket.id; });
-        if (player) {
-            gameState.players = gameState.players.filter(function (p) { return p.id !== socket.id; });
+        var playerIndex = gameState.players.findIndex(function (p) { return p.id === socket.id; });
+        if (playerIndex !== -1) {
+            var player = gameState.players.splice(playerIndex, 1)[0];
             io.to(gameState.manager).emit("manager:removePlayer", player.id);
         }
     });

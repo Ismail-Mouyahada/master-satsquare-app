@@ -19,9 +19,10 @@ interface PlayerData {
   points: number;
 }
 
-const gameState: any = deepClone(GAME_STATE_INIT);
+// Initialiser gameState avec la structure correcte
+let gameState: any = deepClone(GAME_STATE_INIT);
 
-const io: any = new Server({
+const io = new Server({
   cors: {
     origin: "*",
   },
@@ -30,7 +31,7 @@ const io: any = new Server({
 
 io.listen(5157);
 
-io.on("connection", (socket: any) => {
+io.on("connection", (socket: Socket) => {
   console.log(`Un utilisateur connecté ${socket.id}`);
 
   socket.on("player:checkRoom", (roomId: string) =>
@@ -71,20 +72,20 @@ io.on("connection", (socket: any) => {
 
   socket.on("disconnect", () => {
     console.log(`Utilisateur déconnecté ${socket.id}`);
+
     if (gameState.manager === socket.id) {
       console.log("Réinitialisation du jeu");
       io.to(gameState.room).emit("game:reset");
-      gameState.started = false;
-      deepClone(GAME_STATE_INIT);
+      gameState = deepClone(GAME_STATE_INIT);
 
       abortCooldown();
       return;
     }
 
-    const player = gameState.players.find((p: { id: any; }) => p.id === socket.id);
+    const playerIndex = gameState.players.findIndex((p: { id: any }) => p.id === socket.id);
 
-    if (player) {
-      gameState.players = gameState.players.filter((p: { id: any; }) => p.id !== socket.id);
+    if (playerIndex !== -1) {
+      const player = gameState.players.splice(playerIndex, 1)[0];
       io.to(gameState.manager).emit("manager:removePlayer", player.id);
     }
   });

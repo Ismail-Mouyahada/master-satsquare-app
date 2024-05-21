@@ -122,7 +122,7 @@ export default function Answers({ data: { question, answers, image, time, respon
         </h2>
 
         {!!image && !responses && (
-          <Image width={undefined} height={undefined} src={image} className="w-auto h-48 rounded-md max-h-60" alt={"Question related"} />
+          <Image width={100} height={100} src={image} className="w-auto h-48 rounded-md max-h-60" alt={"Question related"} />
         )}
 
         {responses && (
