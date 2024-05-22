@@ -27,7 +27,7 @@ const links = [
   { href: "/ranking", icon: <FaChartBar />, tooltip: "Classement" },
   { href: "/sponsors", icon: <FaHeart />, tooltip: "Sponsors" },
   { href: "/associations", icon: <FaBuilding />, tooltip: "Associations" },
-  { href: "/donations", icon: <FaDonate />, tooltip: "Donations" },
+  { href: "/reward", icon: <FaDonate />, tooltip: "Récompenses" },
   { href: "/evenements", icon: <FaCalendarAlt />, tooltip: "Evenements" },
   { href: "/profile", icon: <FaUserAlt />, tooltip: "Profile" },
   { href: "/lightning", icon: <FaLightbulb />, tooltip: "Lightning" },
