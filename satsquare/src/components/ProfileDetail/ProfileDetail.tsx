@@ -1,12 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { UserDTO } from "@/types/userDto";
 
 const ProfileDetail = () => {
+  const { data: session } = useSession();
+  const [userData, setUserData] = useState<UserDTO | null>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (session?.user?.email) {
+        try {
+          const response = await fetch(
+            `/api/users?email=${session.user.email}`
+          );
+          const data: UserDTO = await response.json();
+          setUserData(data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [session]);
+
   const sectionStyle =
     "bg-white text-black rounded-lg flex items-center h-16 mb-4";
   const buttonStyle =
     "py-2 px-4 bg-[#f4bd8a] text-[#726e81] rounded flex items-center";
   const inputContainerStyle = "mb-4 flex items-center";
   const inputStyle = "flex-1 p-2 bg-[#ebebeb] rounded border-transparent";
+
+  if (!userData) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center bg-white p-4">
@@ -17,8 +44,9 @@ const ProfileDetail = () => {
               Détails de compte
             </h2>
             {[
-              { label: "Pseudo", value: "Halfred Trump" },
-              { label: "Email", value: "halfred.cesi@gmail.com" },
+              { label: "Pseudo", value: userData.pseudo },
+              { label: "Email", value: userData.email },
+              { label: "Role", value: userData.role || "N/A" },
             ].map((item, index) => (
               <div key={index} className={sectionStyle}>
                 <span className="ml-2">icon</span>

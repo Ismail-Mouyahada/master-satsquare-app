@@ -2,35 +2,30 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeModeScript } from "flowbite-react";
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import { SocketContextProvider } from "@/context/socket";
-import { PlayerContextProvider } from "@/context/player";
-import { Toaster } from "react-hot-toast";
+import Providers from "./providers";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SATSQUARE App",
-  description: "Application dedié pour aider les associations",
+  description: "Application dédiée pour aider les associations",
 };
 
-export default function RootLayout({ children, Component, pageProps }: Readonly<{ children: React.ReactNode; Component: React.ReactNode; pageProps: React.ReactNode; }>) {
+export default function RootLayout({
+  children,
+  pageProps,
+}: {
+  children: React.ReactNode;
+  pageProps: any;
+}) {
   return (
     <html>
       <head>
         <ThemeModeScript />
       </head>
-      <SocketContextProvider>
-        <PlayerContextProvider>
-          <AppRouterCacheProvider>
-            <body className="survey-main">
-              {children}
-              <Toaster />
-            </body>
-          </AppRouterCacheProvider>
-        </PlayerContextProvider>
-      </SocketContextProvider>
+      <body className="survey-main">
+        <Providers session={pageProps?.session}>{children}</Providers>
+      </body>
     </html>
   );
 }
-
-
