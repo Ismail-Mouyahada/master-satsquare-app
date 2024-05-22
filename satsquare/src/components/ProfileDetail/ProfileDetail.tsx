@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { UserDTO } from "@/types/userDto";
-
+import { UserDTO } from "@/types/userDTO";
 const ProfileDetail = () => {
   const { data: session } = useSession();
   const [userData, setUserData] = useState<UserDTO | null>(null);

@@ -20,9 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <head>
-        <ThemeModeScript />
-      </head>
+      <head></head>
       <body className="survey-main">
         <Providers session={pageProps?.session}>{children}</Providers>
       </body>
