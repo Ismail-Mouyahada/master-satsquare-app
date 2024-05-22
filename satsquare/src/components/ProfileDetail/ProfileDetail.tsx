@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { UserDTO } from "@/types/userDTO";
+
 const ProfileDetail = () => {
   const { data: session } = useSession();
   const [userData, setUserData] = useState<UserDTO | null>(null);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -22,6 +28,40 @@ const ProfileDetail = () => {
 
     fetchUserData();
   }, [session]);
+
+  const handlePasswordReset = async () => {
+    if (newPassword !== confirmPassword) {
+      setError("Les nouveaux mots de passe ne correspondent pas.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/users/reset-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user?.email,
+          oldPassword,
+          newPassword,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(
+          data.message || "Erreur lors de la réinitialisation du mot de passe."
+        );
+      }
+
+      setSuccess("Mot de passe réinitialisé avec succès.");
+      setError(null);
+    } catch (error: any) {
+      setError(error.message);
+      setSuccess(null);
+    }
+  };
 
   const sectionStyle =
     "bg-white text-black rounded-lg flex items-center h-16 mb-4";
@@ -62,17 +102,38 @@ const ProfileDetail = () => {
             <h2 className="text-xl font-medium text-[#727ea7] mb-2">
               Réinitialiser le mot de passe
             </h2>
+            {error && <p className="text-red-500">{error}</p>}
+            {success && <p className="text-green-500">{success}</p>}
             {[
-              "Ancien mot de passe",
-              "Nouveau mot de passe",
-              "Confirmer le mot de passe",
-            ].map((label, index) => (
+              {
+                label: "Ancien mot de passe",
+                value: oldPassword,
+                onChange: setOldPassword,
+              },
+              {
+                label: "Nouveau mot de passe",
+                value: newPassword,
+                onChange: setNewPassword,
+              },
+              {
+                label: "Confirmer le mot de passe",
+                value: confirmPassword,
+                onChange: setConfirmPassword,
+              },
+            ].map((item, index) => (
               <div key={index} className={inputContainerStyle}>
-                <label className="flex-1 text-gray-600 mb-1">{label}</label>
-                <input type="password" className={inputStyle} />
+                <label className="flex-1 text-gray-600 mb-1">
+                  {item.label}
+                </label>
+                <input
+                  type="password"
+                  className={inputStyle}
+                  value={item.value}
+                  onChange={(e) => item.onChange(e.target.value)}
+                />
               </div>
             ))}
-            <button className={buttonStyle}>
+            <button className={buttonStyle} onClick={handlePasswordReset}>
               <span>icon</span>
               <span className="ml-2">Réinitialiser</span>
             </button>
