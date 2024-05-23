@@ -1,13 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { useSession } from "next-auth/react";
 import { UserDTO } from "@/types/userDTO";
+import {
+  FaDonate,
+  FaHeartbeat,
+  FaMailBulk,
+  FaRecycle,
+  FaTrashAlt,
+  FaUserCheck,
+  FaUserShield,
+} from "react-icons/fa";
 
-const ProfileDetail = () => {
+const ProfileDetail: React.FC = () => {
   const { data: session } = useSession();
   const [userData, setUserData] = useState<UserDTO | null>(null);
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -15,9 +24,7 @@ const ProfileDetail = () => {
     const fetchUserData = async () => {
       if (session?.user?.email) {
         try {
-          const response = await fetch(
-            `/api/users?email=${session.user.email}`
-          );
+          const response = await fetch(`/api/users?email=${session.user.email}`);
           const data: UserDTO = await response.json();
           setUserData(data);
         } catch (error) {
@@ -63,10 +70,8 @@ const ProfileDetail = () => {
     }
   };
 
-  const sectionStyle =
-    "bg-white text-black rounded-lg flex items-center h-16 mb-4";
-  const buttonStyle =
-    "py-2 px-4 bg-[#f4bd8a] text-[#726e81] rounded flex items-center";
+  const sectionStyle = "bg-white text-black rounded-lg flex items-center h-16 mb-4";
+  const buttonStyle = "py-2 px-4 bg-[#f4bd8a] text-[#726e81] rounded flex items-center";
   const inputContainerStyle = "mb-4 flex items-center";
   const inputStyle = "flex-1 p-2 bg-[#ebebeb] rounded border-transparent";
 
@@ -75,30 +80,42 @@ const ProfileDetail = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white p-4">
+    <div className="flex flex-col items-center justify-center p-4 bg-white">
       <div className="w-full h-full flex-1 bg-[#ebebf8] rounded-lg shadow-lg p-6">
-        <div className="flex-1 h-full grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid flex-1 h-full grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <h2 className="text-xl font-medium text-[#727ea7] mb-2">
               Détails de compte
             </h2>
             {[
-              { label: "Pseudo", value: userData.pseudo },
-              { label: "Email", value: userData.email },
-              { label: "Role", value: userData.role || "N/A" },
+              {
+                label: "Pseudo",
+                value: userData.pseudo,
+                icon: <FaUserCheck className="scale-[150%] mx-2 text-[#514F69]" />,
+              },
+              {
+                label: "Email",
+                value: userData.email,
+                icon: <FaMailBulk className="scale-[150%] mx-2 text-[#514F69]" />,
+              },
+              {
+                label: "Role",
+                value: userData.role || "N/A",
+                icon: <FaUserShield className="scale-[150%] mx-2 text-[#514F69]" />,
+              },
             ].map((item, index) => (
               <div key={index} className={sectionStyle}>
-                <span className="ml-2">icon</span>
+                <span className="ml-2">{item.icon}</span>
                 <span className="ml-2">{item.label}</span>
                 <span className="ml-4">{item.value}</span>
               </div>
             ))}
             <button className={buttonStyle}>
-              <span>icon</span>
-              <span className="ml-2">Associer portefeuille Lightning</span>
+              <span className="mx-2">Icon</span>
+              <span>Associer portefeuille Lightning</span>
             </button>
           </div>
-          <div className="bg-white rounded-lg p-4">
+          <div className="p-4 bg-white rounded-lg">
             <h2 className="text-xl font-medium text-[#727ea7] mb-2">
               Réinitialiser le mot de passe
             </h2>
@@ -122,37 +139,38 @@ const ProfileDetail = () => {
               },
             ].map((item, index) => (
               <div key={index} className={inputContainerStyle}>
-                <label className="flex-1 text-gray-600 mb-1">
-                  {item.label}
-                </label>
+                <FaUserShield className="scale-[150%] mx-2 text-[#514F69]" />
+                <label className="flex-1 mb-1 text-gray-600">{item.label}</label>
                 <input
                   type="password"
                   className={inputStyle}
                   value={item.value}
-                  onChange={(e) => item.onChange(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    item.onChange(e.target.value)
+                  }
                 />
               </div>
             ))}
             <button className={buttonStyle} onClick={handlePasswordReset}>
-              <span>icon</span>
-              <span className="ml-2">Réinitialiser</span>
+              <FaRecycle className="scale-[150%] mx-2 text-[#514F69]" />
+              <span>Réinitialiser</span>
             </button>
           </div>
         </div>
-        <div className="flex mt-6 justify-between">
+        <div className="flex justify-between mt-6">
           <div className="flex">
             <button className={buttonStyle}>
-              <span>icon</span>
-              <span className="ml-2">Activer le mode sponsor</span>
+              <FaDonate className="scale-[150%] mx-2 text-[#514F69]" />
+              <span>Activer le mode sponsor</span>
             </button>
             <button className={`ml-2 ${buttonStyle}`}>
-              <span>icon</span>
-              <span className="ml-2">Activer le mode caritatif</span>
+              <FaHeartbeat className="scale-[150%] mx-2 text-[#514F69]" />
+              <span>Activer le mode caritatif</span>
             </button>
           </div>
-          <button className="ml-2 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-600 flex items-center">
-            <span>icon</span>
-            <span className="ml-2">Supprimer le compte</span>
+          <button className="flex items-center px-4 py-2 ml-2 text-white bg-red-500 rounded hover:bg-red-600">
+            <FaTrashAlt className="scale-[150%] mx-2 text-[#514F69]" />
+            <span>Supprimer le compte</span>
           </button>
         </div>
       </div>
