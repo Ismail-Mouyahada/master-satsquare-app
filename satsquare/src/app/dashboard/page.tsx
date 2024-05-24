@@ -1,9 +1,21 @@
 "use client";
+import React, { useState } from "react";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import { FaCalendarAlt, FaGamepad, FaHome } from "react-icons/fa";
+import EventCreationModal from "@/components/EventCreationModal/EventCreationModal";
 
 export default function Dashboard() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <div className="w-full bg-[#F3F3FF] flex min-h-screen">
@@ -16,22 +28,26 @@ export default function Dashboard() {
           />
           <div className="bg-[#F3F3FF] rounded-md p-8 h-full flex justify-center items-center">
             <div className="flex item-center justify-around w-full">
-
               <div className="flex flex-col items-center justify-between p-4">
-                  <button className="flex items-center p-4 bg-white rounded-lg shadow-md w-full">
-                    <div className="p-4 bg-[#4145c1] rounded-full">
-                      <FaGamepad className="text-white scale-[180%]" />
-                    </div>
-                    <span className="ml-4 font-bold text-[#909db4]">Créer un quiz</span>
-                  </button>
-                  <button className="flex items-center p-4 bg-white rounded-lg shadow-md w-full">
-                    <div className="p-4 bg-[#4145c1] rounded-full">
-                      <FaCalendarAlt className="text-white scale-[160%]" />
-                    </div>
-                    <span className="ml-4 font-bold text-[#909db4]">
-                      Créer un événement
-                    </span>
-                  </button>
+                <button className="flex items-center p-4 bg-white rounded-lg shadow-md w-full">
+                  <div className="p-4 bg-[#4145c1] rounded-full">
+                    <FaGamepad className="text-white scale-[180%]" />
+                  </div>
+                  <span className="ml-4 font-bold text-[#909db4]">
+                    Créer un quiz
+                  </span>
+                </button>
+                <button
+                  className="flex items-center p-4 bg-white rounded-lg shadow-md w-full"
+                  onClick={handleOpenModal}
+                >
+                  <div className="p-4 bg-[#4145c1] rounded-full">
+                    <FaCalendarAlt className="text-white scale-[160%]" />
+                  </div>
+                  <span className="ml-4 font-bold text-[#909db4]">
+                    Créer un événement
+                  </span>
+                </button>
               </div>
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <div className="flex flex-col items-center p-8 bg-white rounded-lg shadow-md gap-4">
@@ -57,6 +73,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <EventCreationModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </>
   );
 }
