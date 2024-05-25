@@ -34,6 +34,7 @@ model Association {
   adresse_eclairage String
   valide            Int
   est_confirme      Boolean
+  logo_url          String
   cree_le           DateTime         @default(now())
   mis_a_jour_le     DateTime         @updatedAt
   Utilisateurs      Utilisateur[]

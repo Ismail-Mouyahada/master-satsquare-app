@@ -19,6 +19,7 @@ async function main() {
         adresse_eclairage: faker.address.streetAddress(),
         valide: faker.datatype.number({ min: 0, max: 1 }),
         est_confirme: faker.datatype.boolean(),
+        logo_url: faker.image.imageUrl(),
       },
     });
     associations.push(association);
