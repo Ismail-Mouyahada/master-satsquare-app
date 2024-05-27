@@ -147,3 +147,15 @@ h1 {
 .animate-spin-slow {
   animation: spin-slow 2s linear infinite;
 }
+
+[type='checkbox']:focus, [type='radio']:focus {
+  outline: none !important;
+  outline-offset: 0px !important;
+  --tw-ring-inset: var(--tw-empty, /*!*/ /*!*/);
+  --tw-ring-offset-width: 0px !important;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: #19ce6a;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) #19ce6a !important;
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+}
