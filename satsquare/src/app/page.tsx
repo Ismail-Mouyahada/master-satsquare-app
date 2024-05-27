@@ -51,8 +51,8 @@ export default function Home() {
                 <FaLightbulb className="text-5xl text-white" />
               </div>
             </div>
-            <Button href="/api/auth/signin" className="outline-none ring-[#6a6b74!important] bg-[#F8D99B] hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1">Se connecter</Button>
-            <Button href="/signup" className="outline-none ring-[#6a6b74!important] bg-[#F8D99B] hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1">S'inscrire</Button>
+            <Button href="/auth/signin" className="outline-none ring-[#6a6b74!important] bg-[#F8D99B] hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1">Se connecter</Button>
+            <Button href="/auth/signup" className="outline-none ring-[#6a6b74!important] bg-[#F8D99B] hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1">S'inscrire</Button>
           </Card>
         </div>
       </div>

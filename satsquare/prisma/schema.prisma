@@ -34,6 +34,7 @@ model Association {
   adresse_eclairage String
   valide            Int
   est_confirme      Boolean
+  logo_url          String
   cree_le           DateTime         @default(now())
   mis_a_jour_le     DateTime         @updatedAt
   Utilisateurs      Utilisateur[]
@@ -62,18 +63,23 @@ model Role {
 
 // Define the event model
 model Evenement {
-  id             Int              @id @default(autoincrement())
-  nom            String
-  description    String
-  utilisateur    Utilisateur?      @relation(fields: [user_id], references: [id])
-  user_id        Int?
-  commence_a     DateTime
-  termine_a      DateTime
-  est_public     Boolean
-  cree_le        DateTime         @default(now())
-  mis_a_jour_le  DateTime         @updatedAt
-  Dons           Don[]
-  EvenementsQuiz EvenementsQuiz[]
+  id                    Int              @id @default(autoincrement())
+  nom                   String
+  description           String
+  utilisateur           Utilisateur?      @relation(fields: [user_id], references: [id])
+  user_id               Int?
+  commence_a            DateTime
+  termine_a             DateTime
+  est_public            Boolean
+  est_gratuit           Boolean
+  sat_minimum           Int
+  recompense_joueurs    Int
+  don_association       Int
+  don_plateforme        Int
+  cree_le               DateTime         @default(now())
+  mis_a_jour_le         DateTime         @updatedAt
+  Dons                  Don[]
+  EvenementsQuiz        EvenementsQuiz[]
 }
 
 // Define the donation model

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { UserDTO } from "@/types/userDto";
+import { UserDTO } from "@/types/userDTO";
 import { exclude } from "../utilisateurs/route";
 
 const prisma = new PrismaClient();

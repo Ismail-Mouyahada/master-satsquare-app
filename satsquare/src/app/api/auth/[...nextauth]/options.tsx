@@ -4,6 +4,9 @@ import prisma from "@/db/connect";
 
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: '/auth/signin', // Custom sign-in page
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -22,7 +25,7 @@ export const authOptions = {
 
         const user = await prisma.utilisateur.findFirst({
           where: {
-            email: credentials?.email,
+            email: credentials.email,
           },
         });
 
