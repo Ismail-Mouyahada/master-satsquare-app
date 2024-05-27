@@ -108,8 +108,8 @@ model AssociationDon {
 model Quiz {
   id             Int              @id @default(autoincrement())
   titre          String
-  utilisateur    Utilisateur      @relation(fields: [user_id], references: [id])
-  user_id        Int
+  utilisateur    Utilisateur?      @relation(fields: [user_id], references: [id])
+  user_id        Int?
   categorie      String
   cree_le        DateTime         @default(now())
   mis_a_jour_le  DateTime         @updatedAt
@@ -136,8 +136,8 @@ model EvenementsQuiz {
 // Define the question model
 model Question {
   id             Int       @id @default(autoincrement())
-  quiz           Quiz      @relation(fields: [quiz_id], references: [id])
-  quiz_id        Int
+  quiz           Quiz?      @relation(fields: [quiz_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  quiz_id        Int?
   texte_question String
   Reponses       Reponse[]
 }
@@ -145,8 +145,8 @@ model Question {
 // Define the answer model
 model Reponse {
   id            Int      @id @default(autoincrement())
-  question      Question @relation(fields: [question_id], references: [id])
-  question_id   Int
+  question      Question? @relation(fields: [question_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  question_id   Int?
   texte_reponse String
   est_correcte  Boolean
 }
