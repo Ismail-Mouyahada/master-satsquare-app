@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FaBox, FaPlus, FaCopy, FaTrash, FaTimes } from "react-icons/fa";
 
 interface Question {
@@ -10,7 +12,9 @@ interface Question {
   imageUrl: string;
 }
 
-const QuizForm = () => {
+const QuizForm = ({ params }: { params: { id: string } }) => {
+  const router = useRouter();
+  const { id } = params;
   const [quizName, setQuizName] = useState("");
   const [category, setCategory] = useState("");
   const [questions, setQuestions] = useState<Question[]>([
@@ -24,6 +28,40 @@ const QuizForm = () => {
   ]);
   const [selectedQuestion, setSelectedQuestion] = useState(questions[0].id);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      fetchQuiz(id);
+    }
+  }, [id]);
+
+  const fetchQuiz = async (quizId: string) => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(`/api/quizzes/${quizId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch quiz");
+      }
+      const quiz = await response.json();
+      setQuizName(quiz.titre);
+      setCategory(quiz.categorie);
+      setQuestions(
+        quiz.Questions.map((q: any) => ({
+          id: q.id,
+          text: q.texte_question,
+          answers: q.Reponses.map((r: any) => r.texte_reponse),
+          correctAnswer: q.Reponses.findIndex((r: any) => r.est_correcte),
+          imageUrl: q.imageUrl,
+        }))
+      );
+      setSelectedQuestion(quiz.Questions[0].id);
+    } catch (error) {
+      console.error("Error fetching quiz:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const addQuestion = () => {
     const newQuestion = {
       id: questions.length + 1,
@@ -137,8 +175,8 @@ const QuizForm = () => {
     };
 
     try {
-      const response = await fetch(`/api/quizform`, {
-        method: "POST",
+      const response = await fetch(`/api/quizzes/${id}`, {
+        method: id ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -149,7 +187,7 @@ const QuizForm = () => {
         throw new Error("Failed to save quiz");
       }
 
-      window.location.href = "/quizzes";
+      router.push("/quizzes");
     } catch (error) {
       console.error("Error saving quiz:", error);
     } finally {
@@ -157,11 +195,29 @@ const QuizForm = () => {
     }
   };
 
+  const handleDelete = async () => {
+    if (id) {
+      try {
+        const response = await fetch(`/api/quizzes/${id}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to delete quiz");
+        }
+
+        router.push("/quizzes");
+      } catch (error) {
+        console.error("Error deleting quiz:", error);
+      }
+    }
+  };
+
   return (
     <div className="w-full min-h-screen flex items-start justify-center bg-[#ecedf0]">
       <div className="flex w-full min-h-screen">
         <div className="w-5/6 min-h-screen">
-          <div className="bg-primary p-7 w-full h-50 rounded-md">
+          <div className="w-full rounded-md bg-primary p-7 h-50">
             <div className="flex items-center justify-end gap-3">
               <input
                 type="text"
@@ -179,17 +235,26 @@ const QuizForm = () => {
               />
               <a
                 href="/quizzes"
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg mt-2"
+                className="px-4 py-2 mt-2 text-white bg-gray-500 rounded-lg"
               >
                 Annuler
               </a>
               <button
-                className="bg-orange-500 text-white px-4 py-2 rounded-lg mt-2"
+                className="px-4 py-2 mt-2 text-white bg-orange-500 rounded-lg"
                 onClick={handleSubmit}
                 disabled={isLoading}
               >
                 {isLoading ? "Enregistrement..." : "Enregistrer"}
               </button>
+              {id && (
+                <button
+                  className="px-4 py-2 mt-2 text-white bg-red-500 rounded-lg"
+                  onClick={handleDelete}
+                  disabled={isLoading}
+                >
+                  Supprimer
+                </button>
+              )}
             </div>
           </div>
           <div className="bg-[#EBEBF8] shadow-md rounded-lg p-8 my-8">
@@ -201,10 +266,10 @@ const QuizForm = () => {
                   handleQuestionChange(selectedQuestion, e.target.value)
                 }
                 placeholder="Une question dans un sujet de votre choix ?"
-                className="text-center text-xl border border-gray-300 rounded-lg p-4 w-5/6 font-bold"
+                className="w-5/6 p-4 text-xl font-bold text-center border border-gray-300 rounded-lg"
               />
               {!questions.find((q) => q.id === selectedQuestion)?.imageUrl && (
-                <div className="bg-white w-fit border-2 border-dashed border-gray-300 rounded-lg flex flex-col gap-3 items-center justify-center cursor-pointer mt-4 relative p-11">
+                <div className="relative flex flex-col items-center justify-center gap-3 mt-4 bg-white border-2 border-gray-300 border-dashed rounded-lg cursor-pointer w-fit p-11">
                   <input
                     type="file"
                     onChange={handleImageUpload}
@@ -217,17 +282,17 @@ const QuizForm = () => {
                 </div>
               )}
               {questions.find((q) => q.id === selectedQuestion)?.imageUrl && (
-                <div className="mt-4 relative">
+                <div className="relative mt-4">
                   <img
                     src={
                       questions.find((q) => q.id === selectedQuestion)?.imageUrl
                     }
                     alt="Uploaded content"
-                    className="w-full h-auto max-h-64 object-contain rounded-md"
+                    className="object-contain w-full h-auto rounded-md max-h-64"
                   />
                   <button
                     onClick={() => handleImageRemove(selectedQuestion)}
-                    className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full"
+                    className="absolute p-2 text-white bg-red-500 rounded-full top-2 right-2"
                   >
                     <FaTimes />
                   </button>
@@ -243,7 +308,6 @@ const QuizForm = () => {
                     key={index}
                   >
                     <FaBox className="scale-[200%] text-slate-500" />
-
                     <input
                       type="text"
                       value={answer}
@@ -257,7 +321,7 @@ const QuizForm = () => {
                       placeholder={`Ajoute une réponse ${index + 1} ${
                         index < 2 ? "(requis)" : "(facultatif)"
                       }`}
-                      className="border border-gray-300 rounded-lg px-4 py-2 w-full bg-transparent border-none"
+                      className="w-full px-4 py-2 bg-transparent border border-gray-300 border-none rounded-lg"
                     />
                     <input
                       type="radio"
@@ -276,7 +340,7 @@ const QuizForm = () => {
             </div>
           </div>
         </div>
-        <div className="ml-4 w-1/6 bg-primary scroll-auto p-4 rounded-md min-w-48">
+        <div className="w-1/6 p-4 ml-4 rounded-md bg-primary scroll-auto min-w-48">
           <div>
             {questions.map((question, index) => (
               <div
@@ -295,7 +359,7 @@ const QuizForm = () => {
                       e.stopPropagation();
                       duplicateQuestion(question.id);
                     }}
-                    className="bg-slate-300 text-gray-500 p-2 rounded-full"
+                    className="p-2 text-gray-500 rounded-full bg-slate-300"
                   >
                     <FaCopy />
                   </button>
@@ -304,7 +368,7 @@ const QuizForm = () => {
                       e.stopPropagation();
                       deleteQuestion(question.id);
                     }}
-                    className="bg-slate-300 text-gray-500 p-2 rounded-full"
+                    className="p-2 text-gray-500 rounded-full bg-slate-300"
                   >
                     <FaTrash />
                   </button>
@@ -314,9 +378,9 @@ const QuizForm = () => {
           </div>
           <button
             onClick={addQuestion}
-            className="bg-white shadow-md rounded-lg p-8 w-full mb-2 flex flex-col gap-3 items-center justify-center bg-opacity-80"
+            className="flex flex-col items-center justify-center w-full gap-3 p-8 mb-2 bg-white rounded-lg shadow-md bg-opacity-80"
           >
-            <span className="text-slate-400 font-bold">Nouvelle question</span>
+            <span className="font-bold text-slate-400">Nouvelle question</span>
             <FaPlus className="scale-[150%] text-slate-400" />
           </button>
         </div>

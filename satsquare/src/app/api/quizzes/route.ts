@@ -50,13 +50,22 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const { titre, user_id, categorie, questions } = data;
+
     const newQuiz = await prisma.quiz.create({
       data: {
         titre,
         user_id,
         categorie,
         Questions: {
-          create: questions,
+          create: questions.map((question: any) => ({
+            texte_question: question.texte_question,
+            Reponses: {
+              create: question.reponses.map((reponse: any) => ({
+                texte_reponse: reponse.texte_reponse,
+                est_correcte: reponse.est_correcte,
+              })),
+            },
+          })),
         },
       },
     });

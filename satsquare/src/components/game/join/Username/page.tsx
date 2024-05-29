@@ -43,17 +43,22 @@ export default function Username() {
   return (
     <Form>
       <div className="flex flex-col items-center justify-center">
-        <div className="bg-main p-8 rounded-full">
+        <div className="p-8 rounded-full bg-main">
           <FaGamepad className="text-5xl text-white" />
         </div>
       </div>
 
       <Input
+      name="username"
         onChange={(e: { target: { value: SetStateAction<string> } }) => setUsername(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Nom d'utilsiateur..."
       />
-      <Button onClick={handleJoin}>Submit</Button>
+      <Button  className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold" onClick={handleJoin}>Submit</Button>
+      <Button
+        href="/"
+        className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
+      >Retour</Button>
     </Form>
   );
 }

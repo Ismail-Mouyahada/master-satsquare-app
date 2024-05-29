@@ -46,10 +46,10 @@ export default function Home() {
   }, [socket]);
 
   return (
-    <main className="flex flex-col w-full min-h-screen px-10 pt-10 survey-main">
-      <div className="w-full h-1/8">
+    <main className="flex flex-col w-full min-h-screen px-10 pt-10 survey-main justify-evenly item">
+      {/* <div className="w-full h-1/8">
         <Logo />
-      </div>
+      </div> */}
       <div className="flex flex-col items-center justify-center w-full h-full gap-4">
         <div className="mb-5">
           <LogoHeader />
@@ -71,9 +71,16 @@ export default function Home() {
             />
             <Button
               onClick={handleLogin}
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1"
+              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1 font-semibold"
             >
               Rejoindre
+            </Button>
+
+            <Button
+              href="/lightning"
+              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
+            >
+            Connexion lightning
             </Button>
           </Card>
           {/* Registration Form */}
@@ -85,15 +92,22 @@ export default function Home() {
             </div>
             <Button
               href="/auth/signin"
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1"
+              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1 font-semibold"
             >
               Se connecter
             </Button>
             <Button
               href="/auth/signup"
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1"
+              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
             >
               S'inscrire
+            </Button>
+
+            <Button
+              href="/manager"
+              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
+            >
+             Manager de session
             </Button>
           </Card>
         </div>
