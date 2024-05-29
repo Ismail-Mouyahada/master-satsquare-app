@@ -41,7 +41,7 @@ export default function SignIn() {
 
             <div className="p-6 bg-white rounded-lg shadow-md">
                 <div className="flex flex-col items-center justify-center">
-                    <div className="bg-[#4145c1] p-8 rounded-full">
+                    <div className="bg-main p-8 rounded-full">
                         <FaSignInAlt className="text-5xl text-white" />
                     </div>
                 </div>

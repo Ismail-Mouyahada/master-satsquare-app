@@ -51,7 +51,7 @@ const UtilisateurTable: FC<UtilisateurTableProps> = ({
               </td>
               <td className="border px-4 py-2 space-x-2">
                 <button
-                  className="bg-[#F8D99B] p-2 rounded-md"
+                  className="bg-action p-2 rounded-md"
                   onClick={() => onEdit(utilisateur)}
                 >
                   ✏️

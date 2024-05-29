@@ -43,7 +43,7 @@ export default function Username() {
   return (
     <Form>
       <div className="flex flex-col items-center justify-center">
-        <div className="bg-[#4145c1] p-8 rounded-full">
+        <div className="bg-main p-8 rounded-full">
           <FaGamepad className="text-5xl text-white" />
         </div>
       </div>

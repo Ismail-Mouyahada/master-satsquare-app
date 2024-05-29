@@ -35,12 +35,12 @@ export default function Room() {
     <Form>
       
         <div className="flex flex-col items-center justify-center">
-          <div className="bg-[#4145c1] p-8 rounded-full">
+          <div className="p-8 rounded-full bg-main">
             <FaGamepad className="text-5xl text-white" />
           </div>
         </div>
 
-        <FloatingLabel className="w-full font-bold text-center border-spacing-1 border-1 border-slate-300 focus:text-center " onChange={(e: { target: { value: SetStateAction<string> } }) => setRoomId(e.target.value)}
+        <Input className="w-full font-bold text-center border-spacing-1 border-1 border-slate-300 focus:text-center " onChange={(e: { target: { value: SetStateAction<string> } }) => setRoomId(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="PIN Code here" variant="outlined" label="Code de la session" />
         <Button onClick={() => handleLogin()}  >Rejoindre</Button>

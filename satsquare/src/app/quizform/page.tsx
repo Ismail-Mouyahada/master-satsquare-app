@@ -220,7 +220,7 @@ const QuizForm = () => {
                 onClick={() => setSelectedQuestion(question.id)}
                 className={`cursor-pointer p-6 rounded-lg mb-2 ${
                   selectedQuestion === question.id
-                    ? "bg-[#F8D99B] hover:bg-slate-200 hover:text-[#ffffff] font-bold text-[#6C7584]"
+                    ? "bg-action hover:bg-slate-200 hover:text-[#ffffff] font-bold text-[#6C7584]"
                     : "bg-[#ffffff] hover:bg-opacity-100 font-bold text-[#808794]"
                 }`}
               >

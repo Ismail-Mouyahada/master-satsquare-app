@@ -31,7 +31,7 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
                 {new Date(quiz.mis_a_jour_le).toLocaleDateString()}
               </td>
               <td className="border px-4 py-2 space-x-2">
-                <a href={`/quizzes/${quiz.id}`} className="bg-[#F8D99B] p-2 rounded-md">
+                <a href={`/quizzes/${quiz.id}`} className="bg-action p-2 rounded-md">
                  ✏️
                 </a>
                 <button

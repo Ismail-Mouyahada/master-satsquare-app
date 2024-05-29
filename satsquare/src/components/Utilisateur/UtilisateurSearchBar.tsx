@@ -44,7 +44,7 @@ const UtilisateurSearchBar: FC<UtilisateurSearchBarProps> = ({
           onChange={handleSearchChange}
         />
         <button
-          className="bg-[#F8D99B] w-auto  p-3.5 rounded-md"
+          className="bg-action w-auto  p-3.5 rounded-md"
           onClick={handleSearchClick}
         >
           {" "}

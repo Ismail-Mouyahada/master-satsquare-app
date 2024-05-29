@@ -41,7 +41,7 @@ export default function SignUp() {
       <div className="flex items-center justify-center my-3">
         <div className="flex items-center space-x-2">
           <div className="flex flex-col items-center justify-center rounded-md">
-            <div className="flex items-center justify-center p-[2em] rounded-full bg-[#4145c1]">
+            <div className="flex items-center justify-center p-[2em] rounded-full bg-main">
               <FaUser className="text-white scale-150" />
             </div>
             <span className="font-bold text-[#808086] p-4 text-xl">Inscription</span>
@@ -77,7 +77,7 @@ export default function SignUp() {
         />
         <button
           type="submit"
-          className="w-full bg-[#F8D99B] mt-8 px-8 py-3.5 font-bold text-[#6D6B81] rounded-md"
+          className="w-full bg-action mt-8 px-8 py-3.5 font-bold text-[#6D6B81] rounded-md"
         >
           S'inscrire
         </button>

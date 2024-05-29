@@ -27,7 +27,7 @@ const RankingSearchBar: FC<RankingSearchBarProps> = ({ onSearch }) => {
           onChange={handleSearchChange}
         />
         <button
-          className="bg-[#F8D99B] w-auto  p-3.5 rounded-md"
+          className="bg-action w-auto  p-3.5 rounded-md"
           onClick={handleSearchClick}
         >
           <FaSearch className="text-[#6D6B81] scale-125" />

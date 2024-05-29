@@ -14,7 +14,7 @@ import Triangle from "@/components/icons/Triangle"
 
  
 
-export const WEBSOCKET_URL = "http://10.176.142.78:5157"
+export const WEBSOCKET_URL = "http://localhost:5157"
 
 export const ANSWERS_COLORS = [
   "bg-red-500",

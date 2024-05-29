@@ -30,7 +30,7 @@ export default function Dashboard() {
             <div className="flex item-center justify-around w-full">
               <div className="flex flex-col items-center justify-between p-4">
                 <button className="flex items-center p-4 bg-white rounded-lg shadow-md w-full">
-                  <div className="p-4 bg-[#4145c1] rounded-full">
+                  <div className="p-4 bg-main rounded-full">
                     <FaGamepad className="text-white scale-[180%]" />
                   </div>
                   <span className="ml-4 font-bold text-[#909db4]">
@@ -41,7 +41,7 @@ export default function Dashboard() {
                   className="flex items-center p-4 bg-white rounded-lg shadow-md w-full"
                   onClick={handleOpenModal}
                 >
-                  <div className="p-4 bg-[#4145c1] rounded-full">
+                  <div className="p-4 bg-main rounded-full">
                     <FaCalendarAlt className="text-white scale-[160%]" />
                   </div>
                   <span className="ml-4 font-bold text-[#909db4]">
@@ -52,7 +52,7 @@ export default function Dashboard() {
               <div className="flex flex-col items-center justify-center px-4 py-2">
                 <div className="flex flex-col items-center p-8 bg-white rounded-lg shadow-md gap-4">
                   <div className="flex flex-row items-center">
-                    <div className="p-4 bg-[#4145c1] rounded-full">
+                    <div className="p-4 bg-main rounded-full">
                       <FaCalendarAlt className="text-white scale-[160%]" />
                     </div>
                     <span className="ml-4 font-bold text-[#909db4]">
@@ -64,7 +64,7 @@ export default function Dashboard() {
                     placeholder="Code PIN de l'événement"
                     className="w-full px-8 py-3 border-none shadow bg-slate-100 rounded-md outline-none"
                   />
-                  <button className="p-2 bg-[#F8D99B] font-bold text-[#6C7584] rounded w-full">
+                  <button className="p-2 bg-action font-bold text-[#6C7584] rounded w-full">
                     Valider
                   </button>
                 </div>

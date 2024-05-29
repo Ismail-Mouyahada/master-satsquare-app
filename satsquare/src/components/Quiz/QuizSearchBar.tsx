@@ -33,7 +33,7 @@ const QuizSearchBar: FC<QuizSearchBarProps> = ({ onSearch }) => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <button className="bg-[#F8D99B] w-auto p-3.5 rounded-md" onClick={handleSearchClick}>
+        <button className="bg-action w-auto p-3.5 rounded-md" onClick={handleSearchClick}>
           <FaSearch className='text-[#6D6B81] scale-125' />
         </button>
       </div>

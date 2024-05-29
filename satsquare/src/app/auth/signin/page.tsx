@@ -38,7 +38,7 @@ export default function SignIn() {
 
             <div className="rounded-lg ">
                 <div className="flex flex-col items-center justify-center">
-                    <div className="bg-[#4145c1] p-8 rounded-full">
+                    <div className="bg-main p-8 rounded-full">
                         <FaConnectdevelop className="text-5xl text-white" />
                     </div>
                 </div>
@@ -65,7 +65,7 @@ export default function SignIn() {
                         />
                     </div>
 
-                    <button type="submit" className="outline-none ring-[#6a6b74!important] font-bold w-full p-4 mt-4 rounded-md bg-[#F8D99B] hover:bg-[#c9aa6c!important] text-[#6a6b74]  "> Se connecter</button>
+                    <button type="submit" className="outline-none ring-[#6a6b74!important] font-bold w-full p-4 mt-4 rounded-md bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74]  "> Se connecter</button>
 
                 </form>
             </div>

@@ -32,7 +32,7 @@ const EventTable: FC<EventTableProps> = ({ events, onEdit, onDelete }) => {
                 {event.est_public ? <span className="text-green-500">✔️</span> : <span className="text-red-500">❌</span>}
               </td>
               <td className="border px-4 py-2 space-x-2">
-                <button className="bg-[#F8D99B] p-2 rounded-md" onClick={() => onEdit(event)}>✏️</button>
+                <button className="bg-action p-2 rounded-md" onClick={() => onEdit(event)}>✏️</button>
                 <button className="bg-red-400 p-2 rounded-md" onClick={() => onDelete(event)}>🗑️</button>
               </td>
             </tr>

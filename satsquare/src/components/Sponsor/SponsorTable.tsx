@@ -32,7 +32,7 @@ const SponsorTable: FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete }) => 
                 {sponsor.est_confirme ? <span className="text-green-500">✔️</span> : <span className="text-red-500">❌</span>}
               </td>
               <td className="border px-4 py-2 space-x-2">
-                <button className="bg-[#F8D99B] p-2 rounded-md" onClick={() => onEdit(sponsor)}>✏️</button>
+                <button className="bg-action p-2 rounded-md" onClick={() => onEdit(sponsor)}>✏️</button>
                 <button className="bg-red-400 p-2 rounded-md" onClick={() => onDelete(sponsor)}>🗑️</button>
                 {/* <button className="bg-green-400 p-2 rounded-md">👁️</button> */}
               </td>
