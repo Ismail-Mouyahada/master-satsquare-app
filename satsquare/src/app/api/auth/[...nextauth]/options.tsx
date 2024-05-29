@@ -1,3 +1,4 @@
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import prisma from "@/db/connect";
@@ -29,10 +30,7 @@ export const authOptions = {
           },
         });
 
-        if (
-          user &&
-          (await bcrypt.compare(credentials.password, user.mot_de_passe))
-        ) {
+        if (user && await bcrypt.compare(credentials.password, user.mot_de_passe)) {
           return user;
         }
 
@@ -41,3 +39,5 @@ export const authOptions = {
     }),
   ],
 };
+
+export default NextAuth(authOptions);

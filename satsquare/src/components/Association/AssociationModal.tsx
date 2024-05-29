@@ -88,7 +88,7 @@ const AssociationModal: FC<AssociationModalProps> = ({
               name="nom"
               value={formData.nom}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>
@@ -101,7 +101,7 @@ const AssociationModal: FC<AssociationModalProps> = ({
               name="adresse_eclairage"
               value={formData.adresse_eclairage}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>

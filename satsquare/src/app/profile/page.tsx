@@ -86,10 +86,10 @@ const UtilisateursPage: FC = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row w-full h-full">
       <Sidebar />
-      <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-white rounded-lg shadow-md">
+      <div className="bg-[#F3F3FF] w-full ">
+        <div className="h-full p-4 bg-white rounded-lg shadow-md">
           <PageHeader
             title="Profil"
             icon={<FaUser className="scale-[1.5]" color="#6D6B81" />}

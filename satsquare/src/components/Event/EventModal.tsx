@@ -100,7 +100,7 @@ const EventModal: FC<EventModalProps> = ({
               name="nom"
               value={formData.nom}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>
@@ -112,7 +112,7 @@ const EventModal: FC<EventModalProps> = ({
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             ></textarea>
           </div>
@@ -125,7 +125,7 @@ const EventModal: FC<EventModalProps> = ({
               name="commence_a"
               value={formData.commence_a}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>
@@ -138,7 +138,7 @@ const EventModal: FC<EventModalProps> = ({
               name="termine_a"
               value={formData.termine_a}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>

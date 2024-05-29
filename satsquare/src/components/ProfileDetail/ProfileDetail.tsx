@@ -2,10 +2,13 @@ import React, { useEffect, useState, ChangeEvent } from "react";
 import { useSession } from "next-auth/react";
 import { UserDTO } from "@/types/userDTO";
 import {
+  FaCreativeCommonsSamplingPlus,
   FaDonate,
   FaHeartbeat,
   FaMailBulk,
+  FaPassport,
   FaRecycle,
+  FaShieldVirus,
   FaTrashAlt,
   FaUserCheck,
   FaUserShield,
@@ -70,28 +73,30 @@ const ProfileDetail: React.FC = () => {
     }
   };
 
-  const sectionStyle = "bg-white text-black rounded-lg flex items-center h-16 mb-4";
-  const buttonStyle = "py-2 px-4 bg-[#f4bd8a] text-[#726e81] rounded flex items-center";
-  const inputContainerStyle = "mb-4 flex items-center";
-  const inputStyle = "flex-1 p-2 bg-[#ebebeb] rounded border-transparent";
+  const sectionStyle = "bg-white text-black rounded-lg flex items-center h-16 m-6 ";
+  const buttonStyle = "p-4 px-8 bg-[#F4BD8A] text-[#726e81] rounded-md flex items-center";
+  const inputContainerStyle = " grid grid-cols-2 mb-4";
+  const inputStyle = "w-full px-8 py-3  text-center border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]";
 
   if (!userData) {
-    return <p>Loading...</p>;
+    return <p>Chargement...</p>;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-white">
-      <div className="w-full h-full flex-1 bg-[#ebebf8] rounded-lg shadow-lg p-6">
+    <div className="flex flex-col items-center justify-center mt-8 bg-white l">
+      <div className="w-full h-fit flex-1 bg-[#EBEBF8] rounded-lg  shadow-md p-10  ">
+
         <div className="grid flex-1 h-full grid-cols-1 gap-4 md:grid-cols-2">
-          <div>
-            <h2 className="text-xl font-medium text-[#727ea7] mb-2">
+
+          <div className="p-4">
+            <h2 className="text-2xl font-semibold text-[#727EA7] my-8">
               Détails de compte
             </h2>
             {[
               {
                 label: "Pseudo",
                 value: userData.pseudo,
-                icon: <FaUserCheck className="scale-[150%] mx-2 text-[#514F69]" />,
+                icon: <FaPassport className="scale-[150%] mx-2 text-[#514F69]" />,
               },
               {
                 label: "Email",
@@ -111,12 +116,13 @@ const ProfileDetail: React.FC = () => {
               </div>
             ))}
             <button className={buttonStyle}>
-              <span className="mx-2">Icon</span>
-              <span>Associer portefeuille Lightning</span>
+              <FaCreativeCommonsSamplingPlus className="text-[#514F69] scale-[160%] mx-2 " />
+              <span className="font-bold">Associer portefeuille Lightning</span>
             </button>
           </div>
-          <div className="p-4 bg-white rounded-lg">
-            <h2 className="text-xl font-medium text-[#727ea7] mb-2">
+
+          <div className="px-10 py-8 bg-white rounded-lg">
+            <h2 className="text-2xl  font-semibold text-[#727EA7] pb-8">
               Réinitialiser le mot de passe
             </h2>
             {error && <p className="text-red-500">{error}</p>}
@@ -139,10 +145,13 @@ const ProfileDetail: React.FC = () => {
               },
             ].map((item, index) => (
               <div key={index} className={inputContainerStyle}>
-                <FaUserShield className="scale-[150%] mx-2 text-[#514F69]" />
-                <label className="flex-1 mb-1 text-gray-600">{item.label}</label>
+                <div className="flex flex-row items-center w-full">
+                  <FaUserShield className="scale-[150%] mx-2 text-[#514F69]" />
+                  <label className="flex-1 mb-1 text-gray-600">{item.label}</label>
+                </div>
                 <input
                   type="password"
+                  placeholder="****************************************"
                   className={inputStyle}
                   value={item.value}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -156,20 +165,21 @@ const ProfileDetail: React.FC = () => {
               <span>Réinitialiser</span>
             </button>
           </div>
+
         </div>
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between pt-40 my-6">
           <div className="flex">
             <button className={buttonStyle}>
               <FaDonate className="scale-[150%] mx-2 text-[#514F69]" />
-              <span>Activer le mode sponsor</span>
+              <span className="font-bold">Activer le mode sponsor</span>
             </button>
             <button className={`ml-2 ${buttonStyle}`}>
               <FaHeartbeat className="scale-[150%] mx-2 text-[#514F69]" />
-              <span>Activer le mode caritatif</span>
+              <span className="font-bold">Activer le mode caritatif</span>
             </button>
           </div>
-          <button className="flex items-center px-4 py-2 ml-2 text-white bg-red-500 rounded hover:bg-red-600">
-            <FaTrashAlt className="scale-[150%] mx-2 text-[#514F69]" />
+          <button className="flex items-center px-4 py-4 ml-2 text-white bg-red-500 rounded px- hover:bg-red-600">
+            <FaShieldVirus className="scale-[150%] mx-2 text-[#f5f5f7]  " />
             <span>Supprimer le compte</span>
           </button>
         </div>

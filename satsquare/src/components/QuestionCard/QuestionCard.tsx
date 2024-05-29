@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ButtonWrapper, Wrapper } from "./QuestionCard.styles";
-import { AnswerObject } from "@/app/quiz/page";
+import { AnswerObject } from "@/app/tester/page";
 
 
 //import styling

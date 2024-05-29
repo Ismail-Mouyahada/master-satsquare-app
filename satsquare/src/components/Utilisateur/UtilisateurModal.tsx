@@ -107,7 +107,7 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
               name="pseudo"
               value={formData.pseudo}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>
@@ -120,7 +120,7 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>
@@ -133,7 +133,7 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
               name="mot_de_passe"
               value={formData.mot_de_passe}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             />
           </div>
@@ -145,7 +145,7 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
               name="role_id"
               value={formData.role_id ?? ""}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border rounded-md"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
             >
               <option value="">Sélectionner un rôle</option>
