@@ -9,8 +9,6 @@ import {
   FaPassport,
   FaRecycle,
   FaShieldVirus,
-  FaTrashAlt,
-  FaUserCheck,
   FaUserShield,
 } from "react-icons/fa";
 

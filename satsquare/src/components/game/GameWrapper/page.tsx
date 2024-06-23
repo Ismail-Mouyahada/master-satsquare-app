@@ -6,8 +6,6 @@ import { usePlayerContext } from "@/context/player";
 import { useSocketContext } from "@/context/socket";
 import Button from "@/components/Button";
 
- 
-
 interface QuestionState {
   current: number;
   total: number;
@@ -28,24 +26,23 @@ export default function GameWrapper({ children, textNext, onNext, manager }: Pro
   const [questionState, setQuestionState] = useState<QuestionState | null>(null);
 
   useEffect(() => {
-    socket.on("game:kick", () => {
+    const handleKick = () => {
       dispatch({
         type: "LOGOUT",
       });
-
       router.replace("/");
-    });
+    };
 
-    socket.on("game:updateQuestion", ({ current, total }: QuestionState) => {
-      setQuestionState({
-        current,
-        total,
-      });
-    });
+    const handleUpdateQuestion = ({ current, total }: QuestionState) => {
+      setQuestionState({ current, total });
+    };
+
+    socket.on("game:kick", handleKick);
+    socket.on("game:updateQuestion", handleUpdateQuestion);
 
     return () => {
-      socket.off("game:kick");
-      socket.off("game:updateQuestion");
+      socket.off("game:kick", handleKick);
+      socket.off("game:updateQuestion", handleUpdateQuestion);
     };
   }, [socket, dispatch, router]);
 
@@ -67,10 +64,7 @@ export default function GameWrapper({ children, textNext, onNext, manager }: Pro
         )}
 
         {manager && (
-          <Button
-            className="self-end bg-white px-4 !text-black"
-            onClick={onNext}
-          >
+          <Button className="self-end bg-white px-4 !text-black" onClick={onNext}>
             {textNext}
           </Button>
         )}
@@ -78,11 +72,11 @@ export default function GameWrapper({ children, textNext, onNext, manager }: Pro
 
       {children}
 
-      {!manager && (
+      {!manager && player && (
         <div className="z-50 flex items-center justify-between px-4 py-2 text-lg font-bold text-white bg-white">
-          <p className="text-gray-800">{player && player.username}</p>
+          <p className="text-gray-800">{player.username}</p>
           <div className="px-3 py-1 text-lg bg-gray-800 rounded-sm">
-            {player && player.points}
+            {player.points}
           </div>
         </div>
       )}

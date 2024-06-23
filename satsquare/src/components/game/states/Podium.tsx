@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import ReactConfetti from "react-confetti";
 import useSound from "use-sound";
-
 import useScreenSize from "@/hook/useScreenSize";
 import {
   SFX_PODIUM_THREE,
@@ -11,29 +10,24 @@ import {
   SFX_PODIUM_FIRST,
 } from "@/constants/db";
 
-export default function Podium({ data: { subject, top } }: any) {
+export default function Podium({ data }: any) {
   const [apparition, setApparition] = useState(0);
-
   const { width, height } = useScreenSize();
 
   const [sfxtThree] = useSound(SFX_PODIUM_THREE, {
     volume: 0.2,
   });
-
   const [sfxSecond] = useSound(SFX_PODIUM_SECOND, {
     volume: 0.2,
   });
-
   const [sfxRool, { stop: sfxRoolStop }] = useSound(SFX_SNEAR_ROOL, {
     volume: 0.2,
   });
-
   const [sfxFirst] = useSound(SFX_PODIUM_FIRST, {
     volume: 0.2,
   });
 
   useEffect(() => {
-    console.log(apparition);
     switch (apparition) {
       case 4:
         sfxRoolStop();
@@ -48,10 +42,13 @@ export default function Podium({ data: { subject, top } }: any) {
       case 1:
         sfxtThree();
         break;
+      default:
+        break;
     }
   }, [apparition, sfxFirst, sfxSecond, sfxtThree, sfxRool, sfxRoolStop]);
 
   useEffect(() => {
+    const top = data?.top || [];
     if (top.length < 3) {
       setApparition(4);
       return;
@@ -66,7 +63,10 @@ export default function Podium({ data: { subject, top } }: any) {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [apparition, top.length]);
+  }, [apparition, data?.top]);
+
+  const subject = data?.subject || "No Subject";
+  const top = data?.top || [];
 
   return (
     <>
@@ -84,46 +84,35 @@ export default function Podium({ data: { subject, top } }: any) {
           {subject}
         </h2>
 
-        <div
-          className={`grid w-full max-w-[800px] flex-1 grid-cols-${top.length} items-end justify-center justify-self-end overflow-y-hidden overflow-x-visible`}
-        >
-          {top[1] && (
-            <div
+        <div className={`grid w-full max-w-[800px] flex-1 grid-cols-3 items-end justify-center justify-self-end overflow-y-hidden overflow-x-visible`}>
+          <div
+            className={clsx(
+              "z-20 flex h-[50%] w-full translate-y-full flex-col items-center justify-center gap-3 opacity-0 transition-all",
+              { "!translate-y-0 opacity-100": apparition >= 2 },
+            )}
+          >
+            <p
               className={clsx(
-                "z-20 flex h-[50%] w-full translate-y-full flex-col items-center justify-center gap-3 opacity-0 transition-all",
-                { "!translate-y-0 opacity-100": apparition >= 2 },
+                "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
+                { "anim-balanced": apparition >= 4 },
               )}
             >
-              <p
-                className={clsx(
-                  "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
-                  {
-                    "anim-balanced": apparition >= 4,
-                  },
-                )}
-              >
-                {top[1].username}
+              {top[1]?.username || "No Name"}
+            </p>
+            <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
+              <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-zinc-400 bg-zinc-500 drop-shadow-lg">
+                <span className="drop-shadow-md">2</span>
               </p>
-              <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
-                <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-zinc-400 bg-zinc-500 drop-shadow-lg">
-                  <span className="drop-shadow-md">2</span>
-                </p>
-                <p className="text-2xl font-bold text-white drop-shadow-lg">
-                  {top[1].points}
-                </p>
-              </div>
+              <p className="text-2xl font-bold text-white drop-shadow-lg">
+                {top[1]?.points ?? 0}
+              </p>
             </div>
-          )}
+          </div>
 
           <div
             className={clsx(
               "z-30 flex h-[60%] w-full translate-y-full flex-col items-center gap-3 opacity-0 transition-all",
-              {
-                "!translate-y-0 opacity-100": apparition >= 3,
-              },
-              {
-                "md:min-w-64": top.length < 2,
-              },
+              { "!translate-y-0 opacity-100": apparition >= 3 },
             )}
           >
             <p
@@ -132,48 +121,41 @@ export default function Podium({ data: { subject, top } }: any) {
                 { "anim-balanced opacity-100": apparition >= 4 },
               )}
             >
-              {top[0].username}
+              {top[0]?.username || "No Name"}
             </p>
             <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
               <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-400 bg-amber-300 drop-shadow-lg">
                 <span className="drop-shadow-md">1</span>
               </p>
               <p className="text-2xl font-bold text-white drop-shadow-lg">
-                {top[0].points}
+                {top[0]?.points ?? 0}
               </p>
             </div>
           </div>
 
-          {top[2] && (
-            <div
+          <div
+            className={clsx(
+              "z-10 flex h-[40%] w-full translate-y-full flex-col items-center gap-3 opacity-0 transition-all",
+              { "!translate-y-0 opacity-100": apparition >= 1 },
+            )}
+          >
+            <p
               className={clsx(
-                "z-10 flex h-[40%] w-full translate-y-full flex-col items-center gap-3 opacity-0 transition-all",
-                {
-                  "!translate-y-0 opacity-100": apparition >= 1,
-                },
+                "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
+                { "anim-balanced": apparition >= 4 },
               )}
             >
-              <p
-                className={clsx(
-                  "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
-                  {
-                    "anim-balanced": apparition >= 4,
-                  },
-                )}
-              >
-                {top[2].username}
+              {top[2]?.username || "No Name"}
+            </p>
+            <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
+              <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-800 bg-amber-700 drop-shadow-lg">
+                <span className="drop-shadow-md">3</span>
               </p>
-              <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
-                <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-800 bg-amber-700 drop-shadow-lg">
-                  <span className="drop-shadow-md">3</span>
-                </p>
-
-                <p className="text-2xl font-bold text-white drop-shadow-lg">
-                  {top[2].points}
-                </p>
-              </div>
+              <p className="text-2xl font-bold text-white drop-shadow-lg">
+                {top[2]?.points ?? 0}
+              </p>
             </div>
-          )}
+          </div>
         </div>
       </section>
     </>

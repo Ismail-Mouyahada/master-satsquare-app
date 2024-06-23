@@ -65,7 +65,7 @@ export default function Home() {
             <Input
               className="w-full bg-white border-none text-slate-400"
               variant="outlined"
-              Placeholder="Code de la salle"
+              PlaceHolder="Code de la salle"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoomId(e.target.value)}
               onKeyDown={handleKeyDown}
             />
