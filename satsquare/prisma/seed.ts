@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Seed roles
-  // await prisma.role.createMany({
-  //   data: [
-  //     { nom: 'Admin' },
-  //     { nom: 'User' },
-  //   ],
-  // });
+  await prisma.role.createMany({
+    data: [
+      { nom: 'Admin' },
+      { nom: 'User' },
+    ],
+  });
 
   const roleAdmin = await prisma.role.findFirst({ where: { nom: 'Admin' } });
   const roleUser = await prisma.role.findFirst({ where: { nom: 'User' } });

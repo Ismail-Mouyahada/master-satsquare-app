@@ -21,9 +21,9 @@ model Utilisateur {
   Evenement      Evenement[]
   EvenementsQuiz EvenementsQuiz[]
   Quiz           Quiz[]
-  association    Association?     @relation(fields: [association_id], references: [id])
-  role           Role?            @relation(fields: [role_id], references: [id])
-  sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id])
+  association    Association?     @relation(fields: [association_id], references: [id], onDelete: Cascade)
+  role           Role?            @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
 }
 
 model Association {
@@ -73,7 +73,7 @@ model Evenement {
   cree_le            DateTime         @default(now())
   mis_a_jour_le      DateTime         @updatedAt
   Dons               Don[]
-  utilisateur        Utilisateur?     @relation(fields: [user_id], references: [id])
+  utilisateur        Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   EvenementsQuiz     EvenementsQuiz[]
 }
 
@@ -85,16 +85,16 @@ model Don {
   cree_le         DateTime         @default(now())
   mis_a_jour_le   DateTime         @updatedAt
   AssociationDons AssociationDon[]
-  evenement       Evenement        @relation(fields: [evenement_id], references: [id])
-  sponsor         Sponsor          @relation(fields: [sponsor_id], references: [id])
+  evenement       Evenement        @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
+  sponsor         Sponsor          @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
 }
 
 model AssociationDon {
   id             Int         @id @default(autoincrement())
   don_id         Int
   association_id Int
-  association    Association @relation(fields: [association_id], references: [id])
-  don            Don         @relation(fields: [don_id], references: [id])
+  association    Association @relation(fields: [association_id], references: [id], onDelete: Cascade)
+  don            Don         @relation(fields: [don_id], references: [id], onDelete: Cascade)
 }
 
 model Quiz {
@@ -106,7 +106,7 @@ model Quiz {
   mis_a_jour_le  DateTime         @updatedAt
   EvenementsQuiz EvenementsQuiz[]
   Questions      Question[]
-  utilisateur    Utilisateur?     @relation(fields: [user_id], references: [id])
+  utilisateur    Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model EvenementsQuiz {
@@ -117,9 +117,9 @@ model EvenementsQuiz {
   question_id  Int
   reponse_id   Int
   user_id      Int
-  evenement    Evenement   @relation(fields: [evenement_id], references: [id])
-  quiz         Quiz        @relation(fields: [quiz_id], references: [id])
-  utilisateur  Utilisateur @relation(fields: [user_id], references: [id])
+  evenement    Evenement   @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
+  quiz         Quiz        @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+  utilisateur  Utilisateur @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([evenement_id, quiz_id, question_id, reponse_id, user_id], name: "unique_event_quiz_question_response_user")
 }

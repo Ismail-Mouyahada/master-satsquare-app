@@ -79,7 +79,7 @@ const QuizPage: FC = () => {
           <QuizTable quizzes={quizzes} onDelete={openDeleteModal} />
           {isDeleteModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <div className="p-6 bg-white rounded-lg shadow-lg">
+              <div className="p-6 bg-white rounded-lg shadow-lg text-slate-500">
                 <h2 className="mb-4 text-2xl">Confirmer la suppression</h2>
                 <p>
                   Êtes-vous sûr de vouloir supprimer le quiz "
