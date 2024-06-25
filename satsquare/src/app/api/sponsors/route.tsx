@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/db/connect';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/db/prisma";
 
 // GET: Récupérer tous les sponsors ou rechercher par nom
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const name = searchParams.get('name');
+    const name = searchParams.get("name");
 
     let sponsors;
     if (name) {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
         where: {
           nom: {
             contains: name,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
         },
       });
@@ -24,7 +24,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(sponsors, { status: 200 });
   } catch (error) {
     console.error("Error fetching sponsors:", error);
-    return NextResponse.json({ error: "An error occurred while fetching sponsors" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while fetching sponsors" },
+      { status: 500 }
+    );
   }
 }
 
@@ -38,6 +41,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(newSponsor, { status: 201 });
   } catch (error) {
     console.error("Error creating sponsor:", error);
-    return NextResponse.json({ error: "An error occurred while creating the sponsor" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while creating the sponsor" },
+      { status: 500 }
+    );
   }
 }

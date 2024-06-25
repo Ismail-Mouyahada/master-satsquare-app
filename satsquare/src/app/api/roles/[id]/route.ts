@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/db/connect";
+import prisma from "@/db/prisma";
 
 // PUT: Mettre à jour un role existant
 export async function PUT(

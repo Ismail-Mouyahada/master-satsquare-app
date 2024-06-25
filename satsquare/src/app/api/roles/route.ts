@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/db/connect";
+import prisma from "@/db/prisma";
 
 // GET: Récupérer tous les roles ou rechercher par nom
 export async function GET(req: NextRequest) {

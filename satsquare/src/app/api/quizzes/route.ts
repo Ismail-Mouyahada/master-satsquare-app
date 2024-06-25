@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/db/connect';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/db/prisma";
 
 // GET: Fetch all quizzes or search by title
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const title = searchParams.get('title');
+    const title = searchParams.get("title");
 
     let quizzes;
     if (title) {
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
         where: {
           titre: {
             contains: title,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
         },
         include: {
@@ -41,7 +41,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(quizzes, { status: 200 });
   } catch (error) {
     console.error("Error fetching quizzes:", error);
-    return NextResponse.json({ error: "An error occurred while fetching quizzes" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while fetching quizzes" },
+      { status: 500 }
+    );
   }
 }
 
@@ -73,6 +76,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(newQuiz, { status: 201 });
   } catch (error) {
     console.error("Error creating quiz:", error);
-    return NextResponse.json({ error: "An error occurred while creating the quiz" }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while creating the quiz" },
+      { status: 500 }
+    );
   }
 }

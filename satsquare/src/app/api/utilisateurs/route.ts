@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/db/connect";
+import prisma from "@/db/prisma";
 import bcrypt from "bcrypt";
 
 // Fonction pour exclure des clés d'un objet
