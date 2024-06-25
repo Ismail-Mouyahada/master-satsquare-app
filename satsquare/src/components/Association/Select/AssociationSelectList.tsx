@@ -10,23 +10,45 @@ const AssociationSelectList: FC<AssociationSelectListProps> = ({
   associations,
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {associations.map((association) => (
-        <div key={association.id} className="bg-white p-4 rounded-lg shadow-md">
-          <img
-            src={association.logo_url}
-            alt={association.nom}
-            className="w-full h-32 object-cover rounded-lg"
-          />
-          <h3 className="mt-2 text-lg font-bold">{association.nom}</h3>
-          <p className="text-gray-500">{association.adresse_eclairage}</p>
-          <p
-            className={`mt-2 ${association.est_confirme ? "text-green-500" : "text-red-500"}`}
-          >
-            {association.est_confirme ? "Confirmé" : "Non confirmé"}
-          </p>
-        </div>
-      ))}
+    <div>
+      <h3 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
+        Choisir une association:
+      </h3>
+      <ul className="grid w-full gap-6 md:grid-cols-3">
+        {associations.map((association) => (
+          <li key={association.id}>
+            <input
+              type="checkbox"
+              id={`association-${association.id}`}
+              value={association.id}
+              className="hidden peer"
+            />
+            <label
+              htmlFor={`association-${association.id}`}
+              className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+            >
+              <div className="block w-full">
+                <img
+                  src={association.logo_url}
+                  alt={association.nom}
+                  className="mb-2 w-full h-32 object-cover rounded-lg"
+                />
+                <div className="w-full text-lg font-semibold">
+                  {association.nom}
+                </div>
+                <div className="w-full text-sm">
+                  {association.adresse_eclairage}
+                </div>
+                <p
+                  className={`mt-2 ${association.est_confirme ? "text-green-500" : "text-red-500"}`}
+                >
+                  {association.est_confirme ? "Confirmé" : "Non confirmé"}
+                </p>
+              </div>
+            </label>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
