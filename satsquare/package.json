@@ -9,8 +9,8 @@
     "seed": "ts-node prisma/seed.ts",
     "build-socket": "tsc ./socket/*",
     "socket": "node ./socket/index.js",
-    "all": "concurrently --kill-others \"npm run start\" \"npm run socket\"",
-    "all-dev": "concurrently --kill-others \"npm run dev\" \"npm run socket\"",
+    "all": "concurrently --kill-others  \"npm run start\" \"npm run socket\"",
+    "all-dev": "concurrently --kill-others \"npm run dev\" \"npm run socket\" ",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -56,9 +56,9 @@
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/node": "^20.14.8",
     "@types/jest": "^29.5.12",
     "@types/jest-json-schema": "^6.1.4",
-    "@types/node": "^20.12.13",
     "@types/react": "^18.3.3",
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.3.0",
@@ -77,7 +77,7 @@
     "storybook": "^8.1.4",
     "tailwindcss": "^3.4.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "whatwg-fetch": "^3.6.20"
   }
 }

@@ -13,7 +13,7 @@ const UtilisateurTable: FC<UtilisateurTableProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="bg-[#F3F3FF] p-4 rounded-lg">
+    <div className="bg-[#F3F3FF] p-4 rounded-lg overflow-x-auto text-slate-600">
       <table className="min-w-full bg-white border">
         <thead>
           <tr className="bg-[#EDF2FF]">

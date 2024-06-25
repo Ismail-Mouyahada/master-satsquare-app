@@ -7,27 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Define the user model
 model Utilisateur {
   id             Int              @id @default(autoincrement())
   pseudo         String           @unique
   email          String           @unique
-  role           Role?            @relation(fields: [role_id], references: [id])
   role_id        Int?
   mot_de_passe   String
-  association    Association?     @relation(fields: [association_id], references: [id])
   association_id Int?
   statut_compte  Boolean
-  sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id])
   sponsor_id     Int?
   cree_le        DateTime         @default(now())
   mis_a_jour_le  DateTime         @updatedAt
-  EvenementsQuiz EvenementsQuiz[]
   Evenement      Evenement[]
+  EvenementsQuiz EvenementsQuiz[]
   Quiz           Quiz[]
+  association    Association?     @relation(fields: [association_id], references: [id], onDelete: Cascade)
+  role           Role?            @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
 }
 
-// Define the association model
 model Association {
   id                Int              @id @default(autoincrement())
   nom               String
@@ -37,11 +35,10 @@ model Association {
   logo_url          String
   cree_le           DateTime         @default(now())
   mis_a_jour_le     DateTime         @updatedAt
-  Utilisateurs      Utilisateur[]
   AssociationDons   AssociationDon[]
+  Utilisateurs      Utilisateur[]
 }
 
-// Define the sponsor model
 model Sponsor {
   id                Int           @id @default(autoincrement())
   nom               String
@@ -50,103 +47,95 @@ model Sponsor {
   est_confirme      Boolean
   cree_le           DateTime      @default(now())
   mis_a_jour_le     DateTime      @updatedAt
-  Utilisateurs      Utilisateur[]
   Dons              Don[]
+  Utilisateurs      Utilisateur[]
 }
 
-// Define the role model
 model Role {
   id           Int           @id @default(autoincrement())
   nom          String
   utilisateurs Utilisateur[]
 }
 
-// Define the event model
 model Evenement {
-  id                    Int              @id @default(autoincrement())
-  nom                   String
-  description           String
-  utilisateur           Utilisateur?      @relation(fields: [user_id], references: [id])
-  user_id               Int?
-  commence_a            DateTime
-  termine_a             DateTime
-  est_public            Boolean
-  est_gratuit           Boolean
-  sat_minimum           Int
-  recompense_joueurs    Int
-  don_association       Int
-  don_plateforme        Int
-  cree_le               DateTime         @default(now())
-  mis_a_jour_le         DateTime         @updatedAt
-  Dons                  Don[]
-  EvenementsQuiz        EvenementsQuiz[]
+  id                 Int              @id @default(autoincrement())
+  nom                String
+  description        String
+  user_id            Int?
+  commence_a         DateTime
+  termine_a          DateTime
+  est_public         Boolean
+  est_gratuit        Boolean
+  sat_minimum        Int
+  recompense_joueurs Int
+  don_association    Int
+  don_plateforme     Int
+  cree_le            DateTime         @default(now())
+  mis_a_jour_le      DateTime         @updatedAt
+  Dons               Don[]
+  utilisateur        Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  EvenementsQuiz     EvenementsQuiz[]
 }
 
-// Define the donation model
 model Don {
   id              Int              @id @default(autoincrement())
-  sponsor         Sponsor          @relation(fields: [sponsor_id], references: [id])
   sponsor_id      Int
-  evenement       Evenement        @relation(fields: [evenement_id], references: [id])
   evenement_id    Int
   montant         Float
   cree_le         DateTime         @default(now())
   mis_a_jour_le   DateTime         @updatedAt
   AssociationDons AssociationDon[]
+  evenement       Evenement        @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
+  sponsor         Sponsor          @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
 }
 
-// Define the association_don model
 model AssociationDon {
   id             Int         @id @default(autoincrement())
-  don            Don         @relation(fields: [don_id], references: [id])
   don_id         Int
-  association    Association @relation(fields: [association_id], references: [id])
   association_id Int
+  association    Association @relation(fields: [association_id], references: [id], onDelete: Cascade)
+  don            Don         @relation(fields: [don_id], references: [id], onDelete: Cascade)
 }
 
-// Define the quiz model
 model Quiz {
   id             Int              @id @default(autoincrement())
   titre          String
-  utilisateur    Utilisateur?      @relation(fields: [user_id], references: [id])
   user_id        Int?
   categorie      String
   cree_le        DateTime         @default(now())
   mis_a_jour_le  DateTime         @updatedAt
   EvenementsQuiz EvenementsQuiz[]
   Questions      Question[]
+  utilisateur    Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
-// Define the events_quizzes model
 model EvenementsQuiz {
   id           Int         @id @default(autoincrement())
   score        Int
-  evenement    Evenement   @relation(fields: [evenement_id], references: [id])
   evenement_id Int
-  quiz         Quiz        @relation(fields: [quiz_id], references: [id])
   quiz_id      Int
   question_id  Int
   reponse_id   Int
-  utilisateur  Utilisateur @relation(fields: [user_id], references: [id])
   user_id      Int
+  evenement    Evenement   @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
+  quiz         Quiz        @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+  utilisateur  Utilisateur @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([evenement_id, quiz_id, question_id, reponse_id, user_id], name: "unique_event_quiz_question_response_user")
 }
 
-// Define the question model
 model Question {
   id             Int       @id @default(autoincrement())
-  quiz           Quiz?      @relation(fields: [quiz_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   quiz_id        Int?
   texte_question String
+  quiz           Quiz?     @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
   Reponses       Reponse[]
 }
 
-// Define the answer model
 model Reponse {
-  id            Int      @id @default(autoincrement())
-  question      Question? @relation(fields: [question_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  id            Int       @id @default(autoincrement())
   question_id   Int?
   texte_reponse String
   est_correcte  Boolean
+  question      Question? @relation(fields: [question_id], references: [id], onDelete: Cascade)
 }

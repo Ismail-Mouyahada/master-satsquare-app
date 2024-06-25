@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Association } from "@prisma/client";
-import { FaCertificate, FaCloudversify, FaCross, FaEdit, FaEye, FaObjectGroup, FaObjectUngroup, FaRemoveFormat, FaTrash } from "react-icons/fa";
+import { FaCertificate, FaCheck, FaCloudversify, FaCross, FaEdit, FaExclamationTriangle, FaEye, FaObjectGroup, FaObjectUngroup, FaRegFlushed, FaRemoveFormat, FaTrash } from "react-icons/fa";
 import ActionButtons from "../ActionButtons/page";
 
 interface AssociationTableProps {
@@ -19,10 +19,11 @@ const AssociationTable: FC<AssociationTableProps> = ({
   }
 
   return (
-    <div className="  bg-[#F3F3FF] rounded-lg p-8">
-      <table className="min-w-full p-4 rounded-md -none">
-        <thead>
-          <tr className="text-center text-gray-400 rounded-md ">
+    <div className="bg-[#F3F3FF] p-4 rounded-lg overflow-x-auto text-slate-600">
+    <table className="min-w-full bg-white border">
+      <thead>
+        <tr className="bg-[#EDF2FF]">
+ 
             <th className="p-8 text-center rounded-md">Nom</th>
             <th className="p-8 font-semibold rounded-md">Adresse</th>
             <th className="p-8 font-semibold rounded-md ">Valide</th>
@@ -33,22 +34,22 @@ const AssociationTable: FC<AssociationTableProps> = ({
         <tbody className="bg-white">
           {associations.map((association) => (
             <tr key={association.id}>
-              <td className="p-4 px-4 py-2 rounded-md ">{association.nom}</td>
-              <td className="p-4 px-4 py-2 rounded-md ">
+              <td className="border px-4 py-2  ">{association.nom}</td>
+              <td className="border px-4 py-2  ">
                 {association.adresse_eclairage}
               </td>
-              <td className="p-4 px-4 py-2 rounded-md ">
+              <td className="border px-4 py-2  justify-center ">
                 {association.valide ? (
-                  <span className="text-green-500"><FaCertificate/></span>
+                 <span className="text-green-400  "><FaCheck className="scale-[1.5]"/></span>
                 ) : (
-                  <span className="text-red-500"><FaCross/></span>
+                  <span className="text-red-400"><FaExclamationTriangle className="scale-[1.5]"/></span>
                 )}
               </td>
-              <td className="p-4 px-4 py-2 rounded-md ">
+              <td className="border px-4 py-2  ">
                 {association.est_confirme ? (
-                  <span className="text-green-500">✔️</span>
+                  <span className="text-green-400  "><FaCheck className="scale-[1.5]"/></span>
                 ) : (
-                  <span className="text-red-500">❌</span>
+                  <span className="text-red-400"><FaExclamationTriangle className="scale-[1.5]"/></span>
                 )}
               </td>
               <ActionButtons

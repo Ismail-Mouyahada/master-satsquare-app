@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ChangeEvent } from "react";
-import { useSession } from "next-auth/react";
-import { UserDTO } from "@/types/userDTO";
+import { useSession, signOut } from "next-auth/react";
+ 
 import {
   FaCreativeCommonsSamplingPlus,
   FaDonate,
@@ -11,6 +11,10 @@ import {
   FaShieldVirus,
   FaUserShield,
 } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
+import { UserDTO } from "@/types/userDto";
+ 
 
 const ProfileDetail: React.FC = () => {
   const { data: session } = useSession();
@@ -18,8 +22,7 @@ const ProfileDetail: React.FC = () => {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -30,6 +33,7 @@ const ProfileDetail: React.FC = () => {
           setUserData(data);
         } catch (error) {
           console.error("Error fetching user data:", error);
+          toast.error("Erreur lors de la récupération des données utilisateur.");
         }
       }
     };
@@ -39,7 +43,7 @@ const ProfileDetail: React.FC = () => {
 
   const handlePasswordReset = async () => {
     if (newPassword !== confirmPassword) {
-      setError("Les nouveaux mots de passe ne correspondent pas.");
+      toast.error("Les nouveaux mots de passe ne correspondent pas.");
       return;
     }
 
@@ -63,26 +67,63 @@ const ProfileDetail: React.FC = () => {
         );
       }
 
-      setSuccess("Mot de passe réinitialisé avec succès.");
-      setError(null);
+      toast.success("Mot de passe réinitialisé avec succès.");
     } catch (error: any) {
-      setError(error.message);
-      setSuccess(null);
+      toast.error(error.message);
     }
   };
 
-  const sectionStyle = "bg-white text-black rounded-lg flex items-center h-16 m-6 ";
+  const handleLightningWallet = () => {
+    // Logic to handle associating Lightning wallet
+    toast.success("Associer portefeuille Lightning");
+  };
+
+  const handleActivateSponsorMode = () => {
+    // Logic to handle activating sponsor mode
+    toast.success("Activer le mode sponsor");
+  };
+
+  const handleActivateCharityMode = () => {
+    // Logic to handle activating charity mode
+    toast.success("Activer le mode caritatif");
+  };
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await fetch("/api/users/delete-account", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: session?.user?.email,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Erreur lors de la suppression du compte.");
+      }
+
+      signOut();
+      router.push("/");
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  const sectionStyle = "bg-white text-black rounded-lg flex items-center h-16 m-6";
   const buttonStyle = "p-4 px-8 bg-[#F4BD8A] text-[#726e81] rounded-md flex items-center";
-  const inputContainerStyle = " grid grid-cols-2 mb-4";
-  const inputStyle = "w-full px-8 py-3  text-center border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]";
+  const inputContainerStyle = "grid grid-cols-2 mb-4";
+  const inputStyle = "w-full px-8 py-3 text-center border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]";
 
   if (!userData) {
     return <p>Chargement...</p>;
   }
 
   return (
-    <div className="flex flex-col items-center justify-center mt-8 bg-white l">
-      <div className="w-full h-fit flex-1 bg-[#EBEBF8] rounded-lg  shadow-md p-10  ">
+    <div className="flex flex-col items-center justify-center mt-8 bg-white">
+      <Toaster />
+      <div className="w-full h-fit flex-1 bg-[#EBEBF8] rounded-lg shadow-md p-10">
 
         <div className="grid flex-1 h-full grid-cols-1 gap-4 md:grid-cols-2">
 
@@ -113,18 +154,16 @@ const ProfileDetail: React.FC = () => {
                 <span className="ml-4">{item.value}</span>
               </div>
             ))}
-            <button className={buttonStyle}>
-              <FaCreativeCommonsSamplingPlus className="text-[#514F69] scale-[160%] mx-2 " />
+            <button className={buttonStyle} onClick={handleLightningWallet}>
+              <FaCreativeCommonsSamplingPlus className="text-[#514F69] scale-[160%] mx-2" />
               <span className="font-bold">Associer portefeuille Lightning</span>
             </button>
           </div>
 
           <div className="px-10 py-8 bg-white rounded-lg">
-            <h2 className="text-2xl  font-semibold text-[#727EA7] pb-8">
+            <h2 className="text-2xl font-semibold text-[#727EA7] pb-8">
               Réinitialiser le mot de passe
             </h2>
-            {error && <p className="text-red-500">{error}</p>}
-            {success && <p className="text-green-500">{success}</p>}
             {[
               {
                 label: "Ancien mot de passe",
@@ -144,7 +183,7 @@ const ProfileDetail: React.FC = () => {
             ].map((item, index) => (
               <div key={index} className={inputContainerStyle}>
                 <div className="flex flex-row items-center w-full">
-                  <FaUserShield className="scale-[150%] mx-2 text-[#514F69]" />
+                  <FaUserShield className="scale-[150%] mx-4 mb-3 text-[#514F69]" />
                   <label className="flex-1 mb-1 text-gray-600">{item.label}</label>
                 </div>
                 <input
@@ -167,17 +206,17 @@ const ProfileDetail: React.FC = () => {
         </div>
         <div className="flex justify-between pt-40 my-6">
           <div className="flex">
-            <button className={buttonStyle}>
+            <button className={buttonStyle} onClick={handleActivateSponsorMode}>
               <FaDonate className="scale-[150%] mx-2 text-[#514F69]" />
               <span className="font-bold">Activer le mode sponsor</span>
             </button>
-            <button className={`ml-2 ${buttonStyle}`}>
+            <button className={`ml-2 ${buttonStyle}`} onClick={handleActivateCharityMode}>
               <FaHeartbeat className="scale-[150%] mx-2 text-[#514F69]" />
               <span className="font-bold">Activer le mode caritatif</span>
             </button>
           </div>
-          <button className="flex items-center px-4 py-4 ml-2 text-white bg-red-500 rounded px- hover:bg-red-600">
-            <FaShieldVirus className="scale-[150%] mx-2 text-[#f5f5f7]  " />
+          <button className="flex items-center px-4 py-4 ml-2 text-white bg-red-500 rounded hover:bg-red-600" onClick={handleDeleteAccount}>
+            <FaShieldVirus className="scale-[150%] mx-2 text-[#f5f5f7]" />
             <span>Supprimer le compte</span>
           </button>
         </div>

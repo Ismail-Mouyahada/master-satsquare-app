@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 import bcrypt from "bcrypt";
+import { Utilisateur } from "@/types/datatypes";
 
 // Fonction pour exclure des clés d'un objet
 export function exclude<
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Exclure le champ mot_de_passe de chaque utilisateur
-    utilisateurs = utilisateurs.map((utilisateur) =>
+    utilisateurs = utilisateurs.map((utilisateur: any) =>
       exclude(utilisateur, ["mot_de_passe"])
     );
 
@@ -56,8 +57,10 @@ export async function GET(req: NextRequest) {
 
 // POST: Créer un nouveau utilisateur
 export async function POST(req: NextRequest) {
+  const data = await req.json();
+  console.log(req)
   try {
-    const data = await req.json();
+    // const data = await req.json();
 
     if (data.mot_de_passe) {
       const saltRounds = 10;

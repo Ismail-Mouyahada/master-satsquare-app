@@ -19,11 +19,12 @@ import {
 import styles from "./Sidebar.module.css";
 import Link from "next/link";
 import { Tooltip } from "@nextui-org/tooltip";
+import { signOut } from "next-auth/react";
 
 const links = [
   { href: "/utilisateurs", icon: <FaUsers />, tooltip: "Utilisateurs" },
   { href: "/roles", icon: <FaShieldAlt />, tooltip: "Roles" },
-  { href: "/quiz", icon: <FaGamepad />, tooltip: "Quizzes" },
+  { href: "/quizzes", icon: <FaGamepad />, tooltip: "Quizzes" },
   { href: "/ranking", icon: <FaChartBar />, tooltip: "Classement" },
   { href: "/sponsors", icon: <FaHeart />, tooltip: "Sponsors" },
   { href: "/associations", icon: <FaBuilding />, tooltip: "Associations" },
@@ -41,12 +42,16 @@ const Sidebar: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLogout = () => {
+    signOut();
+  };
+
   return (
     <>
       <div className={styles.sidebar}>
         <div className={`${styles.sidebar} ${isOpen ? "open" : ""}`}>
           <div className="flex items-center justify-center p-[1em] rounded-full bg-[#4a34f1]">
-            <FaBtc className=" scale-[1.8]" />
+            <FaBtc className="scale-[1.8]" />
           </div>
           <div className={styles.main}>
             {links.map((link, index) => (
@@ -63,8 +68,11 @@ const Sidebar: React.FC = () => {
               </Tooltip>
             ))}
           </div>
-          <div className="flex items-center justify-center w-10 h-10 text-red-400 rounded-full bg-opacity-85 hover:bg-opacity-90 bg-slate-100">
-            <FaSignOutAlt className=" scale-[1.2]" />
+          <div
+            className="flex items-center justify-center w-10 h-10 text-red-400 rounded-full bg-opacity-85 hover:bg-opacity-90 bg-slate-100 cursor-pointer"
+            onClick={handleLogout}
+          >
+            <FaSignOutAlt className="scale-[1.2]" />
           </div>
         </div>
       </div>
