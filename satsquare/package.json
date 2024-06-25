@@ -9,8 +9,8 @@
     "seed": "ts-node prisma/seed.ts",
     "build-socket": "tsc ./socket/*",
     "socket": "node ./socket/index.js",
-    "all": "concurrently --kill-others  \"npm run seed\" \"npm run start\" \"npm run socket\"",
-    "all-dev": "concurrently --kill-others \"npm run seed\" \"npm run dev\" \"npm run socket\" ",
+    "all": "concurrently --kill-others  \"npm run start\" \"npm run socket\"",
+    "all-dev": "concurrently --kill-others \"npm run dev\" \"npm run socket\" ",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

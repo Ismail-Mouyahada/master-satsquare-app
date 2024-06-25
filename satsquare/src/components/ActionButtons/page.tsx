@@ -10,7 +10,7 @@ interface ActionButtonsProps {
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({ onEdit, onDelete, onView, association }) => {
   return (
-    <td className="p-4 px-4 py-2 space-x-2 rounded-md">
+    <td className="border px-4 py-2 space-x-2">
       <button
         className="bg-[#f1eada] p-3 rounded-full"
         onClick={() => onEdit(association)}

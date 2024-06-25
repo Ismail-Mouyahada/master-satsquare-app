@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { Quiz } from '@prisma/client';
+import ActionButtons from '../ActionButtons/page';
 
 interface QuizTableProps {
   quizzes: Quiz[];
@@ -8,7 +9,7 @@ interface QuizTableProps {
 
 const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
   return (
-    <div className="bg-[#F3F3FF] p-4 rounded-lg overflow-x-auto">
+    <div className="bg-[#F3F3FF] p-4 rounded-lg overflow-x-auto text-slate-600">
       <table className="min-w-full bg-white border">
         <thead>
           <tr className="bg-[#EDF2FF]">
@@ -41,6 +42,7 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
                   🗑️
                 </button>
               </td>
+           
             </tr>
           ))}
         </tbody>

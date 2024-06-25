@@ -1,16 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
   // Seed roles
-  await prisma.role.createMany({
-    data: [
-      { nom: 'Admin' },
-      { nom: 'User' },
-    ],
-  });
+  // await prisma.role.createMany({
+  //   data: [
+  //     { nom: 'Admin' },
+  //     { nom: 'User' },
+  //   ],
+  // });
 
   const roleAdmin = await prisma.role.findFirst({ where: { nom: 'Admin' } });
   const roleUser = await prisma.role.findFirst({ where: { nom: 'User' } });
@@ -55,7 +56,7 @@ async function main() {
       data: {
         pseudo: faker.internet.userName(),
         email: faker.internet.email(),
-        mot_de_passe: faker.internet.password(),
+        mot_de_passe: bcrypt.hashSync("password123", 10),
         role: { connect: { id: roleAdmin.id } },
         association: { connect: { id: associations[i % associations.length].id } },
         sponsor: { connect: { id: sponsors[i % sponsors.length].id } },
