@@ -1,21 +1,29 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "GET") {
-    // Get all questions
+// GET: Retrieve all questions
+export async function GET(req: NextRequest) {
+  try {
     const questions = await prisma.question.findMany({
       include: {
         Reponses: true,
       },
     });
-    res.status(200).json(questions);
-  } else if (req.method === "POST") {
-    // Create a new question
-    const { texte_question, quiz_id, Reponses } = req.body;
+    return NextResponse.json(questions, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+    return NextResponse.json(
+      { error: "An error occurred while fetching questions" },
+      { status: 500 }
+    );
+  }
+}
+
+// POST: Create a new question
+export async function POST(req: NextRequest) {
+  try {
+    const data = await req.json();
+    const { texte_question, quiz_id, Reponses } = data;
     const question = await prisma.question.create({
       data: {
         texte_question,
@@ -25,9 +33,12 @@ export default async function handler(
         },
       },
     });
-    res.status(201).json(question);
-  } else {
-    res.setHeader("Allow", ["GET", "POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return NextResponse.json(question, { status: 201 });
+  } catch (error) {
+    console.error("Error creating question:", error);
+    return NextResponse.json(
+      { error: "An error occurred while creating the question" },
+      { status: 500 }
+    );
   }
 }

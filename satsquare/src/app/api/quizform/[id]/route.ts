@@ -2,13 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
 // GET: Retrieve a specific quiz by ID with its questions and answers
-export async function GET({
-  req,
-  params,
-}: {
-  req: NextRequest;
-  params: { id: string };
-}) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   try {
     const quiz = await prisma.quiz.findUnique({
@@ -37,13 +34,10 @@ export async function GET({
 }
 
 // PUT: Update a specific quiz by ID
-export async function PUT({
-  req,
-  params,
-}: {
-  req: NextRequest;
-  params: { id: string };
-}) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const { id } = params;
   try {
     const data = await req.json();
@@ -99,18 +93,22 @@ export async function PUT({
 }
 
 // DELETE: Delete a specific quiz by ID
-export async function DELETE({
-  req,
-  params,
-}: {
-  req: NextRequest;
-  params: { id: string };
-}) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: number } }
+) {
   const { id } = params;
 
   try {
     await prisma.quiz.delete({
       where: { id: Number(id) },
+      include: {
+        Questions: {
+          include: {
+            Reponses: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json(

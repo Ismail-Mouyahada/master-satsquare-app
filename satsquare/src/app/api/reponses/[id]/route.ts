@@ -1,21 +1,46 @@
 import prisma from "@/db/prisma";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+// GET: Retrieve response by ID
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const { id } = req.query;
+  const { id } = params;
 
-  if (req.method === "GET") {
-    // Get reponse by id
+  try {
     const reponse = await prisma.reponse.findUnique({
       where: { id: Number(id) },
     });
-    res.status(200).json(reponse);
-  } else if (req.method === "PUT") {
-    // Update reponse by id
-    const { texte_reponse, est_correcte } = req.body;
+
+    if (!reponse) {
+      return NextResponse.json(
+        { error: "Response not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(reponse, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching response:", error);
+    return NextResponse.json(
+      { error: "An error occurred while fetching the response" },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT: Update response by ID
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+
+  try {
+    const data = await req.json();
+    const { texte_reponse, est_correcte } = data;
+
     const reponse = await prisma.reponse.update({
       where: { id: Number(id) },
       data: {
@@ -23,15 +48,35 @@ export default async function handler(
         est_correcte,
       },
     });
-    res.status(200).json(reponse);
-  } else if (req.method === "DELETE") {
-    // Delete reponse by id
+
+    return NextResponse.json(reponse, { status: 200 });
+  } catch (error) {
+    console.error("Error updating response:", error);
+    return NextResponse.json(
+      { error: "An error occurred while updating the response" },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE: Delete response by ID
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+
+  try {
     await prisma.reponse.delete({
       where: { id: Number(id) },
     });
-    res.status(204).end();
-  } else {
-    res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+
+    return NextResponse.json(null, { status: 204 });
+  } catch (error) {
+    console.error("Error deleting response:", error);
+    return NextResponse.json(
+      { error: "An error occurred while deleting the response" },
+      { status: 500 }
+    );
   }
 }

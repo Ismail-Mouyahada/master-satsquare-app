@@ -111,19 +111,3 @@ export async function DELETE(req: NextRequest) {
     );
   }
 }
-
-export async function handler(req: NextRequest) {
-  switch (req.method) {
-    case "GET":
-      return GET(req);
-    case "PUT":
-      return PUT(req);
-    case "DELETE":
-      return DELETE(req);
-    default:
-      return NextResponse.json(
-        { error: `Method ${req.method} Not Allowed` },
-        { status: 405 }
-      );
-  }
-}

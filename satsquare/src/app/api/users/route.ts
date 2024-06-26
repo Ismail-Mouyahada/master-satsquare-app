@@ -1,13 +1,12 @@
-import { NextResponse } from "next/server";
- import { PrismaClient } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
- 
-import { exclude } from "../utilisateurs/route";
-import { UserDTO } from "@/types/userDto";
+import { UserDTO } from "@/types/userDTO";
+import { exclude } from "@/utils/utils";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const { email, username, password } = await req.json();
 
   try {
@@ -46,9 +45,7 @@ function mapToUserDTO(user: any): UserDTO {
 }
 
 // GET: Récupérer un utilisateur par email
-export async function GET(req: Request) {
-
-  console.log(req)
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const email = searchParams.get("email");
 

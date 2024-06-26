@@ -4,7 +4,7 @@ import GameWrapper from "@/components/game/GameWrapper/page";
 import { useSocketContext } from "@/context/socket";
 import React, { useEffect, useState } from "react";
 import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
-import { useQRCode } from 'next-qrcode';
+import { useQRCode } from "next-qrcode";
 import { FaSignOutAlt } from "react-icons/fa";
 
 export default function Manager() {
@@ -12,8 +12,19 @@ export default function Manager() {
   const { socket } = useSocketContext();
   const [nextText, setNextText] = useState("Commencer");
   const [state, setState] = useState(() => {
-    const savedState = localStorage.getItem('gameState');
-    return savedState ? JSON.parse(savedState) : {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("gameState");
+      return savedState
+        ? JSON.parse(savedState)
+        : {
+            ...GAME_STATES,
+            status: {
+              ...GAME_STATES.status,
+              name: "SHOW_ROOM",
+            },
+          };
+    }
+    return {
       ...GAME_STATES,
       status: {
         ...GAME_STATES.status,
@@ -21,12 +32,21 @@ export default function Manager() {
       },
     };
   });
-  const [inviteCode, setInviteCode] = useState(() => localStorage.getItem('inviteCode'));
+  const [inviteCode, setInviteCode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("inviteCode");
+    }
+    return null;
+  });
 
   useEffect(() => {
-    const handleGameStatus = (status: { name: any; data: any; question: any; }) => {
+    const handleGameStatus = (status: {
+      name: any;
+      data: any;
+      question: any;
+    }) => {
       console.log("Received game status:", status); // Debugging log
-      setState((prevState: { status: any; question: any; }) => {
+      setState((prevState: { status: any; question: any }) => {
         const newState = {
           ...prevState,
           status: {
@@ -39,18 +59,24 @@ export default function Manager() {
             current: status.question,
           },
         };
-        localStorage.setItem('gameState', JSON.stringify(newState));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("gameState", JSON.stringify(newState));
+        }
         return newState;
       });
     };
 
-    const handleInviteCode = (roomInvite: React.SetStateAction<string | null>) => {
+    const handleInviteCode = (
+      roomInvite: React.SetStateAction<string | null>
+    ) => {
       console.log("Received invite code:", roomInvite); // Debugging log
-      if (typeof roomInvite === 'string') {
+      if (typeof roomInvite === "string") {
         setInviteCode(roomInvite);
-        localStorage.setItem('inviteCode', roomInvite);
+        if (typeof window !== "undefined") {
+          localStorage.setItem("inviteCode", roomInvite);
+        }
       }
-      setState((prevState: { status: { data: any; }; }) => {
+      setState((prevState: { status: { data: any } }) => {
         const newState = {
           ...prevState,
           created: true,
@@ -62,7 +88,9 @@ export default function Manager() {
             },
           },
         };
-        localStorage.setItem('gameState', JSON.stringify(newState));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("gameState", JSON.stringify(newState));
+        }
         return newState;
       });
     };
@@ -107,8 +135,10 @@ export default function Manager() {
 
   const handleLogout = () => {
     console.log("Logging out..."); // Debugging log
-    localStorage.removeItem('gameState');
-    localStorage.removeItem('inviteCode');
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("gameState");
+      localStorage.removeItem("inviteCode");
+    }
     setState({
       ...GAME_STATES,
       status: {
@@ -134,15 +164,15 @@ export default function Manager() {
                 <Canvas
                   text={inviteCode || ""}
                   options={{
-                    type: 'image/jpeg',
+                    type: "image/jpeg",
                     quality: 0.3,
-                    errorCorrectionLevel: 'M',
+                    errorCorrectionLevel: "M",
                     margin: 0,
                     scale: 4,
                     width: 200,
                     color: {
-                      light: '#3037ce',
-                      dark: '#ffffffff',
+                      light: "#3037ce",
+                      dark: "#ffffffff",
                     },
                   }}
                 />
@@ -150,15 +180,21 @@ export default function Manager() {
               <h3 className="text-2xl font-bold text-center text-slate-500 mb-4 bg-action p-8 rounded-md ">
                 Room ID: {inviteCode}
               </h3>
-              <button onClick={handleLogout} className="mt-4 p-4 bg-red-500 text-white rounded">
-                <FaSignOutAlt className="scale-150"/>
+              <button
+                onClick={handleLogout}
+                className="mt-4 p-4 bg-red-500 text-white rounded"
+              >
+                <FaSignOutAlt className="scale-150" />
               </button>
             </div>
           )}
           {GAME_STATE_COMPONENTS_MANAGER[state.status.name] &&
-            React.createElement(GAME_STATE_COMPONENTS_MANAGER[state.status.name], {
-              data: state.status.data,
-            })}
+            React.createElement(
+              GAME_STATE_COMPONENTS_MANAGER[state.status.name],
+              {
+                data: state.status.data,
+              }
+            )}
         </GameWrapper>
       )}
     </>

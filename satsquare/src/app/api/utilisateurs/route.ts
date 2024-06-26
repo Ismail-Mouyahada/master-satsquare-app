@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 import bcrypt from "bcrypt";
-import { Utilisateur } from "@/types/datatypes";
-
-// Fonction pour exclure des clés d'un objet
-export function exclude<
-  User extends { [key: string]: any },
-  Key extends keyof User,
->(user: User, keys: Key[]): Omit<User, Key> {
-  return Object.fromEntries(
-    Object.entries(user).filter(([key]) => !keys.includes(key as Key))
-  ) as Omit<User, Key>;
-}
+import { exclude } from "@/utils/utils";
 
 // GET: Récupérer tous les utilisateurs ou rechercher par nom
 export async function GET(req: NextRequest) {
@@ -57,10 +47,8 @@ export async function GET(req: NextRequest) {
 
 // POST: Créer un nouveau utilisateur
 export async function POST(req: NextRequest) {
-  const data = await req.json();
-  console.log(req)
   try {
-    // const data = await req.json();
+    const data = await req.json();
 
     if (data.mot_de_passe) {
       const saltRounds = 10;
@@ -71,7 +59,10 @@ export async function POST(req: NextRequest) {
       data,
     });
 
-    return NextResponse.json(newUtilisateur, { status: 201 });
+    // Exclure le champ mot_de_passe avant de retourner la réponse
+    const utilisateurSansMotDePasse = exclude(newUtilisateur, ["mot_de_passe"]);
+
+    return NextResponse.json(utilisateurSansMotDePasse, { status: 201 });
   } catch (error) {
     console.error("Error creating utilisateur:", error);
     return NextResponse.json(
