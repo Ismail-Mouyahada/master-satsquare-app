@@ -123,6 +123,7 @@ export default function Manager() {
     <>
       {!state.created ? (
         <div>
+        
           <ManagerPassword />
 
         </div>

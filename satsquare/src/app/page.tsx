@@ -56,15 +56,15 @@ export default function Home() {
         <div className="mb-5">
           <LogoHeader />
         </div>
-        <div className="flex flex-row gap-4">
+        <div className="flex gap-4 flex-col lg:flex-row  md:flex-row  sm:flex-col  xs:flex-col ">
           {/* Game Form */}
-          <Card className="p-6 bg-opacity-90">
+          <Card className="p-6 bg-opacity-90 bg-white">
             <div className="flex flex-col items-center justify-center">
               <div className="p-8 rounded-full bg-main">
                 <FaGamepad className="text-5xl text-white" />
               </div>
             </div>
-            <Link href="/game" target="_blank" rel="noopener noreferrer"
+            <Link href="/home" target="_blank" rel="noopener noreferrer"
 
               className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
             >
@@ -106,7 +106,7 @@ export default function Home() {
             </Link>
           </Card>
 
-           
+
         </div>
       </div>
     </main>

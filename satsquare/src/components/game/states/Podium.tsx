@@ -9,6 +9,7 @@ import {
   SFX_SNEAR_ROOL,
   SFX_PODIUM_FIRST,
 } from "@/constants/db";
+import prisma from "@/db/prisma";
 
 export default function Podium({ data }: any) {
   const [apparition, setApparition] = useState(0);
@@ -67,6 +68,8 @@ export default function Podium({ data }: any) {
 
   const subject = data?.subject || "No Subject";
   const top = data?.top || [];
+
+  // await prisma.game.
 
   return (
     <>
