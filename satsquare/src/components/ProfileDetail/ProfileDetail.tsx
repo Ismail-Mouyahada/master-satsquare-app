@@ -111,7 +111,7 @@ const ProfileDetail: React.FC = () => {
     }
   };
 
-  const sectionStyle = "bg-white text-black rounded-lg flex items-center h-16 m-6";
+  const sectionStyle = "bg-slate-50 text-black rounded-lg flex items-center h-16 m-6";
   const buttonStyle = "p-4 px-8 bg-[#F4BD8A] text-[#726e81] rounded-md flex items-center";
   const inputContainerStyle = "grid grid-cols-2 mb-4";
   const inputStyle = "w-full px-8 py-3 text-center border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]";
@@ -121,7 +121,7 @@ const ProfileDetail: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center mt-8 bg-white">
+    <div className="flex flex-col items-center justify-center mt-8 bg-slate-50">
       <Toaster />
       <div className="w-full h-fit flex-1 bg-[#EBEBF8] rounded-lg shadow-md p-10">
 
@@ -160,7 +160,7 @@ const ProfileDetail: React.FC = () => {
             </button>
           </div>
 
-          <div className="px-10 py-8 bg-white rounded-lg">
+          <div className="px-10 py-8 bg-slate-50 rounded-lg">
             <h2 className="text-2xl font-semibold text-[#727EA7] pb-8">
               Réinitialiser le mot de passe
             </h2>

@@ -72,7 +72,7 @@ const SponsorModal: FC<SponsorModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-slate-50 p-6 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-2xl mb-4 text-[#8495B0]">
           {sponsor ? "Modifier Sponsor" : "Ajouter Sponsor"}
         </h2>
@@ -118,7 +118,7 @@ const SponsorModal: FC<SponsorModalProps> = ({
                 className="flex items-center space-x-2 cursor-pointer"
               >
                 <span
-                  className={`w-8 h-8 rounded-full border-4 ${formData.valide ? "bg-black border-gray-300" : "bg-white border-gray-300"}`}
+                  className={`w-8 h-8 rounded-full border-4 ${formData.valide ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
                 ></span>
                 <span className="text-sm font-medium text-gray-700">
                   Valide
@@ -139,7 +139,7 @@ const SponsorModal: FC<SponsorModalProps> = ({
                 className="flex items-center space-x-2 cursor-pointer"
               >
                 <span
-                  className={`w-8 h-8 rounded-full border-4 ${formData.est_confirme ? "bg-black border-gray-300" : "bg-white border-gray-300"}`}
+                  className={`w-8 h-8 rounded-full border-4 ${formData.est_confirme ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
                 ></span>
                 <span className="text-sm font-medium text-gray-700">
                   Confirmé

@@ -71,7 +71,7 @@ io.on("connection", (socket: Socket) => {
   );
 
   socket.on("disconnect", () => {
-    console.log(`Utilisateur déconnecté ${socket.id}`);
+    // console.log(`Utilisateur déconnecté ${socket.id}`);
 
     if (gameState.manager === socket.id) {
       console.log("Réinitialisation du jeu");

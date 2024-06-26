@@ -93,7 +93,7 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-slate-50 p-6 rounded-lg shadow-lg max-w-md w-full">
         <h2 className="text-2xl mb-4 text-[#8495B0]">
           {utilisateur ? "Modifier Utilisateur" : "Ajouter Utilisateur"}
         </h2>
