@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { FaConnectdevelop, FaSignInAlt } from 'react-icons/fa';
+import Link from 'next/link';
 
 export default function SignIn() {
     const [email, setEmail] = useState('');
@@ -34,7 +35,7 @@ export default function SignIn() {
     };
 
     return (
-        <section className="p-8 mx-auto bg-white rounded-lg shadow-md ">
+        <section className="p-8 mx-auto bg-slate-50 rounded-lg shadow-md ">
 
             <div className="rounded-lg ">
                 <div className="flex flex-col items-center justify-center">
@@ -65,8 +66,13 @@ export default function SignIn() {
                         />
                     </div>
 
-                    <button type="submit" className="outline-none ring-[#6a6b74!important] font-bold w-full p-4 mt-4 rounded-md bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74]  "> Se connecter</button>
-
+                  <div className='flex flex-col gap-4'>
+                  <button type="submit" className="outline-none ring-[#6a6b74!important] font-bold w-full p-4 mt-4 rounded-md bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74]  "> Se connecter</button>
+                    <Link
+                        href="/" 
+                        className="outline-none text-center p-6 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-3 font-semibold"
+                      >Retour</Link>
+                  </div>
                 </form>
             </div>
         </section>

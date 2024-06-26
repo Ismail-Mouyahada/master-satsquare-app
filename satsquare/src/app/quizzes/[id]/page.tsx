@@ -269,7 +269,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
                 className="w-5/6 p-4 text-xl font-bold text-center border border-gray-300 rounded-lg"
               />
               {!questions.find((q) => q.id === selectedQuestion)?.imageUrl && (
-                <div className="relative flex flex-col items-center justify-center gap-3 mt-4 bg-white border-2 border-gray-300 border-dashed rounded-lg cursor-pointer w-fit p-11">
+                <div className="relative flex flex-col items-center justify-center gap-3 mt-4 bg-slate-50 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer w-fit p-11">
                   <input
                     type="file"
                     onChange={handleImageUpload}
@@ -378,7 +378,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
           </div>
           <button
             onClick={addQuestion}
-            className="flex flex-col items-center justify-center w-full gap-3 p-8 mb-2 bg-white rounded-lg shadow-md bg-opacity-80"
+            className="flex flex-col items-center justify-center w-full gap-3 p-8 mb-2 bg-slate-50 rounded-lg shadow-md bg-opacity-80"
           >
             <span className="font-bold text-slate-400">Nouvelle question</span>
             <FaPlus className="scale-[150%] text-slate-400" />

@@ -67,7 +67,7 @@ export default function Tester() {
   return (
     <div className="flex flex-col items-center justify-center p-8 rounded-md bg-[#2c2e9f] bg-opacity-80">
       {!gameOver && !complete && <p className="score">Score: {score}</p>}
-      {complete && <div className="p-4 bg-white rounded-md complete">Quiz is complete</div>}
+      {complete && <div className="p-4 bg-slate-50 rounded-md complete">Quiz is complete</div>}
 
       {(gameOver || complete) ? (
         <>

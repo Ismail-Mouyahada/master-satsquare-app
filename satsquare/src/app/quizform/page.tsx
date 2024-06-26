@@ -142,7 +142,7 @@ const QuizForm = () => {
                 className="text-center text-xl border border-gray-300 rounded-lg p-4 w-5/6 font-bold"
               />
               {!questions.find((q) => q.id === selectedQuestion)?.imageUrl && (
-                <div className="bg-white w-fit border-2 border-dashed border-gray-300 rounded-lg flex flex-col gap-3 items-center justify-center cursor-pointer mt-4 relative p-11">
+                <div className="bg-slate-50 w-fit border-2 border-dashed border-gray-300 rounded-lg flex flex-col gap-3 items-center justify-center cursor-pointer mt-4 relative p-11">
                   <input
                     type="file"
                     onChange={handleImageUpload}
@@ -250,7 +250,7 @@ const QuizForm = () => {
           </div>
           <button
             onClick={addQuestion}
-            className="bg-white shadow-md rounded-lg p-8 w-full mb-2 flex flex-col gap-3 items-center justify-center bg-opacity-80"
+            className="bg-slate-50 shadow-md rounded-lg p-8 w-full mb-2 flex flex-col gap-3 items-center justify-center bg-opacity-80"
           >
             <span className="text-slate-400 font-bold">Nouvelle question</span>
             <FaPlus className="scale-[150%] text-slate-400" />

@@ -8,7 +8,7 @@ interface RankingTableProps {
 const RoleTable: FC<RankingTableProps> = ({ usersRanking }) => {
   return (
     <div className="bg-[#F3F3FF] p-4 rounded-lg overflow-x-auto text-slate-600">
-      <table className="min-w-full bg-white border">
+      <table className="min-w-full bg-slate-50 border">
         <thead>
           <tr className="bg-[#EDF2FF]">
             <th className="border px-4 py-2">Classement</th>

@@ -6,6 +6,7 @@ import { SetStateAction, useEffect, useState } from "react"
 import { socket } from "@/context/socket"
 import { Card, FloatingLabel } from "flowbite-react"
 import { FaGamepad } from "react-icons/fa"
+import Link from "next/link"
 
 export default function Room() {
   const { player, dispatch } = usePlayerContext()
@@ -42,13 +43,13 @@ export default function Room() {
 
         <Input className="w-full font-bold text-center border-spacing-1 border-1 border-slate-300 focus:text-center " onChange={(e: { target: { value: SetStateAction<string> } }) => setRoomId(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="PIN Code here" variant="outlined" label="Code de la session" />
+          placeholder="Code de la session" variant="outlined" label="Code de la session" />
         <Button onClick={() => handleLogin()}  >Rejoindre</Button>
    
-        <Button
-              href="/"
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
-            >Retour</Button>
+        <Link
+              href="/" 
+              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-3 font-semibold text-center rounded-md "
+            > Retour à l'accueil </Link>
     </Form>
   )
 }
