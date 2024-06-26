@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/db/connect";
+import prisma from "@/db/prisma";
 
 // POST: Créer un nouveau événement
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
+    let data;
+    try {
+      data = await req.json();
+    } catch (error) {
+      return NextResponse.json({ error: "No body received." }, { status: 400 });
+    }
+
+    if (!data || Object.keys(data).length === 0) {
+      return NextResponse.json({ error: "No body received." }, { status: 400 });
+    }
 
     const newEvent = await prisma.evenement.create({
       data: {

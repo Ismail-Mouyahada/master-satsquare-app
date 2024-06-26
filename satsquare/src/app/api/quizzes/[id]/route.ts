@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/db/connect';
+import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/db/prisma";
 
 // GET: Fetch quiz by ID
 async function getQuizById(id: string) {
@@ -50,30 +50,33 @@ async function deleteQuizById(id: string) {
 
 export async function GET(req: NextRequest) {
   const { pathname } = new URL(req.url);
-  const id = pathname.split('/').pop(); // Extract ID from URL
+  const id = pathname.split("/").pop(); // Extract ID from URL
 
   if (!id) {
-    return NextResponse.json({ error: 'Quiz ID is required' }, { status: 400 });
+    return NextResponse.json({ error: "Quiz ID is required" }, { status: 400 });
   }
 
   try {
     const quiz = await getQuizById(id);
     if (!quiz) {
-      return NextResponse.json({ error: 'Quiz not found' }, { status: 404 });
+      return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
     }
     return NextResponse.json(quiz, { status: 200 });
   } catch (error) {
     console.error(`Error fetching quiz with ID ${id}:`, error);
-    return NextResponse.json({ error: 'An error occurred while fetching the quiz' }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while fetching the quiz" },
+      { status: 500 }
+    );
   }
 }
 
 export async function PUT(req: NextRequest) {
   const { pathname } = new URL(req.url);
-  const id = pathname.split('/').pop(); // Extract ID from URL
+  const id = pathname.split("/").pop(); // Extract ID from URL
 
   if (!id) {
-    return NextResponse.json({ error: 'Quiz ID is required' }, { status: 400 });
+    return NextResponse.json({ error: "Quiz ID is required" }, { status: 400 });
   }
 
   try {
@@ -82,16 +85,19 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(updatedQuiz, { status: 200 });
   } catch (error) {
     console.error(`Error updating quiz with ID ${id}:`, error);
-    return NextResponse.json({ error: 'An error occurred while updating the quiz' }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while updating the quiz" },
+      { status: 500 }
+    );
   }
 }
 
 export async function DELETE(req: NextRequest) {
   const { pathname } = new URL(req.url);
-  const id = pathname.split('/').pop(); // Extract ID from URL
+  const id = pathname.split("/").pop(); // Extract ID from URL
 
   if (!id) {
-    return NextResponse.json({ error: 'Quiz ID is required' }, { status: 400 });
+    return NextResponse.json({ error: "Quiz ID is required" }, { status: 400 });
   }
 
   try {
@@ -99,19 +105,25 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json(null, { status: 204 });
   } catch (error) {
     console.error(`Error deleting quiz with ID ${id}:`, error);
-    return NextResponse.json({ error: 'An error occurred while deleting the quiz' }, { status: 500 });
+    return NextResponse.json(
+      { error: "An error occurred while deleting the quiz" },
+      { status: 500 }
+    );
   }
 }
 
 export async function handler(req: NextRequest) {
   switch (req.method) {
-    case 'GET':
+    case "GET":
       return GET(req);
-    case 'PUT':
+    case "PUT":
       return PUT(req);
-    case 'DELETE':
+    case "DELETE":
       return DELETE(req);
     default:
-      return NextResponse.json({ error: `Method ${req.method} Not Allowed` }, { status: 405 });
+      return NextResponse.json(
+        { error: `Method ${req.method} Not Allowed` },
+        { status: 405 }
+      );
   }
 }

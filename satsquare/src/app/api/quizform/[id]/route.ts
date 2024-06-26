@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/db/connect";
+import prisma from "@/db/prisma";
 
 // GET: Retrieve a specific quiz by ID with its questions and answers
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET({
+  req,
+  params,
+}: {
+  req: NextRequest;
+  params: { id: string };
+}) {
   const { id } = params;
   try {
     const quiz = await prisma.quiz.findUnique({
@@ -34,7 +37,13 @@ export async function GET(
 }
 
 // PUT: Update a specific quiz by ID
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT({
+  req,
+  params,
+}: {
+  req: NextRequest;
+  params: { id: string };
+}) {
   const { id } = params;
   try {
     const data = await req.json();
@@ -49,15 +58,25 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
         categorie,
         Questions: {
           deleteMany: {}, // Delete existing questions
-          create: questions.map((question: { texte_question: string; reponses: { texte_reponse: string; est_correcte: boolean; }[]; }) => ({
-            texte_question: question.texte_question,
-            Reponses: {
-              create: question.reponses.map((reponse: { texte_reponse: string; est_correcte: boolean; }) => ({
-                texte_reponse: reponse.texte_reponse,
-                est_correcte: reponse.est_correcte,
-              })),
-            },
-          })),
+          create: questions.map(
+            (question: {
+              texte_question: string;
+              reponses: { texte_reponse: string; est_correcte: boolean }[];
+            }) => ({
+              texte_question: question.texte_question,
+              Reponses: {
+                create: question.reponses.map(
+                  (reponse: {
+                    texte_reponse: string;
+                    est_correcte: boolean;
+                  }) => ({
+                    texte_reponse: reponse.texte_reponse,
+                    est_correcte: reponse.est_correcte,
+                  })
+                ),
+              },
+            })
+          ),
         },
       },
       include: {
@@ -80,30 +99,29 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 }
 
 // DELETE: Delete a specific quiz by ID
-export async function DELETE(
-    req: NextRequest,
-    { params }: { params: { id: number } }
-  ) {
-    const { id } = params;
-  
-    try {
-      await prisma.quiz.delete({
-        where: { id: Number(id) },
-        include: {
-          Questions: {
-            include: {
-              Reponses: true,
-            },
-          },
-        },
-      });
-  
-      return NextResponse.json({ message: "Quiz deleted successfully" }, { status: 204 });
-    } catch (error) {
-      console.error("Error deleting quiz:", error);
-      return NextResponse.json(
-        { error: "An error occurred while deleting the quiz" },
-        { status: 500 }
-      );
-    }
+export async function DELETE({
+  req,
+  params,
+}: {
+  req: NextRequest;
+  params: { id: string };
+}) {
+  const { id } = params;
+
+  try {
+    await prisma.quiz.delete({
+      where: { id: Number(id) },
+    });
+
+    return NextResponse.json(
+      { message: "Quiz deleted successfully" },
+      { status: 204 }
+    );
+  } catch (error) {
+    console.error("Error deleting quiz:", error);
+    return NextResponse.json(
+      { error: "An error occurred while deleting the quiz" },
+      { status: 500 }
+    );
   }
+}

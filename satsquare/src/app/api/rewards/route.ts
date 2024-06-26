@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/db/connect";
+import prisma from "@/db/prisma";
 import { RewardDTO } from "@/types/rewardDTO";
 
 // GET: Récupérer les récompenses

@@ -13,7 +13,9 @@
     "all-dev": "concurrently --kill-others \"npm run dev\" \"npm run socket\" ",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
@@ -55,8 +57,12 @@
     "@storybook/nextjs": "^8.1.4",
     "@storybook/react": "^8.1.4",
     "@storybook/test": "^8.1.4",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.14.8",
+    "@types/jest": "^29.5.12",
+    "@types/jest-json-schema": "^6.1.4",
     "@types/react": "^18.3.3",
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.3.0",
@@ -67,10 +73,15 @@
     "eslint": "^8.0.0",
     "eslint-config-next": "14.2.3",
     "eslint-plugin-storybook": "^0.8.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jest-json-schema": "^6.1.0",
+    "jest-mock-extended": "^3.0.7",
     "postcss": "^8.4.38",
     "storybook": "^8.1.4",
     "tailwindcss": "^3.4.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "whatwg-fetch": "^3.6.20"
   }
 }
