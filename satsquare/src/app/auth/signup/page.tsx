@@ -37,7 +37,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="max-w-md p-8 m-20 mx-auto bg-white rounded-lg shadow-md">
+    <div className="max-w-md p-8 m-20 mx-auto bg-slate-50 rounded-lg shadow-md">
       <div className="flex items-center justify-center my-3">
         <div className="flex items-center space-x-2">
           <div className="flex flex-col items-center justify-center rounded-md">

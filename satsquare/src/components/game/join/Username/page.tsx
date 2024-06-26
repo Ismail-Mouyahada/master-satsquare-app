@@ -54,10 +54,10 @@ export default function Username() {
         onKeyDown={handleKeyDown}
         placeholder="Nom d'utilsiateur..."
       />
-      <Button  className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold" onClick={handleJoin}>Submit</Button>
+      <Button  className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-3 font-semibold" onClick={handleJoin}>Soumettre</Button>
       <Button
         href="/"
-        className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
+        className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-3 font-semibold"
       >Retour</Button>
     </Form>
   );

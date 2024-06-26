@@ -19,10 +19,21 @@ export default function RootLayout({
   pageProps: any;
 }) {
   return (
-    <html>
-      <head></head>
-      <body className="survey-main">
-        <Providers session={pageProps?.session}>{children}</Providers>
+    <html lang="fr">
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" sizes="16x16." href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/icon-512x512.png" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="description" content="Application dédiée pour aider les associations" />
+        <title>SATSQUARE App</title>
+      </head>
+      <body className={`survey-main ${inter.className}`}>
+        <Providers session={pageProps?.session}>
+          <ThemeModeScript />
+          {children}
+        </Providers>
       </body>
     </html>
   );

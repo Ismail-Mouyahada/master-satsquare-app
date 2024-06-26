@@ -79,7 +79,7 @@ const Manager = {
       name: "SHOW_START",
       data: {
         time: 3,
-        subject: "Adobe",
+        subject: "Le jeu commence !",
       },
     });
 

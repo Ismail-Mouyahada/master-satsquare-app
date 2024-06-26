@@ -40,7 +40,7 @@ export default function ManagerPassword() {
   }, []);
 
   return (
-    <section className="relative flex flex-col items-center justify-center w-full h-screen">
+    <section className="  flex flex-col items-center justify-center w-full h-screen">
       <div className="absolute w-full h-full overflow-hidden">
         <div className="absolute -left-[15vmin] -top-[15vmin] min-h-[75vmin] min-w-[75vmin] rounded-full bg-primary/15"></div>
         <div className="absolute -bottom-[15vmin] -right-[15vmin] min-h-[75vmin] min-w-[75vmin] rotate-45 bg-primary/15"></div>
@@ -61,7 +61,7 @@ export default function ManagerPassword() {
           placeholder="Mot de passe de l'admin"
         />
         <Button onClick={handleCreate} disabled={loading}>
-          Submit
+          Soumettre
         </Button>
       </Form>
     </section>

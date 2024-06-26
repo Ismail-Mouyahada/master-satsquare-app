@@ -43,7 +43,7 @@ export default function Room({ data: { text, inviteCode } }: Props): JSX.Element
 
   return (
     <section className="relative flex flex-col items-center justify-center flex-1 w-full px-2 mx-auto max-w-7xl">
-      <div className="px-6 py-4 mb-10 text-6xl font-extrabold bg-white rounded-md rotate-3">
+      <div className="px-6 py-4 mb-10 text-6xl font-extrabold bg-slate-50 rounded-md rotate-3">
         {inviteCode}
       </div>
 

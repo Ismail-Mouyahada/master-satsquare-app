@@ -9,6 +9,8 @@ import { useSocketContext } from "@/context/socket";
 import { useEffect, useState } from "react";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import Input from "@/components/Input";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
   const { player, dispatch } = usePlayerContext();
@@ -54,34 +56,27 @@ export default function Home() {
         <div className="mb-5">
           <LogoHeader />
         </div>
-        <div className="flex flex-row gap-4">
+        <div className="flex gap-4 flex-col lg:flex-row  md:flex-row  sm:flex-col  xs:flex-col ">
           {/* Game Form */}
-          <Card className="p-6 bg-opacity-90">
+          <Card className="p-6 bg-opacity-90 bg-white">
             <div className="flex flex-col items-center justify-center">
               <div className="p-8 rounded-full bg-main">
                 <FaGamepad className="text-5xl text-white" />
               </div>
             </div>
-            <Input
-              className="w-full bg-white border-none text-slate-400"
-              variant="outlined"
-              PlaceHolder="Code de la salle"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoomId(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            <Button
-              onClick={handleLogin}
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1 font-semibold"
+            <Link href="/home" target="_blank" rel="noopener noreferrer"
+
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
             >
               Rejoindre
-            </Button>
+            </Link>
 
-            <Button
-              href="/lightning"
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
+            <Link href="lightning" target="_blank" rel="noopener noreferrer"
+
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
             >
-            Connexion lightning
-            </Button>
+              Connexion lightning
+            </Link>
           </Card>
           {/* Registration Form */}
           <Card className="p-6 bg-opacity-90">
@@ -90,26 +85,28 @@ export default function Home() {
                 <FaLightbulb className="text-5xl text-white" />
               </div>
             </div>
-            <Button
+            <Link
               href="/auth/signin"
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 py-1 font-semibold"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
             >
               Se connecter
-            </Button>
-            <Button
+            </Link>
+            <Link
               href="/auth/signup"
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
             >
               S'inscrire
-            </Button>
+            </Link>
 
-            <Button
-              href="/manager"
-              className="outline-none ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-4 py-1 font-semibold"
+            <Link
+              href="/manager" target="_blank" rel="noopener noreferrer"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
             >
-             Manager de session
-            </Button>
+              Manager de session
+            </Link>
           </Card>
+
+
         </div>
       </div>
     </main>

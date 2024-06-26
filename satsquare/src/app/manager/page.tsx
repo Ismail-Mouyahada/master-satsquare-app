@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
 import { useQRCode } from "next-qrcode";
 import { FaSignOutAlt } from "react-icons/fa";
+import Image from "next/image";
 
 export default function Manager() {
   const { Canvas } = useQRCode();
@@ -128,13 +129,11 @@ export default function Manager() {
         socket.emit("manager:nextQuestion");
         break;
       default:
-        console.log("No matching case for state:", state.status.name); // Debugging log
-        break;
+        console.log("No matching case for state:", state.status.name);
     }
   };
 
   const handleLogout = () => {
-    console.log("Logging out..."); // Debugging log
     if (typeof window !== "undefined") {
       localStorage.removeItem("gameState");
       localStorage.removeItem("inviteCode");
@@ -152,15 +151,14 @@ export default function Manager() {
   return (
     <>
       {!state.created ? (
-        <>
+        <div>
           <ManagerPassword />
-          <button onClick={handleCreate}>Créer une salle</button>
-        </>
+        </div>
       ) : (
         <GameWrapper textNext={nextText} onNext={handleSkip} manager>
           {state.status.name === "SHOW_ROOM" && (
             <div className="flex flex-col items-center justify-center">
-              <div className="flex justify-center items-center bg-primary p-8 my-2 rounded-md">
+              <div className="flex justify-center items-center bg-slate-50 p-8 my-2 rounded-md">
                 <Canvas
                   text={inviteCode || ""}
                   options={{
@@ -171,13 +169,13 @@ export default function Manager() {
                     scale: 4,
                     width: 200,
                     color: {
-                      light: "#3037ce",
-                      dark: "#ffffffff",
+                      light: "#ffffff",
+                      dark: "#222629ff",
                     },
                   }}
                 />
               </div>
-              <h3 className="text-2xl font-bold text-center text-slate-500 mb-4 bg-action p-8 rounded-md ">
+              <h3 className="text-2xl font-bold text-center text-slate-600 m-4 bg-action px-8 py-8 rounded-md ">
                 Room ID: {inviteCode}
               </h3>
               <button

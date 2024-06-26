@@ -1,6 +1,7 @@
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { useSession, signOut } from "next-auth/react";
-
+import { Button, Modal } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import {
   FaCreativeCommonsSamplingPlus,
   FaDonate,
@@ -21,6 +22,7 @@ const ProfileDetail: React.FC = () => {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [openModal, setOpenModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -77,19 +79,17 @@ const ProfileDetail: React.FC = () => {
   };
 
   const handleLightningWallet = () => {
-    // Logic to handle associating Lightning wallet
     toast.success("Associer portefeuille Lightning");
   };
 
   const handleActivateSponsorMode = () => {
-    // Logic to handle activating sponsor mode
     toast.success("Activer le mode sponsor");
   };
 
   const handleActivateCharityMode = () => {
-    // Logic to handle activating charity mode
     toast.success("Activer le mode caritatif");
   };
+
   const handleDeleteAccount = async () => {
     try {
       const response = await fetch("/api/users/delete-account", {
@@ -117,7 +117,7 @@ const ProfileDetail: React.FC = () => {
   };
 
   const sectionStyle =
-    "bg-white text-black rounded-lg flex items-center h-16 m-6";
+    "bg-slate-50 text-black rounded-lg flex items-center h-16 m-6";
   const buttonStyle =
     "p-4 px-8 bg-[#F4BD8A] text-[#726e81] rounded-md flex items-center";
   const inputContainerStyle = "grid grid-cols-2 mb-4";
@@ -129,7 +129,7 @@ const ProfileDetail: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center mt-8 bg-white">
+    <div className="flex flex-col items-center justify-center mt-8 bg-slate-50">
       <Toaster />
       <div className="w-full h-fit flex-1 bg-[#EBEBF8] rounded-lg shadow-md p-10">
         <div className="grid flex-1 h-full grid-cols-1 gap-4 md:grid-cols-2">
@@ -172,7 +172,7 @@ const ProfileDetail: React.FC = () => {
             </button>
           </div>
 
-          <div className="px-10 py-8 bg-white rounded-lg">
+          <div className="px-10 py-8 bg-slate-50 rounded-lg">
             <h2 className="text-2xl font-semibold text-[#727EA7] pb-8">
               Réinitialiser le mot de passe
             </h2>
@@ -233,11 +233,37 @@ const ProfileDetail: React.FC = () => {
           </div>
           <button
             className="flex items-center px-4 py-4 ml-2 text-white bg-red-500 rounded hover:bg-red-600"
-            onClick={handleDeleteAccount}
+            onClick={() => setOpenModal(true)}
           >
             <FaShieldVirus className="scale-[150%] mx-2 text-[#f5f5f7]" />
             <span>Supprimer le compte</span>
           </button>
+
+          <Modal
+            show={openModal}
+            size="md"
+            position={"center"}
+            onClose={() => setOpenModal(false)}
+            popup
+          >
+            <Modal.Header />
+            <Modal.Body>
+              <div className="text-center">
+                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-red-400 dark:text-gray-200" />
+                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                  Êtes-vous sûr de bien vouloir supprimer votre compte ?
+                </h3>
+                <div className="flex justify-center gap-4">
+                  <Button color="failure" onClick={handleDeleteAccount}>
+                    {"Oui, supprimer le compte"}
+                  </Button>
+                  <Button color="gray" onClick={() => setOpenModal(false)}>
+                    Non, annuler !
+                  </Button>
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
     </div>

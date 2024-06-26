@@ -88,7 +88,7 @@ const UtilisateursPage: FC = () => {
     <div className="flex flex-row w-full">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-white rounded-lg shadow-md">
+        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Utilisateurs"
             icon={<FaUsers className="scale-[1.5]" color="#6D6B81" />}
@@ -111,7 +111,7 @@ const UtilisateursPage: FC = () => {
         />
         {isDeleteModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="p-6 bg-white rounded-lg shadow-lg text-slate-500">
+            <div className="p-6 bg-slate-50 rounded-lg shadow-lg text-slate-500">
               <h2 className="mb-4 text-2xl">Confirmer la suppression</h2>
               <p>
                 Êtes-vous sûr de vouloir supprimer le Utilisateur "

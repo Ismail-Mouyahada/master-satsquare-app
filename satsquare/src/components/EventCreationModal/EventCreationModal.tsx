@@ -93,7 +93,7 @@ const EventCreationModal: React.FC<EventCreationModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl w-full">
+      <div className="bg-slate-50 p-6 rounded-lg shadow-lg max-w-4xl w-full">
         <h2 className="text-2xl mb-4 text-[#8495B0]">Créer un événement</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-5 gap-6 mb-4">

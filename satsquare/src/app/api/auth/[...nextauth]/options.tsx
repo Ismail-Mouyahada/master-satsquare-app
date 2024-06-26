@@ -1,7 +1,9 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
+ 
 import prisma from "@/db/prisma";
+ 
 
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -40,7 +42,9 @@ export const authOptions = {
         return null;
       },
     }),
-  ],
+     
+ 
+  ] 
 };
 
 export default NextAuth(authOptions);
