@@ -1,6 +1,7 @@
 import React, { useEffect, useState, ChangeEvent } from "react";
 import { useSession, signOut } from "next-auth/react";
- 
+import { Button, Modal } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import {
   FaCreativeCommonsSamplingPlus,
   FaDonate,
@@ -14,7 +15,6 @@ import {
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { UserDTO } from "@/types/userDto";
- 
 
 const ProfileDetail: React.FC = () => {
   const { data: session } = useSession();
@@ -22,6 +22,7 @@ const ProfileDetail: React.FC = () => {
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [openModal, setOpenModal] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -62,9 +63,7 @@ const ProfileDetail: React.FC = () => {
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(
-          data.message || "Erreur lors de la réinitialisation du mot de passe."
-        );
+        throw new Error(data.message || "Erreur lors de la réinitialisation du mot de passe.");
       }
 
       toast.success("Mot de passe réinitialisé avec succès.");
@@ -74,19 +73,17 @@ const ProfileDetail: React.FC = () => {
   };
 
   const handleLightningWallet = () => {
-    // Logic to handle associating Lightning wallet
     toast.success("Associer portefeuille Lightning");
   };
 
   const handleActivateSponsorMode = () => {
-    // Logic to handle activating sponsor mode
     toast.success("Activer le mode sponsor");
   };
 
   const handleActivateCharityMode = () => {
-    // Logic to handle activating charity mode
     toast.success("Activer le mode caritatif");
   };
+
   const handleDeleteAccount = async () => {
     try {
       const response = await fetch("/api/users/delete-account", {
@@ -124,9 +121,7 @@ const ProfileDetail: React.FC = () => {
     <div className="flex flex-col items-center justify-center mt-8 bg-slate-50">
       <Toaster />
       <div className="w-full h-fit flex-1 bg-[#EBEBF8] rounded-lg shadow-md p-10">
-
         <div className="grid flex-1 h-full grid-cols-1 gap-4 md:grid-cols-2">
-
           <div className="p-4">
             <h2 className="text-2xl font-semibold text-[#727EA7] my-8">
               Détails de compte
@@ -202,7 +197,6 @@ const ProfileDetail: React.FC = () => {
               <span>Réinitialiser</span>
             </button>
           </div>
-
         </div>
         <div className="flex justify-between pt-40 my-6">
           <div className="flex">
@@ -215,10 +209,30 @@ const ProfileDetail: React.FC = () => {
               <span className="font-bold">Activer le mode caritatif</span>
             </button>
           </div>
-          <button className="flex items-center px-4 py-4 ml-2 text-white bg-red-500 rounded hover:bg-red-600" onClick={handleDeleteAccount}>
+          <button className="flex items-center px-4 py-4 ml-2 text-white bg-red-500 rounded hover:bg-red-600" onClick={() => setOpenModal(true)}>
             <FaShieldVirus className="scale-[150%] mx-2 text-[#f5f5f7]" />
             <span>Supprimer le compte</span>
           </button>
+     
+          <Modal show={openModal} size="md" position={"center"} onClose={() => setOpenModal(false)} popup>
+            <Modal.Header />
+            <Modal.Body>
+              <div className="text-center">
+                <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-red-400 dark:text-gray-200" />
+                <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                  Êtes-vous sûr de bien vouloir supprimer votre compte ?
+                </h3>
+                <div className="flex justify-center gap-4">
+                  <Button color="failure" onClick={handleDeleteAccount}>
+                    {"Oui, supprimer le compte"}
+                  </Button>
+                  <Button color="gray" onClick={() => setOpenModal(false)}>
+                    Non, annuler !
+                  </Button>
+                </div>
+              </div>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
     </div>
