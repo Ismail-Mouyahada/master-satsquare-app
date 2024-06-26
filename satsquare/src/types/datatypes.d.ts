@@ -107,6 +107,12 @@ export interface EvenementsQuiz {
 }
 
 export interface QuestionState {
+    answers: any;
+    question: any;
+    image: any;
+    cooldown: any;
+    time: any;
+    solution: string;
     id?: number;
     texte_question: string;
     Reponses: Reponse[];
@@ -134,6 +140,7 @@ export interface Game {
     roundStartTime: number;
     questions: QuestionState[];
     players: Player[];
+    answers : string[];
     playersAnswer: PlayerAnswer[];
 }
 

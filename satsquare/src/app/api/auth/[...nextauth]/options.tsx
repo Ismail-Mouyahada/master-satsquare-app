@@ -40,7 +40,9 @@ export const authOptions = {
         return null;
       },
     }),
-  ],
+     
+ 
+  ] 
 };
 
 export default NextAuth(authOptions);

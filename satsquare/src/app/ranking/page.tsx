@@ -55,7 +55,7 @@ const RankingPage: FC = () => {
     <div className="flex flex-row w-full">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-white rounded-lg shadow-md">
+        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Classement"
             icon={<FaChartBar className="scale-[1.5]" color="#6D6B81" />}

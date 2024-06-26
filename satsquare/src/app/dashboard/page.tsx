@@ -21,7 +21,7 @@ export default function Dashboard() {
       <div className="w-full bg-[#F3F3FF] flex min-h-screen">
         <Sidebar />
 
-        <div className="p-4 bg-white rounded-lg shadow-md w-full flex flex-col justify-between">
+        <div className="p-4 bg-slate-50 rounded-lg shadow-md w-full flex flex-col justify-between">
           <PageHeader
             title="Dashboard"
             icon={<FaHome className="scale-[1.5]" color="#6D6B81" />}
@@ -29,7 +29,7 @@ export default function Dashboard() {
           <div className="bg-[#F3F3FF] rounded-md p-8 h-full flex justify-center items-center">
             <div className="flex item-center justify-around w-full">
               <div className="flex flex-col items-center justify-between p-4">
-                <button className="flex items-center p-4 bg-white rounded-lg shadow-md w-full">
+                <button className="flex items-center p-4 bg-slate-50 rounded-lg shadow-md w-full">
                   <div className="p-4 bg-main rounded-full">
                     <FaGamepad className="text-white scale-[180%]" />
                   </div>
@@ -38,7 +38,7 @@ export default function Dashboard() {
                   </span>
                 </button>
                 <button
-                  className="flex items-center p-4 bg-white rounded-lg shadow-md w-full"
+                  className="flex items-center p-4 bg-slate-50 rounded-lg shadow-md w-full"
                   onClick={handleOpenModal}
                 >
                   <div className="p-4 bg-main rounded-full">
@@ -50,7 +50,7 @@ export default function Dashboard() {
                 </button>
               </div>
               <div className="flex flex-col items-center justify-center px-4 py-2">
-                <div className="flex flex-col items-center p-8 bg-white rounded-lg shadow-md gap-4">
+                <div className="flex flex-col items-center p-8 bg-slate-50 rounded-lg shadow-md gap-4">
                   <div className="flex flex-row items-center">
                     <div className="p-4 bg-main rounded-full">
                       <FaCalendarAlt className="text-white scale-[160%]" />

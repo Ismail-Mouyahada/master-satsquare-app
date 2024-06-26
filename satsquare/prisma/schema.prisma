@@ -24,6 +24,7 @@ model Utilisateur {
   association    Association?     @relation(fields: [association_id], references: [id], onDelete: Cascade)
   role           Role?            @relation(fields: [role_id], references: [id], onDelete: Cascade)
   sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
+  Game           Game[]
 }
 
 model Association {
@@ -107,6 +108,7 @@ model Quiz {
   EvenementsQuiz EvenementsQuiz[]
   Questions      Question[]
   utilisateur    Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Game           Game[]
 }
 
 model EvenementsQuiz {
@@ -138,4 +140,22 @@ model Reponse {
   texte_reponse String
   est_correcte  Boolean
   question      Question? @relation(fields: [question_id], references: [id], onDelete: Cascade)
+}
+
+model Game {
+  id                Int              @id @default(autoincrement())
+  room              String           @unique
+  password          String
+  manager_id        Int?
+  started           Boolean          @default(false)
+  subject           String
+  currentQuestion   Int              @default(0)
+  roundStartTime    DateTime?
+  players           Json
+  playersAnswer     Json
+  cree_le           DateTime         @default(now())
+  mis_a_jour_le     DateTime         @updatedAt
+  utilisateur       Utilisateur?     @relation(fields: [manager_id], references: [id], onDelete: Cascade)
+  quiz_id           Int?
+  quiz              Quiz?            @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
 }
