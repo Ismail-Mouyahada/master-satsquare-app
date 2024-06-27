@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { createElement, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -52,6 +52,21 @@ export default function Game() {
   const handleNext = () => {
     throw new Error("Function not implemented.");
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("gameState");
+      if (savedState) {
+        setEtat(JSON.parse(savedState));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("gameState", JSON.stringify(etat));
+    }
+  }, [etat]);
 
   return (
     <GameWrapper textNext="Next" onNext={handleNext} manager={false}>

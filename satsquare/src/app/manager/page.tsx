@@ -1,4 +1,5 @@
 "use client";
+
 import ManagerPassword from "@/components/ManagerPassword";
 import GameWrapper from "@/components/game/GameWrapper/page";
 import { useSocketContext } from "@/context/socket";
@@ -6,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
 import { useQRCode } from "next-qrcode";
 import { FaSignOutAlt } from "react-icons/fa";
-import Image from "next/image";
 
 export default function Manager() {
   const { Canvas } = useQRCode();
@@ -46,7 +46,6 @@ export default function Manager() {
       data: any;
       question: any;
     }) => {
-      console.log("Received game status:", status); // Debugging log
       setState((prevState: { status: any; question: any }) => {
         const newState = {
           ...prevState,
@@ -70,12 +69,9 @@ export default function Manager() {
     const handleInviteCode = (
       roomInvite: React.SetStateAction<string | null>
     ) => {
-      console.log("Received invite code:", roomInvite); // Debugging log
-      if (typeof roomInvite === "string") {
+      if (typeof window !== "undefined") {
         setInviteCode(roomInvite);
-        if (typeof window !== "undefined") {
-          localStorage.setItem("inviteCode", roomInvite);
-        }
+        localStorage.setItem("inviteCode", roomInvite as string);
       }
       setState((prevState: { status: { data: any } }) => {
         const newState = {
@@ -106,17 +102,14 @@ export default function Manager() {
   }, [socket]);
 
   const handleCreate = () => {
-    console.log("Creating room..."); // Debugging log
     socket.emit("manager:createRoom");
   };
 
   const handleSkip = () => {
-    console.log("Handling skip... Current state:", state); // Debugging log
     setNextText("Suivant");
 
     switch (state.status.name) {
       case "SHOW_ROOM":
-        console.log("Starting game..."); // Debugging log
         socket.emit("manager:startGame");
         break;
       case "SELECT_ANSWER":
@@ -129,7 +122,7 @@ export default function Manager() {
         socket.emit("manager:nextQuestion");
         break;
       default:
-        console.log("No matching case for state:", state.status.name);
+        break;
     }
   };
 
@@ -151,14 +144,15 @@ export default function Manager() {
   return (
     <>
       {!state.created ? (
-        <div>
+        <>
           <ManagerPassword />
-        </div>
+          <button onClick={handleCreate}>Créer une salle</button>
+        </>
       ) : (
         <GameWrapper textNext={nextText} onNext={handleSkip} manager>
           {state.status.name === "SHOW_ROOM" && (
             <div className="flex flex-col items-center justify-center">
-              <div className="flex justify-center items-center bg-slate-50 p-8 my-2 rounded-md">
+              <div className="flex justify-center items-center bg-primary p-8 my-2 rounded-md">
                 <Canvas
                   text={inviteCode || ""}
                   options={{
@@ -169,13 +163,13 @@ export default function Manager() {
                     scale: 4,
                     width: 200,
                     color: {
-                      light: "#ffffff",
-                      dark: "#222629ff",
+                      light: "#3037ce",
+                      dark: "#ffffffff",
                     },
                   }}
                 />
               </div>
-              <h3 className="text-2xl font-bold text-center text-slate-600 m-4 bg-action px-8 py-8 rounded-md ">
+              <h3 className="text-2xl font-bold text-center text-slate-500 mb-4 bg-action p-8 rounded-md ">
                 Room ID: {inviteCode}
               </h3>
               <button
