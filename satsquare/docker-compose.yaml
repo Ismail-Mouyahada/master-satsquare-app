@@ -6,6 +6,7 @@ services:
     build: .
     ports:
       - '3000:3000'
+      - '5157:5157'
     depends_on:
       - db
     environment:
