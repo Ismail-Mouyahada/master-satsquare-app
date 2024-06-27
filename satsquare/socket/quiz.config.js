@@ -12,7 +12,7 @@ exports.GAME_STATE_INIT = {
     players: [],
     started: false,
     subject: "Programmation et Bitcoin",
-    password: "PASSWORD",
+    password: "PASSWORD", // for testing purposes
     questions: [
         {
             time: 15,

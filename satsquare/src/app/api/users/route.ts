@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
  import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
  
-import { exclude } from "../utilisateurs/route";
+ 
 import { UserDTO } from "@/types/userDto";
+import { exclude } from "@/utils/utils";
 
 const prisma = new PrismaClient();
 

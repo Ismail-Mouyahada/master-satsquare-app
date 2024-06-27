@@ -66,14 +66,14 @@ export default function Home() {
             </div>
             <Link href="/home" target="_blank" rel="noopener noreferrer"
 
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
             >
               Rejoindre
             </Link>
 
             <Link href="lightning" target="_blank" rel="noopener noreferrer"
 
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
             >
               Connexion lightning
             </Link>
@@ -87,20 +87,20 @@ export default function Home() {
             </div>
             <Link
               href="/auth/signin"
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
             >
               Se connecter
             </Link>
             <Link
               href="/auth/signup"
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
             >
               S'inscrire
             </Link>
 
             <Link
               href="/manager" target="_blank" rel="noopener noreferrer"
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center"
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
             >
               Manager de session
             </Link>

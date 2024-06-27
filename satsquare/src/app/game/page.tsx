@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { createElement, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -14,12 +14,17 @@ export default function Game() {
   const router = useRouter();
 
   const [etat, setEtat] = useState(GAME_STATES);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (!player) {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!player && isMounted) {
       router.replace("/");
     }
-  }, [player, router]);
+  }, [player, router, isMounted]);
 
   useEffect(() => {
     const handleGameStatus = (status: any) => {
@@ -36,7 +41,7 @@ export default function Game() {
     const handleGameReset = () => {
       dispatch({ type: "LOGOUT" });
       setEtat(GAME_STATES);
-      toast("Le jeu a été réinitialisé par l'hôte");
+      toast.success("Le jeu a été réinitialisé par l'hôte");
       router.replace("/");
     };
 
@@ -53,8 +58,12 @@ export default function Game() {
     throw new Error("Function not implemented.");
   };
 
+  if (!isMounted) {
+    return null; // Avoid rendering on the server
+  }
+
   return (
-    <GameWrapper textNext="Next" onNext={handleNext} manager={false}>
+    <GameWrapper textNext="Suivant" onNext={handleNext} manager={false}>
       {GAME_STATE_COMPONENTS[etat.status.name] &&
         createElement(GAME_STATE_COMPONENTS[etat.status.name], {
           data: etat.status.data,

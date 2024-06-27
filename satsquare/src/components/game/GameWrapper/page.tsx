@@ -92,10 +92,12 @@ export default function GameWrapper({ children, textNext, onNext, manager }: Pro
         )}
 
         {manager && (
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full z-40">
             <Button className="self-end bg-slate-50 px-4 !text-black" onClick={onNext}>
               {textNext}
             </Button>
+
+            <div className="p-4 rounded-md bg-slate-800">  <p className="text-bold">ID salle : {inviteCode}</p> </div>
 
             <button onClick={handleLogout} className="p-3 m-2 bg-red-500 text-white rounded-md flex items-center justify-center">
               <FaPowerOff className="scale-150" />

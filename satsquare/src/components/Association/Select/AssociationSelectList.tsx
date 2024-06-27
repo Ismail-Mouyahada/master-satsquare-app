@@ -1,8 +1,9 @@
 "use client";
 import { FC } from "react";
 import { Association } from "@prisma/client";
+import Image from "next/image";
 
-interface AssociationSelectListProps {
+export interface AssociationSelectListProps {
   associations: Association[];
 }
 
@@ -28,7 +29,7 @@ const AssociationSelectList: FC<AssociationSelectListProps> = ({
               className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-slate-50 border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
             >
               <div className="block w-full">
-                <img
+                <Image
                   src={association.logo_url}
                   alt={association.nom}
                   className="mb-2 w-full h-32 object-cover rounded-lg"

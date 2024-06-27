@@ -18,6 +18,8 @@ RUN npm run build
 
 # Migration des données
 RUN npx prisma db push
+# Seed des données
+RUN npx prisma seed
 
 # Exposer le port 3000 pour l'application Next.js
 EXPOSE 3000

@@ -1,6 +1,10 @@
 {
   "display_override": [
-    "window-controls-overlay"
+    "window-controls-overlay",
+    "minimal-ui",
+    "fullscreen",
+    "standalone",
+    "browser"
   ],
   "protocol_handlers": [
     {
@@ -10,7 +14,7 @@
   ],
   "name": "Sat Square PWA",
   "short_name": "SAT Square PWA",
-  "start_url": "localhost:3000",
+  "start_url": "/",
   "display": "standalone",
   "description": "App made to bring people togather for charity porpuses",
   "lang": "fr",
@@ -57,6 +61,8 @@
       "platform": "windows",
       "url": "localhost:3000"
     }
+    
+
   ],
   "prefer_related_applications": false,
   "shortcuts": [

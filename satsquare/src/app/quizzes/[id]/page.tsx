@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaBox, FaPlus, FaCopy, FaTrash, FaTimes } from "react-icons/fa";
+import Image from "next/image";
 
 interface Question {
   id: number;
@@ -283,10 +284,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
               )}
               {questions.find((q) => q.id === selectedQuestion)?.imageUrl && (
                 <div className="relative mt-4">
-                  <img
-                    src={
-                      questions.find((q) => q.id === selectedQuestion)?.imageUrl
-                    }
+                  <Image   src={ questions.find((q) => q.id === selectedQuestion)?.imageUrl ?? ''    }
                     alt="Uploaded content"
                     className="object-contain w-full h-auto rounded-md max-h-64"
                   />

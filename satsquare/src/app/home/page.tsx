@@ -36,7 +36,7 @@ export default function Home() {
 
       <Image src={logo} className="mb-6" alt="logo" />
 
-      {!player ? <Room /> : <Username />}
+      {!player ? <Room /> : <Username  />}
     </section>
   );
 }

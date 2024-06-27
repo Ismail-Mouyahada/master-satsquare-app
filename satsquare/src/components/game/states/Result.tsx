@@ -34,7 +34,7 @@ export default function Result({
         {message}
       </h2>
       <p className="mt-1 text-xl font-bold text-white drop-shadow-lg">
-        {`Classement : ${rank}` + (aheadOfMe ? ", en retard " + aheadOfMe : "")}
+        {`Vitesse : ${rank}` + (aheadOfMe ? ", en retard " + aheadOfMe : "")}
       </p>
       {correct && (
         <span className="px-4 py-2 mt-2 text-2xl font-bold text-white rounded bg-black/40 drop-shadow-lg">

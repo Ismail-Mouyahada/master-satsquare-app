@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
-// GET: Fetch quiz by ID
+// Helper function to fetch a quiz by ID
 async function getQuizById(id: string) {
   return prisma.quiz.findUnique({
     where: { id: Number(id) },
@@ -16,7 +16,7 @@ async function getQuizById(id: string) {
   });
 }
 
-// PUT: Update quiz by ID
+// Helper function to update a quiz by ID
 async function updateQuizById(id: string, data: any) {
   const { titre, categorie, questions } = data;
 
@@ -38,16 +38,24 @@ async function updateQuizById(id: string, data: any) {
         })),
       },
     },
+    include: {
+      Questions: {
+        include: {
+          Reponses: true,
+        },
+      },
+    },
   });
 }
 
-// DELETE: Delete quiz by ID
+// Helper function to delete a quiz by ID
 async function deleteQuizById(id: string) {
   return prisma.quiz.delete({
     where: { id: Number(id) },
   });
 }
 
+// GET: Fetch quiz by ID
 export async function GET(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = pathname.split("/").pop(); // Extract ID from URL
@@ -71,6 +79,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// PUT: Update quiz by ID
 export async function PUT(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = pathname.split("/").pop(); // Extract ID from URL
@@ -92,6 +101,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
+// DELETE: Delete quiz by ID
 export async function DELETE(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = pathname.split("/").pop(); // Extract ID from URL
@@ -109,21 +119,5 @@ export async function DELETE(req: NextRequest) {
       { error: "An error occurred while deleting the quiz" },
       { status: 500 }
     );
-  }
-}
-
-export async function handler(req: NextRequest) {
-  switch (req.method) {
-    case "GET":
-      return GET(req);
-    case "PUT":
-      return PUT(req);
-    case "DELETE":
-      return DELETE(req);
-    default:
-      return NextResponse.json(
-        { error: `Method ${req.method} Not Allowed` },
-        { status: 405 }
-      );
   }
 }

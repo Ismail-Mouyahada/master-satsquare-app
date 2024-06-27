@@ -1,33 +1,42 @@
 "use client";
-import ManagerPassword from "@/components/ManagerPassword";
-import GameWrapper from "@/components/game/GameWrapper/page";
-import { useSocketContext } from "@/context/socket";
+
 import React, { useEffect, useState } from "react";
-import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
 import { useQRCode } from 'next-qrcode';
-import { FaSignOutAlt } from "react-icons/fa";
-import Image from "next/image";
+import { useSocketContext } from "@/context/socket";
+import GameWrapper from "@/components/game/GameWrapper/page";
+import ManagerPassword from "@/components/ManagerPassword";
+import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
 
 export default function Manager() {
   const { Canvas } = useQRCode();
   const { socket } = useSocketContext();
   const [nextText, setNextText] = useState("Commencer");
-  const [state, setState] = useState(() => {
-    const savedState = localStorage.getItem('gameState');
-    return savedState ? JSON.parse(savedState) : {
-      ...GAME_STATES,
-      status: {
-        ...GAME_STATES.status,
-        name: "SHOW_ROOM",
-      },
-    };
-  });
-  const [inviteCode, setInviteCode] = useState(() => localStorage.getItem('inviteCode'));
+  const [state, setState] = useState(GAME_STATES);
+  const [inviteCode, setInviteCode] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      const savedState = localStorage.getItem('gameState');
+      const savedInviteCode = localStorage.getItem('inviteCode');
+
+      if (savedState) {
+        setState(JSON.parse(savedState));
+      }
+      if (savedInviteCode) {
+        setInviteCode(savedInviteCode);
+      }
+    }
+  }, [isMounted]);
 
   useEffect(() => {
     const handleGameStatus = (status: { name: any; data: any; question: any; }) => {
       console.log("Received game status:", status); // Debugging log
-      setState((prevState: { status: any; question: any; }) => {
+      setState((prevState) => {
         const newState = {
           ...prevState,
           status: {
@@ -40,18 +49,21 @@ export default function Manager() {
             current: status.question,
           },
         };
-        localStorage.setItem('gameState', JSON.stringify(newState));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('gameState', JSON.stringify(newState));
+        }
         return newState;
       });
     };
 
-    const handleInviteCode = (roomInvite: React.SetStateAction<string | null>) => {
+    const handleInviteCode = (roomInvite: string) => {
       console.log("Received invite code:", roomInvite); // Debugging log
-      if (typeof roomInvite === 'string') {
-        setInviteCode(roomInvite);
+      setInviteCode(roomInvite);
+      if (typeof window !== 'undefined') {
         localStorage.setItem('inviteCode', roomInvite);
       }
-      setState((prevState: { status: { data: any; }; }) => {
+
+      setState((prevState) => {
         const newState = {
           ...prevState,
           created: true,
@@ -63,7 +75,9 @@ export default function Manager() {
             },
           },
         };
-        localStorage.setItem('gameState', JSON.stringify(newState));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('gameState', JSON.stringify(newState));
+        }
         return newState;
       });
     };
@@ -101,14 +115,16 @@ export default function Manager() {
         socket.emit("manager:nextQuestion");
         break;
       default:
+        socket.emit("manager:startGame");
         console.log("No matching case for state:", state.status.name);  
     }
   };
 
   const handleLogout = () => {
- 
-    localStorage.removeItem('gameState');
-    localStorage.removeItem('inviteCode');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('gameState');
+      localStorage.removeItem('inviteCode');
+    }
     setState({
       ...GAME_STATES,
       status: {
@@ -123,9 +139,7 @@ export default function Manager() {
     <>
       {!state.created ? (
         <div>
-        
           <ManagerPassword />
-
         </div>
       ) : (
         <GameWrapper textNext={nextText} onNext={handleSkip} manager>
@@ -151,9 +165,6 @@ export default function Manager() {
               <h3 className="text-2xl font-bold text-center text-slate-600 m-4 bg-action px-8 py-8 rounded-md ">
                 Room ID: {inviteCode}
               </h3>
-         
-
-            
             </div>
           )}
           {GAME_STATE_COMPONENTS_MANAGER[state.status.name] &&

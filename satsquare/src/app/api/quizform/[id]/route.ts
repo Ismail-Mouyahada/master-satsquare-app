@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
 // GET: Retrieve a specific quiz by ID with its questions and answers
-export async function GET({
-  req,
-  params,
-}: {
-  req: NextRequest;
-  params: { id: string };
-}) {
-  const { id } = params;
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "ID is required" }, { status: 400 });
+  }
+
   try {
     const quiz = await prisma.quiz.findUnique({
       where: { id: Number(id) },
@@ -37,14 +37,14 @@ export async function GET({
 }
 
 // PUT: Update a specific quiz by ID
-export async function PUT({
-  req,
-  params,
-}: {
-  req: NextRequest;
-  params: { id: string };
-}) {
-  const { id } = params;
+export async function PUT(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "ID is required" }, { status: 400 });
+  }
+
   try {
     const data = await req.json();
     const { titre, user_id, categorie, questions } = data;
@@ -99,14 +99,13 @@ export async function PUT({
 }
 
 // DELETE: Delete a specific quiz by ID
-export async function DELETE({
-  req,
-  params,
-}: {
-  req: NextRequest;
-  params: { id: string };
-}) {
-  const { id } = params;
+export async function DELETE(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "ID is required" }, { status: 400 });
+  }
 
   try {
     await prisma.quiz.delete({

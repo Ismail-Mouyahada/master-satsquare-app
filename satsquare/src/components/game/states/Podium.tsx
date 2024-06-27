@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import clsx from "clsx";
 import ReactConfetti from "react-confetti";
 import useSound from "use-sound";
@@ -15,18 +15,10 @@ export default function Podium({ data }: any) {
   const [apparition, setApparition] = useState(0);
   const { width, height } = useScreenSize();
 
-  const [sfxtThree] = useSound(SFX_PODIUM_THREE, {
-    volume: 0.2,
-  });
-  const [sfxSecond] = useSound(SFX_PODIUM_SECOND, {
-    volume: 0.2,
-  });
-  const [sfxRool, { stop: sfxRoolStop }] = useSound(SFX_SNEAR_ROOL, {
-    volume: 0.2,
-  });
-  const [sfxFirst] = useSound(SFX_PODIUM_FIRST, {
-    volume: 0.2,
-  });
+  const [sfxtThree] = useSound(SFX_PODIUM_THREE, { volume: 0.2 });
+  const [sfxSecond] = useSound(SFX_PODIUM_SECOND, { volume: 0.2 });
+  const [sfxRool, { stop: sfxRoolStop }] = useSound(SFX_SNEAR_ROOL, { volume: 0.2 });
+  const [sfxFirst] = useSound(SFX_PODIUM_FIRST, { volume: 0.2 });
 
   useEffect(() => {
     switch (apparition) {
@@ -66,10 +58,37 @@ export default function Podium({ data }: any) {
     return () => clearInterval(interval);
   }, [apparition, data?.top]);
 
-  const subject = data?.subject || "No Subject";
-  const top = data?.top || [];
+  const subject = data?.subject || "Pas de sujet";
+  const top = useMemo(() => data?.top || [], [data?.top]);
 
-  // await prisma.game.
+  const saveResults = useCallback(async () => {
+    try {
+      for (let i = 0; i < 3; i++) {
+        const user = top[i];
+        if (!user) continue;
+
+        await prisma.evenementsQuiz.create({
+          data: {
+            evenement: { connect: { id: 1 } },
+            quiz: { connect: { id: 1 } },
+            question_id: 1,
+            utilisateur: { connect: { id: user.id } },
+            reponse_id: 1, // Adjust this as necessary
+            score: user.points ?? 111,
+          },
+        });
+      }
+      console.log("Résultats sauvegardés avec succès");
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde des résultats :", error);
+    }
+  }, [top]);
+
+  useEffect(() => {
+    if (apparition >= 4) {
+      saveResults();
+    }
+  }, [apparition, saveResults]);
 
   return (
     <>
@@ -100,7 +119,7 @@ export default function Podium({ data }: any) {
                 { "anim-balanced": apparition >= 4 },
               )}
             >
-              {top[1]?.username || "No Name"}
+              {top[1]?.username || "Pas de nom"}
             </p>
             <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
               <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-zinc-400 bg-zinc-500 drop-shadow-lg">
@@ -124,16 +143,16 @@ export default function Podium({ data }: any) {
                 { "anim-balanced opacity-100": apparition >= 4 },
               )}
             >
-              {top[0]?.username || "No Name"}
+              {top[0]?.username || "Pas de nom"}
             </p>
             <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
               <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-400 bg-amber-300 drop-shadow-lg">
                 <span className="drop-shadow-md">1</span>
               </p>
               <p className="text-2xl font-bold text-white drop-shadow-lg">
-                {top[0]?.points ?? 0}
+                {top[0]?.points ?? 0} 
               </p>
-            </div>
+            </div> 
           </div>
 
           <div
@@ -148,7 +167,7 @@ export default function Podium({ data }: any) {
                 { "anim-balanced": apparition >= 4 },
               )}
             >
-              {top[2]?.username || "No Name"}
+              {top[2]?.username || "Personne"}
             </p>
             <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
               <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-800 bg-amber-700 drop-shadow-lg">

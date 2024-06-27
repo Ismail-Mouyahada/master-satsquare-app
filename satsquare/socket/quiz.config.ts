@@ -31,7 +31,7 @@ interface GameState {
     players: [],
     started: false,
     subject: "Programmation et Bitcoin",
-    password: "PASSWORD",
+    password: "PASSWORD", // for testing only
     questions: [
         {
             time: 15,

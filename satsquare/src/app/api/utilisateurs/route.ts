@@ -1,19 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 import bcrypt from "bcrypt";
-import { Utilisateur } from "@/types/datatypes";
+import { exclude } from "@/utils/utils";
+ 
+ 
 
-// Fonction pour exclure des clés d'un objet
-export function exclude<
-  User extends { [key: string]: any },
-  Key extends keyof User,
->(user: User, keys: Key[]): Omit<User, Key> {
-  return Object.fromEntries(
-    Object.entries(user).filter(([key]) => !keys.includes(key as Key))
-  ) as Omit<User, Key>;
-}
-
-// GET: Récupérer tous les utilisateurs ou rechercher par nom
+// GET: Fetch all users or search by name
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -40,8 +32,8 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Exclure le champ mot_de_passe de chaque utilisateur
-    utilisateurs = utilisateurs.map((utilisateur: any) =>
+    // Exclude the mot_de_passe field from each user
+    utilisateurs = utilisateurs.map((utilisateur) =>
       exclude(utilisateur, ["mot_de_passe"])
     );
 
@@ -55,12 +47,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST: Créer un nouveau utilisateur
+// POST: Create a new user
 export async function POST(req: NextRequest) {
-  const data = await req.json();
-  console.log(req)
   try {
-    // const data = await req.json();
+    const data = await req.json();
 
     if (data.mot_de_passe) {
       const saltRounds = 10;
@@ -71,7 +61,10 @@ export async function POST(req: NextRequest) {
       data,
     });
 
-    return NextResponse.json(newUtilisateur, { status: 201 });
+    // Exclude mot_de_passe from the response
+    const responseUtilisateur = exclude(newUtilisateur, ["mot_de_passe"]);
+
+    return NextResponse.json(responseUtilisateur, { status: 201 });
   } catch (error) {
     console.error("Error creating utilisateur:", error);
     return NextResponse.json(

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { SetStateAction, useState } from "react";
 import { FaBox, FaBtc, FaPlus, FaCopy, FaTrash, FaTimes } from "react-icons/fa";
 
@@ -156,8 +157,8 @@ const QuizForm = () => {
               )}
               {questions.find((q) => q.id === selectedQuestion)?.imageUrl && (
                 <div className="mt-4 relative">
-                  <img
-                    src={questions.find((q) => q.id === selectedQuestion)?.imageUrl}
+                  <Image
+                    src={questions.find((q) => q.id === selectedQuestion)?.imageUrl || ''}
                     alt="Uploaded content"
                     className="w-full h-auto max-h-64 object-contain rounded-md"
                   />

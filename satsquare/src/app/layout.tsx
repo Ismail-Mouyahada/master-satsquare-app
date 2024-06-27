@@ -27,7 +27,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="512x512" href="/icon-512x512.png" />
         <meta name="theme-color" content="#000000" />
         <meta name="description" content="Application dédiée pour aider les associations" />
-        <title>SATSQUARE App</title>
+        <title>Sat Square App</title>
       </head>
       <body className={`survey-main ${inter.className}`}>
         <Providers session={pageProps?.session}>
