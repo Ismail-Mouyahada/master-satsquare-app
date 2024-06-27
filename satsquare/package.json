@@ -16,7 +16,9 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:e2e": "npm run build && start-server-and-test start http://localhost:3000 test:e2e:run",
+    "test:e2e:run": "jest --config=jest.e2e.config.js"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
@@ -79,11 +81,16 @@
     "eslint-plugin-storybook": "^0.8.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "jest-environment-puppeteer": "^10.0.1",
     "jest-json-schema": "^6.1.0",
     "jest-mock-extended": "^3.0.7",
+    "jest-puppeteer": "^10.0.1",
     "postcss": "^8.4.38",
+    "puppeteer": "^22.12.1",
+    "start-server-and-test": "^2.0.4",
     "storybook": "^8.1.4",
     "tailwindcss": "^3.4.3",
+    "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2",
     "whatwg-fetch": "^3.6.20"

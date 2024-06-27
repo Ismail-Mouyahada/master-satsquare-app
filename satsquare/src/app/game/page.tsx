@@ -58,9 +58,26 @@ export default function Game() {
     throw new Error("Function not implemented.");
   };
 
+<<<<<<< HEAD
   if (!isMounted) {
     return null; // Avoid rendering on the server
   }
+=======
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("gameState");
+      if (savedState) {
+        setEtat(JSON.parse(savedState));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("gameState", JSON.stringify(etat));
+    }
+  }, [etat]);
+>>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
 
   return (
     <GameWrapper textNext="Suivant" onNext={handleNext} manager={false}>

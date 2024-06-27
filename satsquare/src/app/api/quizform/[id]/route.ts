@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
 // GET: Retrieve a specific quiz by ID with its questions and answers
+<<<<<<< HEAD
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -10,6 +11,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "ID is required" }, { status: 400 });
   }
 
+=======
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+>>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
   try {
     const quiz = await prisma.quiz.findUnique({
       where: { id: Number(id) },
@@ -37,6 +45,7 @@ export async function GET(req: NextRequest) {
 }
 
 // PUT: Update a specific quiz by ID
+<<<<<<< HEAD
 export async function PUT(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -45,6 +54,13 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "ID is required" }, { status: 400 });
   }
 
+=======
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+>>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
   try {
     const data = await req.json();
     const { titre, user_id, categorie, questions } = data;
@@ -99,6 +115,7 @@ export async function PUT(req: NextRequest) {
 }
 
 // DELETE: Delete a specific quiz by ID
+<<<<<<< HEAD
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
@@ -106,10 +123,24 @@ export async function DELETE(req: NextRequest) {
   if (!id) {
     return NextResponse.json({ error: "ID is required" }, { status: 400 });
   }
+=======
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: number } }
+) {
+  const { id } = params;
+>>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
 
   try {
     await prisma.quiz.delete({
       where: { id: Number(id) },
+      include: {
+        Questions: {
+          include: {
+            Reponses: true,
+          },
+        },
+      },
     });
 
     return NextResponse.json(
