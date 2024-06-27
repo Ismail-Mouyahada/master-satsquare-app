@@ -14,7 +14,8 @@ import {
 } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
-import { UserDTO } from "@/types/userDTO";
+import { UserDTO } from "@/types/userDto";
+
 
 const ProfileDetail: React.FC = () => {
   const { data: session } = useSession();

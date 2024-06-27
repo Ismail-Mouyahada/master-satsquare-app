@@ -2,15 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 import bcrypt from "bcrypt";
 import { exclude } from "@/utils/utils";
-<<<<<<< HEAD
  
  
 
 // GET: Fetch all users or search by name
-=======
-
-// GET: Récupérer tous les utilisateurs ou rechercher par nom
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -66,17 +61,10 @@ export async function POST(req: NextRequest) {
       data,
     });
 
-<<<<<<< HEAD
     // Exclude mot_de_passe from the response
     const responseUtilisateur = exclude(newUtilisateur, ["mot_de_passe"]);
 
     return NextResponse.json(responseUtilisateur, { status: 201 });
-=======
-    // Exclure le champ mot_de_passe avant de retourner la réponse
-    const utilisateurSansMotDePasse = exclude(newUtilisateur, ["mot_de_passe"]);
-
-    return NextResponse.json(utilisateurSansMotDePasse, { status: 201 });
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
   } catch (error) {
     console.error("Error creating utilisateur:", error);
     return NextResponse.json(
