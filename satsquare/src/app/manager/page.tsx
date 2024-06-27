@@ -1,27 +1,16 @@
 "use client";
 
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { useQRCode } from 'next-qrcode';
 import { useSocketContext } from "@/context/socket";
 import GameWrapper from "@/components/game/GameWrapper/page";
 import ManagerPassword from "@/components/ManagerPassword";
 import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
-=======
-import ManagerPassword from "@/components/ManagerPassword";
-import GameWrapper from "@/components/game/GameWrapper/page";
-import { useSocketContext } from "@/context/socket";
-import React, { useEffect, useState } from "react";
-import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
-import { useQRCode } from "next-qrcode";
-import { FaSignOutAlt } from "react-icons/fa";
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
 
 export default function Manager() {
   const { Canvas } = useQRCode();
   const { socket } = useSocketContext();
   const [nextText, setNextText] = useState("Commencer");
-<<<<<<< HEAD
   const [state, setState] = useState(GAME_STATES);
   const [inviteCode, setInviteCode] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
@@ -48,43 +37,6 @@ export default function Manager() {
     const handleGameStatus = (status: { name: any; data: any; question: any; }) => {
       console.log("Received game status:", status); // Debugging log
       setState((prevState) => {
-=======
-  const [state, setState] = useState(() => {
-    if (typeof window !== "undefined") {
-      const savedState = localStorage.getItem("gameState");
-      return savedState
-        ? JSON.parse(savedState)
-        : {
-            ...GAME_STATES,
-            status: {
-              ...GAME_STATES.status,
-              name: "SHOW_ROOM",
-            },
-          };
-    }
-    return {
-      ...GAME_STATES,
-      status: {
-        ...GAME_STATES.status,
-        name: "SHOW_ROOM",
-      },
-    };
-  });
-  const [inviteCode, setInviteCode] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("inviteCode");
-    }
-    return null;
-  });
-
-  useEffect(() => {
-    const handleGameStatus = (status: {
-      name: any;
-      data: any;
-      question: any;
-    }) => {
-      setState((prevState: { status: any; question: any }) => {
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
         const newState = {
           ...prevState,
           status: {
@@ -97,19 +49,13 @@ export default function Manager() {
             current: status.question,
           },
         };
-<<<<<<< HEAD
         if (typeof window !== 'undefined') {
           localStorage.setItem('gameState', JSON.stringify(newState));
-=======
-        if (typeof window !== "undefined") {
-          localStorage.setItem("gameState", JSON.stringify(newState));
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
         }
         return newState;
       });
     };
 
-<<<<<<< HEAD
     const handleInviteCode = (roomInvite: string) => {
       console.log("Received invite code:", roomInvite); // Debugging log
       setInviteCode(roomInvite);
@@ -118,16 +64,6 @@ export default function Manager() {
       }
 
       setState((prevState) => {
-=======
-    const handleInviteCode = (
-      roomInvite: React.SetStateAction<string | null>
-    ) => {
-      if (typeof window !== "undefined") {
-        setInviteCode(roomInvite);
-        localStorage.setItem("inviteCode", roomInvite as string);
-      }
-      setState((prevState: { status: { data: any } }) => {
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
         const newState = {
           ...prevState,
           created: true,
@@ -139,13 +75,8 @@ export default function Manager() {
             },
           },
         };
-<<<<<<< HEAD
         if (typeof window !== 'undefined') {
           localStorage.setItem('gameState', JSON.stringify(newState));
-=======
-        if (typeof window !== "undefined") {
-          localStorage.setItem("gameState", JSON.stringify(newState));
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
         }
         return newState;
       });
@@ -181,25 +112,15 @@ export default function Manager() {
         socket.emit("manager:nextQuestion");
         break;
       default:
-<<<<<<< HEAD
         socket.emit("manager:startGame");
         console.log("No matching case for state:", state.status.name);  
-=======
-        break;
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
     }
   };
 
   const handleLogout = () => {
-<<<<<<< HEAD
     if (typeof window !== 'undefined') {
       localStorage.removeItem('gameState');
       localStorage.removeItem('inviteCode');
-=======
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("gameState");
-      localStorage.removeItem("inviteCode");
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
     }
     setState({
       ...GAME_STATES,
@@ -214,16 +135,9 @@ export default function Manager() {
   return (
     <>
       {!state.created ? (
-<<<<<<< HEAD
         <div>
           <ManagerPassword />
         </div>
-=======
-        <>
-          <ManagerPassword />
-          <button onClick={handleCreate}>Créer une salle</button>
-        </>
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
       ) : (
         <GameWrapper textNext={nextText} onNext={handleSkip} manager>
           {state.status.name === "SHOW_ROOM" && (
@@ -248,15 +162,6 @@ export default function Manager() {
               <h3 className="text-2xl font-bold text-center text-slate-500 mb-4 bg-action p-8 rounded-md ">
                 Room ID: {inviteCode}
               </h3>
-<<<<<<< HEAD
-=======
-              <button
-                onClick={handleLogout}
-                className="mt-4 p-4 bg-red-500 text-white rounded"
-              >
-                <FaSignOutAlt className="scale-150" />
-              </button>
->>>>>>> 5fcdb68c7599f107d3a7513047445fb37443f27b
             </div>
           )}
           {GAME_STATE_COMPONENTS_MANAGER[state.status.name] &&
