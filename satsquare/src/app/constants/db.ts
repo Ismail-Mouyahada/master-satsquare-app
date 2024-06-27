@@ -12,7 +12,7 @@ import Rhombus from "@/components/icons/Rhombus";
 import Square from "@/components/icons/Square";
 import Triangle from "@/components/icons/Triangle";
 
-export const WEBSOCKET_URL = "http://10.176.140.41:5157";
+export const WEBSOCKET_URL = "http://localhost:5157";
 
 export const ANSWERS_COLORS = [
   "bg-red-500",
