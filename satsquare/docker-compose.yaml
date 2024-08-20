@@ -11,6 +11,9 @@ services:
       - db
     environment:
       - DATABASE_URL=postgresql://satsquare_user:satsquare_password@db:5432/satsquare_db
+      - NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
+      - NEXT_PUBLIC_SITE_URL="http://nextjs:3000"
+      - NEXT_PUBLIC_SOCKET_URL=http://nextjs:5157
       
   db:
     image: postgres:latest

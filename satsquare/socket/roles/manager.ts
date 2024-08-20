@@ -118,7 +118,7 @@ const Manager = {
             .sort((a, b) => b.points - a.points),
         },
       });
-
+      console.log("Players" ,game.players)
       Object.assign(game, deepClone(GAME_STATE_INIT));
       return;
     }

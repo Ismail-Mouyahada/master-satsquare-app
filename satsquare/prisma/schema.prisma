@@ -18,6 +18,8 @@ model Utilisateur {
   sponsor_id     Int?
   cree_le        DateTime         @default(now())
   mis_a_jour_le  DateTime         @updatedAt
+  walletId       String?          // Optional field for the LNbits wallet ID
+  balance        BigInt?
   Evenement      Evenement[]
   EvenementsQuiz EvenementsQuiz[]
   Quiz           Quiz[]

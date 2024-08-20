@@ -22,7 +22,7 @@ RUN npx prisma db push
 RUN npx prisma seed
 
 # Exposer le port 3000 pour l'application Next.js
-EXPOSE 3000
+EXPOSE 3000 5157
 
 # Commande de démarrage de l'application
 CMD ["npm", "start"]

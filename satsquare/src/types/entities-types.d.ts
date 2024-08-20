@@ -18,6 +18,8 @@ export interface Utilisateur {
   sponsor_id?: number;
   cree_le: Date;
   mis_a_jour_le: Date;
+  wallet_id?: string; // Optional field for wallet ID
+  balance?: number;  // Optional field for wallet balance in sats
   EvenementsQuiz: EvenementsQuiz[];
   Evenement: Evenement[];
   Quiz: Quiz[];

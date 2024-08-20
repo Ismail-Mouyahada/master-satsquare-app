@@ -1,6 +1,6 @@
 
 .sidebar {
-    min-height: 100vh;
+    /* min-height: 100vh; */
     width: 60px;
     background: linear-gradient(180deg, #2a00d4, #269ed4);
     display: flex;

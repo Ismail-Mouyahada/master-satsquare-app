@@ -2,8 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 import bcrypt from "bcrypt";
 import { exclude } from "@/utils/utils";
- 
- 
+
+// Utility function to handle BigInt serialization
+function handleBigInt(value: any) {
+  return typeof value === 'bigint' ? value.toString() : value;
+}
 
 // GET: Fetch all users or search by name
 export async function GET(req: NextRequest) {
@@ -32,10 +35,11 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    // Exclude the mot_de_passe field from each user
-    utilisateurs = utilisateurs.map((utilisateur) =>
-      exclude(utilisateur, ["mot_de_passe"])
-    );
+    // Exclude the mot_de_passe field from each user and handle BigInt
+    utilisateurs = utilisateurs.map((utilisateur) => {
+      const userWithoutPassword = exclude(utilisateur, ["mot_de_passe"]);
+      return JSON.parse(JSON.stringify(userWithoutPassword, (_, value) => handleBigInt(value)));
+    });
 
     return NextResponse.json(utilisateurs, { status: 200 });
   } catch (error) {
@@ -61,10 +65,11 @@ export async function POST(req: NextRequest) {
       data,
     });
 
-    // Exclude mot_de_passe from the response
+    // Exclude mot_de_passe from the response and handle BigInt
     const responseUtilisateur = exclude(newUtilisateur, ["mot_de_passe"]);
+    const serializedResponse = JSON.parse(JSON.stringify(responseUtilisateur, (_, value) => handleBigInt(value)));
 
-    return NextResponse.json(responseUtilisateur, { status: 201 });
+    return NextResponse.json(serializedResponse, { status: 201 });
   } catch (error) {
     console.error("Error creating utilisateur:", error);
     return NextResponse.json(
