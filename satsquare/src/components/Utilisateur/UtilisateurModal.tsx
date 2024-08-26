@@ -69,7 +69,7 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
     e.preventDefault();
     const payload = {
       ...formData,
-      role_id: formData.role_id ? Number(formData.role_id) : null, // Convert role_id to number
+      roleId: formData.role_id ? Number(formData.role_id) : null, // Convert role_id to number
       statut_compte: true,
     };
     const method = utilisateur ? "PUT" : "POST";

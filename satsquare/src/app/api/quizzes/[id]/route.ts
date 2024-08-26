@@ -38,8 +38,9 @@ async function updateQuizById(id: string, data: any) {
         deleteMany: {}, // delete existing questions
         create: questions.map((question: any) => ({
           question: question.question,
-          time: question.time,
-          cooldown: question.cooldown,
+          updatedAt: new Date(),
+          time: 15,
+          cooldown: 5,
           image: question.image,
           solution: question.solution,
           answers: question.answers,
@@ -120,7 +121,7 @@ export async function DELETE(req: NextRequest) {
 
   try {
     await deleteQuizById(id);
-    return NextResponse.json(null, { status: 204 });
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(`Error deleting quiz with ID ${id}:`, error);
     return NextResponse.json(

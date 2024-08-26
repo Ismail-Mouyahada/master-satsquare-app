@@ -92,7 +92,7 @@ const UtilisateursPage: FC = () => {
     <div className="flex flex-row w-full h-full">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full ">
-        <div className="min-h-full ml-[3em] p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="min-h-full ml-[4em] p-4 bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Profil"
             icon={<FaUser className="scale-[1.5]" color="#6D6B81" />}

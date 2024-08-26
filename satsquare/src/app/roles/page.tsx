@@ -11,6 +11,7 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 
 const RolePage: FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
+  const [filteredRoles, setFilteredRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -22,15 +23,16 @@ const RolePage: FC = () => {
     fetchRoles();
   }, []);
 
-  const fetchRoles = async (pseudo: string = "") => {
+  const fetchRoles = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/roles?nom=${pseudo}`);
+      const response = await fetch(`/api/roles`);
       if (!response.ok) {
         throw new Error("Failed to fetch Roles");
       }
       const data: Role[] = await response.json();
       setRoles(data);
+      setFilteredRoles(data); // Initially, show all roles
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -75,8 +77,12 @@ const RolePage: FC = () => {
     }
   };
 
+  // Filter roles locally without making an API call
   const handleSearch = (name: string) => {
-    fetchRoles(name);
+    const filtered = roles.filter((role) =>
+      role.nom.toLowerCase().includes(name.toLowerCase())
+    );
+    setFilteredRoles(filtered);
   };
 
   if (loading) return <Loader />;
@@ -86,14 +92,14 @@ const RolePage: FC = () => {
     <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Roles"
             icon={<FaShieldAlt className="scale-[1.5]" color="#6D6B81" />}
           />
           <RolesearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <RoleTable
-            roles={roles}
+            roles={filteredRoles} // Use the filtered list here
             onEdit={openModal}
             onDelete={openDeleteModal}
           />

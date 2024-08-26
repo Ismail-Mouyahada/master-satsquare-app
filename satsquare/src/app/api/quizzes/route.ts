@@ -51,7 +51,10 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching quizzes:", error);
     return NextResponse.json(
-      { error: "An error occurred while fetching quizzes. Please try again later." },
+      {
+        error:
+          "An error occurred while fetching quizzes. Please try again later.",
+      },
       { status: 500 }
     );
   }
@@ -71,8 +74,8 @@ export async function POST(req: NextRequest) {
         questions: {
           create: questions.map((question: any) => ({
             question: question.question,
-            time: question.time,
-            cooldown: question.cooldown,
+            time: 15,
+            cooldown: 5,
             image: question.image,
             solution: question.solution,
             answers: question.answers,
@@ -85,7 +88,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error creating quiz:", error);
     return NextResponse.json(
-      { error: "An error occurred while creating the quiz. Please check your input and try again." },
+      {
+        error:
+          "An error occurred while creating the quiz. Please check your input and try again.",
+      },
       { status: 500 }
     );
   }

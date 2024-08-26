@@ -1,6 +1,6 @@
-import { FC } from 'react';
-import { Quiz } from '@prisma/client';
-import ActionButtons from '../ActionButtons/page';
+import { FC } from "react";
+import { Quiz } from "@prisma/client";
+import ActionButtons from "../ActionButtons/page";
 
 interface QuizTableProps {
   quizzes: Quiz[];
@@ -14,7 +14,6 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
         <thead>
           <tr className="bg-[#EDF2FF]">
             <th className="border px-4 py-2">Titre</th>
-            <th className="border px-4 py-2">Catégorie</th>
             <th className="border px-4 py-2">Créé le</th>
             <th className="border px-4 py-2">Mis à jour le</th>
             <th className="border px-4 py-2">Actions</th>
@@ -23,17 +22,19 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
         <tbody>
           {quizzes.map((quiz) => (
             <tr key={quiz.id}>
-              <td className="border px-4 py-2">{quiz.titre}</td>
-              <td className="border px-4 py-2">{quiz.categorie}</td>
+              <td className="border px-4 py-2">{quiz.subject}</td>
               <td className="border px-4 py-2">
-                {new Date(quiz.cree_le).toLocaleDateString()}
+                {new Date(quiz.createdAt).toLocaleDateString()}
               </td>
               <td className="border px-4 py-2">
-                {new Date(quiz.mis_a_jour_le).toLocaleDateString()}
+                {new Date(quiz.updatedAt).toLocaleDateString()}
               </td>
               <td className="border px-4 py-2 space-x-2">
-                <a href={`/quizzes/${quiz.id}`} className="bg-action p-2 rounded-md">
-                 ✏️
+                <a
+                  href={`/quizzes/${quiz.id}`}
+                  className="bg-action p-2 rounded-md"
+                >
+                  ✏️
                 </a>
                 <button
                   className="bg-red-400 p-2 rounded-md"
@@ -42,7 +43,6 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
                   🗑️
                 </button>
               </td>
-           
             </tr>
           ))}
         </tbody>

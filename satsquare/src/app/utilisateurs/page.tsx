@@ -11,6 +11,9 @@ import { Utilisateur } from "@/types/entities-types";
 
 const UtilisateursPage: FC = () => {
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
+  const [filteredUtilisateurs, setFilteredUtilisateurs] = useState<
+    Utilisateur[]
+  >([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -24,15 +27,16 @@ const UtilisateursPage: FC = () => {
     fetchUtilisateurs();
   }, []);
 
-  const fetchUtilisateurs = async (pseudo: string = "") => {
+  const fetchUtilisateurs = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/utilisateurs?pseudo=${pseudo}`);
+      const response = await fetch(`/api/utilisateurs`);
       if (!response.ok) {
         throw new Error("Failed to fetch utilisateurs");
       }
       const data: Utilisateur[] = await response.json();
       setUtilisateurs(data);
+      setFilteredUtilisateurs(data); // Initialize filtered list with full data
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -77,8 +81,12 @@ const UtilisateursPage: FC = () => {
     }
   };
 
+  // Filter utilisateurs locally without making an API call
   const handleSearch = (name: string) => {
-    fetchUtilisateurs(name);
+    const filtered = utilisateurs.filter((utilisateur) =>
+      utilisateur.pseudo.toLowerCase().includes(name.toLowerCase())
+    );
+    setFilteredUtilisateurs(filtered);
   };
 
   if (loading) return <Loader />;
@@ -88,7 +96,7 @@ const UtilisateursPage: FC = () => {
     <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Utilisateurs"
             icon={<FaUsers className="scale-[1.5]" color="#6D6B81" />}
@@ -98,7 +106,7 @@ const UtilisateursPage: FC = () => {
             onSearch={handleSearch}
           />
           <UtilisateurTable
-            utilisateurs={utilisateurs}
+            utilisateurs={filteredUtilisateurs} // Use the filtered list here
             onEdit={openModal}
             onDelete={openDeleteModal}
           />
