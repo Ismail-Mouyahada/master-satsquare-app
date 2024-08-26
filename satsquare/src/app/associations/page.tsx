@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Association } from "@prisma/client";
+ 
 import AssociationTable from "@/components/Association/AssociationTable";
 import AssociationSearchBar from "@/components/Association/AssociationSearchBar";
 import AssociationModal from "@/components/Association/AssociationModal";
@@ -8,6 +8,7 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
 import { FaHandsHelping } from "react-icons/fa";
+import { Association } from "@/types/entities-types";
 
 const AssociationsPage: FC = () => {
   const [associations, setAssociations] = useState<Association[]>([]);
@@ -99,8 +100,8 @@ const AssociationsPage: FC = () => {
           />
           <AssociationTable
             associations={associations}
-            onEdit={openModal}
-            onDelete={openDeleteModal}
+            onEdit={(association) => openModal(association as Association)}
+            onDelete={(association) => openDeleteModal(association as Association)}
           />
         </div>
         <AssociationModal

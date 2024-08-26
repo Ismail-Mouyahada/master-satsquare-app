@@ -26,10 +26,10 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
   useEffect(() => {
     if (utilisateur) {
       setFormData({
-        pseudo: utilisateur.pseudo,
-        email: utilisateur.email,
-        mot_de_passe: utilisateur.mot_de_passe,
-        role_id: utilisateur.role_id,
+        pseudo: utilisateur.pseudo || "",
+        email: utilisateur.email || "",
+        mot_de_passe: utilisateur.mot_de_passe || "",
+        role_id: utilisateur.roleId || null,
       });
     } else {
       setFormData({

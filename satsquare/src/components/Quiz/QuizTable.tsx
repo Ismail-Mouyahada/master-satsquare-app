@@ -23,13 +23,13 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
         <tbody>
           {quizzes.map((quiz) => (
             <tr key={quiz.id}>
-              <td className="border px-4 py-2">{quiz.titre}</td>
-              <td className="border px-4 py-2">{quiz.categorie}</td>
+              <td className="border px-4 py-2">{quiz.subject}</td>
+              <td className="border px-4 py-2">{quiz.room}</td>
               <td className="border px-4 py-2">
-                {new Date(quiz.cree_le).toLocaleDateString()}
+                {new Date(quiz.createdAt).toLocaleDateString()}
               </td>
               <td className="border px-4 py-2">
-                {new Date(quiz.mis_a_jour_le).toLocaleDateString()}
+                {new Date(quiz.updatedAt).toLocaleDateString()}
               </td>
               <td className="border px-4 py-2 space-x-2">
                 <a href={`/quizzes/${quiz.id}`} className="bg-action p-2 rounded-md">

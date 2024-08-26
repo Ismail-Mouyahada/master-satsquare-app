@@ -11,10 +11,10 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    const rewards: RewardDTO[] = dons.map((don) => ({
+    const rewards: RewardDTO[] = dons.map((don:any) => ({
       sponsor: don.sponsor.nom,
       montant: don.montant,
-      portefeuille: don.sponsor.adresse_eclairage,
+      portefeuille: don.sponsor.adresseEclairage,
     }));
 
     return NextResponse.json(rewards, { status: 200 });

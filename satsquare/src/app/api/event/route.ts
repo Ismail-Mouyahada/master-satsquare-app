@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
+import { EvenementsQuiz } from '../../../types/datatypes';
 
 // POST: Créer un nouveau événement
 export async function POST(req: NextRequest) {
@@ -19,15 +20,15 @@ export async function POST(req: NextRequest) {
       data: {
         nom: data.nom,
         description: data.description,
-        est_public: data.est_public === "public",
-        est_gratuit: data.participation === "free",
-        commence_a: new Date(data.commence_a),
-        termine_a: new Date(data.termine_a),
-        sat_minimum: data.sat_minimum,
-        recompense_joueurs: data.recompense_joueurs,
-        don_association: data.don_association,
-        don_plateforme: data.don_plateforme,
-        EvenementsQuiz: {
+        estPublic: data.est_public === "public",
+        estGratuit: data.participation === "free",
+        commenceA: new Date(data.commence_a),
+        termineA: new Date(data.termine_a),
+        satMinimum: data.sat_minimum,
+        recompenseJoueurs: data.recompense_joueurs,
+        donAssociation: data.don_association,
+        donPlateforme: data.don_plateforme,
+        evenementsQuiz: {
           connect: data.quizzes.map((quizId: string) => ({
             id: parseInt(quizId),
           })),

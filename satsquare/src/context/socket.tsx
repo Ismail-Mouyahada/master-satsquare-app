@@ -4,9 +4,8 @@ import { createContext, useContext, useState } from "react";
 import React from "react";
 import { io, Socket } from "socket.io-client";
  
-
-// Define the type for the socket
-export const socket: Socket = io(WEBSOCKET_URL, {
+// Définir le type pour le socket
+export const socket: Socket = io(WEBSOCKET_URL || "", {
   path: "/ws/",
   // addTrailingSlash: false,
   transports: ["websocket"],

@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   try {
     const questions = await prisma.question.findMany({
       include: {
-        Reponses: true,
+        playersAnswers: true,
       },
     });
     return NextResponse.json(questions, { status: 200 });
@@ -23,17 +23,25 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const { texte_question, quiz_id, Reponses } = data;
-    const question = await prisma.question.create({
+
+    const { quizId, time, image, answers, cooldown, question, solution } = data;
+
+    const newQuestion = await prisma.question.create({
       data: {
-        texte_question,
-        quiz_id,
-        Reponses: {
-          create: Reponses,
+        quizId,
+        time,
+        image,
+        answers,
+        cooldown,
+        question,
+        solution,
+        playersAnswers: {
+          create: data.playersAnswers || [],
         },
       },
     });
-    return NextResponse.json(question, { status: 201 });
+
+    return NextResponse.json(newQuestion, { status: 201 });
   } catch (error) {
     console.error("Error creating question:", error);
     return NextResponse.json(

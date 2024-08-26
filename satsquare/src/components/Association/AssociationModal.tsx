@@ -26,8 +26,8 @@ const AssociationModal: FC<AssociationModalProps> = ({
       setFormData({
         nom: association.nom,
         valide: association.valide === 1,
-        adresse_eclairage: association.adresse_eclairage,
-        est_confirme: association.est_confirme,
+        adresse_eclairage: association.adresseEclairage,
+        est_confirme: association.estConfirme,
       });
     } else {
       setFormData({

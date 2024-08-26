@@ -1,7 +1,7 @@
 "use client";
 import { FC } from "react";
-import { Association } from "@prisma/client";
 import Image from "next/image";
+import { Association } from "@/types/entities-types";
 
 export interface AssociationSelectListProps {
   associations: Association[];
@@ -30,7 +30,7 @@ const AssociationSelectList: FC<AssociationSelectListProps> = ({
             >
               <div className="block w-full">
                 <Image
-                  src={association.logo_url}
+                  src={association.logoUrl}
                   alt={association.nom}
                   className="mb-2 w-full h-32 object-cover rounded-lg"
                 />
@@ -38,12 +38,12 @@ const AssociationSelectList: FC<AssociationSelectListProps> = ({
                   {association.nom}
                 </div>
                 <div className="w-full text-sm">
-                  {association.adresse_eclairage}
+                  {association.adresseEclairage}
                 </div>
                 <p
-                  className={`mt-2 ${association.est_confirme ? "text-green-500" : "text-red-500"}`}
+                  className={`mt-2 ${association.estConfirme ? "text-green-500" : "text-red-500"}`}
                 >
-                  {association.est_confirme ? "Confirmé" : "Non confirmé"}
+                  {association.estConfirme ? "Confirmé" : "Non confirmé"}
                 </p>
               </div>
             </label>

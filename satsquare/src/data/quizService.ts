@@ -6,9 +6,18 @@ export const getQuizById = async (quizId: number) => {
   const quiz = await prisma.quiz.findUnique({
     where: { id: quizId },
     include: {
-      Questions: {
+      playersAnswers: {
         include: {
-          Reponses: true,
+          player: true,
+        },
+      },
+      questions: {
+        include: {
+          playersAnswers: {
+            include: {
+              player: true,
+            },
+          },
         },
       },
     },

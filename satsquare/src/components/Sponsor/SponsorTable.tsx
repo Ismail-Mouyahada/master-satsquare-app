@@ -24,12 +24,12 @@ const SponsorTable: FC<SponsorTableProps> = ({ sponsors, onEdit, onDelete }) => 
           {sponsors.map((sponsor) => (
             <tr key={sponsor.id}>
               <td className="border px-4 py-2">{sponsor.nom}</td>
-              <td className="border px-4 py-2">{sponsor.adresse_eclairage}</td>
+              <td className="border px-4 py-2">{sponsor.adresseEclairage}</td>
               <td className="border px-4 py-2">
                 {sponsor.valide ? <span className="text-green-500">✔️</span> : <span className="text-red-500">❌</span>}
               </td>
               <td className="border px-4 py-2">
-                {sponsor.est_confirme ? <span className="text-green-500">✔️</span> : <span className="text-red-500">❌</span>}
+                {sponsor.estConfirme ? <span className="text-green-500">✔️</span> : <span className="text-red-500">❌</span>}
               </td>
               <td className="border px-4 py-2 space-x-2">
                 <button className="bg-action p-2 rounded-md" onClick={() => onEdit(sponsor)}>✏️</button>

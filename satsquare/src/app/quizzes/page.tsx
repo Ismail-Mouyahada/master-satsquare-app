@@ -83,7 +83,7 @@ const QuizPage: FC = () => {
                 <h2 className="mb-4 text-2xl">Confirmer la suppression</h2>
                 <p>
                   Êtes-vous sûr de vouloir supprimer le quiz "
-                  {quizToDelete?.titre}" ?
+                  {quizToDelete?.subject}" ?
                 </p>
                 <div className="flex justify-end mt-4 space-x-4">
                   <button

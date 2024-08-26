@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import axios from 'axios';
 import prisma from '@/db/prisma';
 import { getToken } from 'next-auth/jwt'; // Import getToken for NextRequest context
 
@@ -35,29 +34,28 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const config = {
-      method: 'get',
-      maxBodyLength: Infinity,
-      url: 'https://lightning.ismail-mouyahada.com/api/v1/wallet',
-      headers: { 
-        'x-api-key': wallet.walletId,
+    const response = await fetch(`https://lightning.ismail-mouyahada.com/api/v1/auth?usr=${wallet.walletId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    };
+    });
 
-    const response = await axios.request(config);
-    console.log('response:', response.data);
-
-    return NextResponse.json(response.data, { status: 200 });
-
-  } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      console.error('Axios error:', error.message);
+    if (!response.ok) {
+      const errorDetails = await response.text();
+      console.error('Error fetching wallet details from external API:', errorDetails);
       return NextResponse.json(
-        { error: 'Failed to fetch wallet details from external API', details: error.message },
-        { status: error.response?.status || 500 }
+        { error: 'Failed to fetch wallet details from external API', details: errorDetails },
+        { status: response.status }
       );
     }
 
+    const responseData = await response.json();
+    console.log('response:', responseData);
+
+    return NextResponse.json(responseData, { status: 200 });
+
+  } catch (error: any) {
     console.error('Error fetching wallet details:', error.message || error);
 
     return NextResponse.json(

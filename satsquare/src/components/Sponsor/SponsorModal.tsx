@@ -26,8 +26,8 @@ const SponsorModal: FC<SponsorModalProps> = ({
       setFormData({
         nom: sponsor.nom,
         valide: sponsor.valide === 1,
-        adresse_eclairage: sponsor.adresse_eclairage,
-        est_confirme: sponsor.est_confirme,
+        adresse_eclairage: sponsor.adresseEclairage,
+        est_confirme: sponsor.estConfirme,
       });
     } else {
       setFormData({
