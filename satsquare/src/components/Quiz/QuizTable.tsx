@@ -1,6 +1,7 @@
 import { FC } from "react";
-import { Quiz } from "@prisma/client";
+
 import ActionButtons from "../ActionButtons/page";
+import { Quiz } from "@/types/main-types/main";
 
 interface QuizTableProps {
   quizzes: Quiz[];
@@ -23,6 +24,7 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes, onDelete }) => {
           {quizzes.map((quiz) => (
             <tr key={quiz.id}>
               <td className="border px-4 py-2">{quiz.subject}</td>
+              <td className="border px-4 py-2">{quiz.room}</td>
               <td className="border px-4 py-2">
                 {new Date(quiz.createdAt).toLocaleDateString()}
               </td>

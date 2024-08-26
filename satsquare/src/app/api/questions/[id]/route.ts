@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
       const question = await prisma.question.findUnique({
         where: { id: Number(id) },
         include: {
-          Reponses: true,
+          playersAnswers: true,
         },
       });
 
@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     } else {
       const questions = await prisma.question.findMany({
         include: {
-          Reponses: true,
+          playersAnswers: true,
         },
       });
 

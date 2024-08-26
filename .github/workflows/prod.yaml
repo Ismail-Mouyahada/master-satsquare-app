@@ -113,3 +113,34 @@ jobs:
           docker-compose up --build -d
         env:
           DATABASE_URL: postgresql://satsquare_user:satsquare_password@db:5432/satsquare_db
+      - name: Notification Discord
+        uses: nobrayner/discord-webhook@v1
+        needs: [build, test]
+        if: always()
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          discord-webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          username: 'Bob'
+          avatar-url: 'https://octodex.github.com/images/Terracottocat_Single.png'
+          title: '${{ github.workflow }}: {{STATUS}}'
+          description: '${{ github.event_name }} a déclenché cette {{STATUS}} !'
+          include-details: 'false'
+          color-success: '#4287f5'
+          color-failure: 'eb4034'
+          color-cancelled: '0x42daf5'
+          footer: 'Bob le Constructeur'
+
+      - name: Notify
+        uses: nobrayner/discord-webhook@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          discord-webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          username: 'Bob'
+          avatar-url: 'https://octodex.github.com/images/Terracottocat_Single.png'
+          title: '${{ github.workflow }}: {{STATUS}}'
+          description: '${{ github.event_name }} trigged this {{STATUS}}!'
+          include-details: 'false'
+          color-success: '#4287f5'
+          color-failure: 'eb4034'
+          color-cancelled: '0x42daf5'
+          footer: 'Bob the Builder'

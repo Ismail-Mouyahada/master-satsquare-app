@@ -7,7 +7,7 @@ import Loader from "@/components/Loader";
 import { FaUsers } from "react-icons/fa";
 import UtilisateursearchBar from "@/components/Utilisateur/UtilisateurSearchBar";
 import PageHeader from "@/components/PageHeader/PageHeader";
-import { Utilisateur } from "@/types/entities-types";
+import { Utilisateur } from "@/types/main-types/main";
 
 const UtilisateursPage: FC = () => {
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);

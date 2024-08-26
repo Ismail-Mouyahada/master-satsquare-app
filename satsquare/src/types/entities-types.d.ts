@@ -1,7 +1,7 @@
 export interface Role {
   id: number;
   nom: string;
-  utilisateurs: Utilisateur[];
+  utilisateurs?: Utilisateur[];
 }
 
 export interface Utilisateur {
@@ -12,10 +12,10 @@ export interface Utilisateur {
   role_id?: number;
   mot_de_passe: string;
   association?: Association;
-  association_id?: number;
+  associationId?: number;
   statut_compte: boolean;
   sponsor?: Sponsor;
-  sponsor_id?: number;
+  sponsorId?: number;
   creeLe: Date;
   mis_a_jour_le: Date;
   walletId?: string; // Optional field for wallet ID
@@ -28,10 +28,10 @@ export interface Utilisateur {
 export interface Association {
   id: number;
   nom: string;
-  adresse_eclairage: string;
+  adresseEclairage: string;
   valide: number;
-  est_confirme: boolean;
-  cree_le: Date;
+  estConfirme: boolean;
+  creeLe: Date;
   mis_a_jour_le: Date;
   Utilisateurs: Utilisateur[];
   AssociationDons: AssociationDon[];
@@ -41,9 +41,9 @@ export interface Sponsor {
   id: number;
   nom: string;
   valide: number;
-  adresse_eclairage: string;
-  est_confirme: boolean;
-  cree_le: Date;
+  adresseEclairage: string;
+  estConfirme: boolean;
+  creeLe: Date;
   mis_a_jour_le: Date;
   Utilisateurs: Utilisateur[];
   Dons: Don[];
@@ -58,7 +58,7 @@ export interface Evenement {
   commence_a: Date;
   termine_a: Date;
   est_public: boolean;
-  cree_le: Date;
+  creeLe: Date;
   mis_a_jour_le: Date;
   Dons: Don[];
   EvenementsQuiz: EvenementsQuiz[];
@@ -67,11 +67,11 @@ export interface Evenement {
 export interface Don {
   id: number;
   sponsor: Sponsor;
-  sponsor_id: number;
+  sponsorId: number;
   evenement: Evenement;
   evenement_id: number;
   montant: number;
-  cree_le: Date;
+  creeLe: Date;
   mis_a_jour_le: Date;
   AssociationDons: AssociationDon[];
 }
@@ -81,19 +81,25 @@ export interface AssociationDon {
   don: Don;
   don_id: number;
   association: Association;
-  association_id: number;
+  associationId: number;
 }
 
 export interface Quiz {
   id: number;
   titre: string;
-  utilisateur: Utilisateur;
-  user_id: number;
+  utilisateur: Utilisateur | null;
+  user_id: number | null;
   categorie: string;
-  cree_le: Date;
+  creeLe: Date;
   mis_a_jour_le: Date;
-  EvenementsQuiz: EvenementsQuiz[];
-  Questions: Question[];
+  room?: string | null;
+  manager?: string | null;
+  started: boolean;
+  subject: string;
+  password: string;
+  roundStartTime: number;
+  currentQuestion: number;
+  utilisateurId: number | null;
 }
 
 export interface EvenementsQuiz {

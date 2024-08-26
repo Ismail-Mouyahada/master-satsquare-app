@@ -1,6 +1,5 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Evenement } from "@prisma/client";
 import EventTable from "@/components/Event/EventTable";
 import EventSearchBar from "@/components/Event/EventSearchBar";
 import EventModal from "@/components/Event/EventModal";
@@ -8,6 +7,7 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
 import { FaCalculator } from "react-icons/fa";
+import { Evenement } from "@/types/main-types/main";
 
 const EventsPage: FC = () => {
   const [events, setEvents] = useState<Evenement[]>([]);
@@ -93,17 +93,27 @@ const EventsPage: FC = () => {
           />
           <EventSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <EventTable
-            events={events}
-            onEdit={openModal}
-            onDelete={openDeleteModal}
+            events={events.map(event => ({
+              ...event,
+              userId: event.userId ?? null,
+              dons: event.dons,
+              donAssociation: event.dons.length,
+            }))}
+            onEdit={(event) => openModal(event as Evenement)}
+            onDelete={(event) => openDeleteModal(event as Evenement)}
           />
         </div>
-        <EventModal
-          event={selectedEvent}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onSave={handleSave}
-        />
+        {selectedEvent && (
+          <EventModal
+            event={{
+              ...selectedEvent,
+              userId: selectedEvent.userId ?? null,
+            }}
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onSave={handleSave}
+          />
+        )}
         {isDeleteModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="p-6 bg-slate-50 rounded-lg shadow-lg text-slate-500">

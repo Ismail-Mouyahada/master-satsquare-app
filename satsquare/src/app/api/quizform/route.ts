@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
   try {
     const quizzes = await prisma.quiz.findMany({
       include: {
+        playersAnswers: true,
         questions: true,
       },
     });

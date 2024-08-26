@@ -16,9 +16,9 @@ export async function GET(req: NextRequest) {
     const quiz = await prisma.quiz.findUnique({
       where: { id: Number(id) },
       include: {
-        Questions: {
+        questions: {
           include: {
-            Reponses: true,
+            playersAnswers: true,
           },
         },
       },
@@ -55,10 +55,10 @@ export async function PUT(req: NextRequest) {
     const updatedQuiz = await prisma.quiz.update({
       where: { id: Number(id) },
       data: {
-        titre,
-        user_id,
-        categorie,
-        Questions: {
+
+        utilisateurId: user_id,
+  
+        questions: {
           deleteMany: {}, // Delete existing questions
           create: questions.map(
             (question: {
@@ -82,9 +82,9 @@ export async function PUT(req: NextRequest) {
         },
       },
       include: {
-        Questions: {
+        questions: {
           include: {
-            Reponses: true,
+            playersAnswers: true,
           },
         },
       },
@@ -113,9 +113,9 @@ export async function DELETE(req: NextRequest) {
     await prisma.quiz.delete({
       where: { id: Number(id) },
       include: {
-        Questions: {
+        questions: {
           include: {
-            Reponses: true,
+            playersAnswers: true,
           },
         },
       },

@@ -34,11 +34,11 @@ describe("API Routes: Associations", () => {
       const mockUpdatedAssociation = {
         id: 1,
         nom: "Updated Association",
-        adresse_eclairage: "123 Street",
+        adresseEclairage: "123 Street",
         valide: 1,
-        est_confirme: true,
+        estConfirme: true,
         logo_url: "http://example.com/logo.png",
-        cree_le: new Date(),
+        creeLe: new Date(),
         mis_a_jour_le: new Date(),
       };
 
@@ -52,7 +52,7 @@ describe("API Routes: Associations", () => {
       expect(response.status).toBe(200);
       expect(body).toEqual({
         ...mockUpdatedAssociation,
-        cree_le: mockUpdatedAssociation.cree_le.toISOString(),
+        creeLe: mockUpdatedAssociation.creeLe.toISOString(),
         mis_a_jour_le: mockUpdatedAssociation.mis_a_jour_le.toISOString(),
       });
       expect(prisma.association.update).toHaveBeenCalledTimes(1);

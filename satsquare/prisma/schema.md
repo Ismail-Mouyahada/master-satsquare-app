@@ -13,30 +13,30 @@ model Utilisateur {
   email          String           @unique
   role_id        Int?
   mot_de_passe   String
-  association_id Int?
+  associationId Int?
   statut_compte  Boolean
-  sponsor_id     Int?
-  cree_le        DateTime         @default(now())
+  sponsorId     Int?
+  creeLe        DateTime         @default(now())
   mis_a_jour_le  DateTime         @updatedAt
   walletId       String?          // Optional field for the LNbits wallet ID
   balance        BigInt?
   Evenement      Evenement[]
   EvenementsQuiz EvenementsQuiz[]
   Quiz           Quiz[]
-  association    Association?     @relation(fields: [association_id], references: [id], onDelete: Cascade)
+  association    Association?     @relation(fields: [associationId], references: [id], onDelete: Cascade)
   role           Role?            @relation(fields: [role_id], references: [id], onDelete: Cascade)
-  sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
+  sponsor        Sponsor?         @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
   Game           Game[]
 }
 
 model Association {
   id                Int              @id @default(autoincrement())
   nom               String
-  adresse_eclairage String
+  adresseEclairage String
   valide            Int
-  est_confirme      Boolean
+  estConfirme      Boolean
   logo_url          String
-  cree_le           DateTime         @default(now())
+  creeLe           DateTime         @default(now())
   mis_a_jour_le     DateTime         @updatedAt
   AssociationDons   AssociationDon[]
   Utilisateurs      Utilisateur[]
@@ -46,9 +46,9 @@ model Sponsor {
   id                Int           @id @default(autoincrement())
   nom               String
   valide            Int
-  adresse_eclairage String
-  est_confirme      Boolean
-  cree_le           DateTime      @default(now())
+  adresseEclairage String
+  estConfirme      Boolean
+  creeLe           DateTime      @default(now())
   mis_a_jour_le     DateTime      @updatedAt
   Dons              Don[]
   Utilisateurs      Utilisateur[]
@@ -73,7 +73,7 @@ model Evenement {
   recompense_joueurs Int
   don_association    Int
   don_plateforme     Int
-  cree_le            DateTime         @default(now())
+  creeLe            DateTime         @default(now())
   mis_a_jour_le      DateTime         @updatedAt
   Dons               Don[]
   utilisateur        Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
@@ -82,21 +82,21 @@ model Evenement {
 
 model Don {
   id              Int              @id @default(autoincrement())
-  sponsor_id      Int
+  sponsorId      Int
   evenement_id    Int
   montant         Float
-  cree_le         DateTime         @default(now())
+  creeLe         DateTime         @default(now())
   mis_a_jour_le   DateTime         @updatedAt
   AssociationDons AssociationDon[]
   evenement       Evenement        @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
-  sponsor         Sponsor          @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
+  sponsor         Sponsor          @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
 }
 
 model AssociationDon {
   id             Int         @id @default(autoincrement())
   don_id         Int
-  association_id Int
-  association    Association @relation(fields: [association_id], references: [id], onDelete: Cascade)
+  associationId Int
+  association    Association @relation(fields: [associationId], references: [id], onDelete: Cascade)
   don            Don         @relation(fields: [don_id], references: [id], onDelete: Cascade)
 }
 
@@ -105,7 +105,7 @@ model Quiz {
   titre          String
   user_id        Int?
   categorie      String
-  cree_le        DateTime         @default(now())
+  creeLe        DateTime         @default(now())
   mis_a_jour_le  DateTime         @updatedAt
   EvenementsQuiz EvenementsQuiz[]
   Questions      Question[]
@@ -155,7 +155,7 @@ model Game {
   roundStartTime    DateTime?
   players           Json
   playersAnswer     Json
-  cree_le           DateTime         @default(now())
+  creeLe           DateTime         @default(now())
   mis_a_jour_le     DateTime         @updatedAt
   utilisateur       Utilisateur?     @relation(fields: [manager_id], references: [id], onDelete: Cascade)
   quiz_id           Int?

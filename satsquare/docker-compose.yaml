@@ -1,30 +1,34 @@
-version: '3'
-
+version: '3.8'
 services:
-# Commenter Nextjs si vous souhaitez developer avec Prostgres en local
   nextjs:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextjs-app
+    restart: always
     ports:
-      - '3000:3000'
-      - '5157:5157'
+      - 3000:3000
     depends_on:
-      - db
+      - postgres
     environment:
-      - DATABASE_URL=postgresql://satsquare_user:satsquare_password@db:5432/satsquare_db
-      - NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
-      - NEXT_PUBLIC_SITE_URL="http://nextjs:3000"
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
+      - NEXTAUTH_SECRET=your-nextauth-secret
+      - NEXT_PUBLIC_SITE_URL=http://nextjs:3000
       - NEXT_PUBLIC_SOCKET_URL=http://nextjs:5157
-      
-  db:
-    image: postgres:latest
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
     ports:
-      - '5432:5432'
+      - 5432:5432
     environment:
-      POSTGRES_USER: satsquare_user
-      POSTGRES_PASSWORD: satsquare_password
-      POSTGRES_DB: satsquare_db
+      POSTGRES_USER=postgres
+      POSTGRES_PASSWORD=yourpassword
+      POSTGRES_DB=sat_square_db
+      POSTGRES_PORT=5432
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  pgdata:
+  postgres_data:

@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Association } from "@prisma/client";
 import { FaCertificate, FaCheck, FaCloudversify, FaCross, FaEdit, FaExclamationTriangle, FaEye, FaObjectGroup, FaObjectUngroup, FaRegFlushed, FaRemoveFormat, FaTrash } from "react-icons/fa";
 import ActionButtons from "../ActionButtons/page";
+import { Association } from "@/types/main-types/main";
 
 interface AssociationTableProps {
   associations: Association[];
@@ -36,7 +36,7 @@ const AssociationTable: FC<AssociationTableProps> = ({
             <tr key={association.id}>
               <td className="border px-4 py-2  ">{association.nom}</td>
               <td className="border px-4 py-2  ">
-                {association.adresse_eclairage}
+                {association.adresseEclairage}
               </td>
               <td className="border px-4 py-2  justify-center ">
                 {association.valide ? (
@@ -46,7 +46,7 @@ const AssociationTable: FC<AssociationTableProps> = ({
                 )}
               </td>
               <td className="border px-4 py-2  ">
-                {association.est_confirme ? (
+                {association.estConfirme ? (
                   <span className="text-green-400  "><FaCheck className="scale-[1.5]"/></span>
                 ) : (
                   <span className="text-red-400"><FaExclamationTriangle className="scale-[1.5]"/></span>

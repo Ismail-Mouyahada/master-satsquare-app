@@ -1,6 +1,5 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Sponsor } from "@prisma/client";
 import SponsorTable from "@/components/Sponsor/SponsorTable";
 import SponsorSearchBar from "@/components/Sponsor/SponsorSearchBar";
 import SponsorModal from "@/components/Sponsor/SponsorModal";
@@ -8,6 +7,7 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
 import { FaDonate } from "react-icons/fa";
+import { Sponsor } from "@/types/main-types/main";
 
 const SponsorsPage: FC = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
@@ -94,8 +94,8 @@ const SponsorsPage: FC = () => {
           <SponsorSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <SponsorTable
             sponsors={sponsors}
-            onEdit={openModal}
-            onDelete={openDeleteModal}
+            onEdit={(sponsor) => openModal(sponsor as Sponsor)}
+            onDelete={(sponsor) => openDeleteModal(sponsor as Sponsor)}
           />
         </div>
         <SponsorModal

@@ -8,7 +8,7 @@ import Loader from "@/components/Loader";
 import { FaUser } from "react-icons/fa";
 import UtilisateursearchBar from "@/components/Utilisateur/UtilisateurSearchBar";
 import PageHeader from "@/components/PageHeader/PageHeader";
-import { Utilisateur } from "@/types/entities-types";
+import { Utilisateur } from "@/types/main-types/main";
 import ProfileDetail from "@/components/ProfileDetail/ProfileDetail";
 import { useSession } from "next-auth/react";
 

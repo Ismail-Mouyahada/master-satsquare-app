@@ -1,5 +1,6 @@
+import { Evenement } from "@/types/main-types/main";
 import { FC, useState, useEffect, FormEvent } from "react";
-import { Evenement } from "@prisma/client";
+ 
 
 interface EventModalProps {
   event?: Evenement | null;
@@ -27,9 +28,9 @@ const EventModal: FC<EventModalProps> = ({
       setFormData({
         nom: event.nom,
         description: event.description,
-        commence_a: new Date(event.commence_a).toISOString().substring(0, 16),
-        termine_a: new Date(event.termine_a).toISOString().substring(0, 16),
-        est_public: event.est_public,
+        commence_a: new Date(event.commenceA).toISOString().substring(0, 16),
+        termine_a: new Date(event.termineA).toISOString().substring(0, 16),
+        est_public: event.estPublic,
       });
     } else {
       setFormData({

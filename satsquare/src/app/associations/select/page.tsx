@@ -1,12 +1,13 @@
 "use client";
 import { FC, useEffect, useState, useCallback } from "react";
-import { Association } from "@prisma/client";
+ 
 import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
 import { FaDonate } from "react-icons/fa";
 import AssociationSelectList from "@/components/Association/Select/AssociationSelectList";
 import AssociationSelectSearchBar from "@/components/Association/Select/AssociationSelectSearchBar";
+import { Association } from "@/types/main-types/main";
 
 const AssociationsSelectPage: FC = () => {
   const [allAssociations, setAllAssociations] = useState<Association[]>([]);
@@ -64,7 +65,7 @@ const AssociationsSelectPage: FC = () => {
             icon={<FaDonate className="scale-[1.5]" color="#6D6B81" />}
           />
           <AssociationSelectSearchBar onSearch={handleSearch} />
-          <AssociationSelectList associations={filteredAssociations} />
+          <AssociationSelectList  associations={filteredAssociations} />
         </div>
       </div>
     </div>

@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Exclude the mot_de_passe field from each user and handle BigInt
-    utilisateurs = utilisateurs.map((utilisateur) => {
+    utilisateurs = utilisateurs.map((utilisateur: any) => {
       const userWithoutPassword = exclude(utilisateur, ["mot_de_passe"]);
       return JSON.parse(
         JSON.stringify(userWithoutPassword, (_, value) => handleBigInt(value))

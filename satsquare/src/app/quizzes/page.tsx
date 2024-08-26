@@ -1,12 +1,12 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Quiz } from "@prisma/client";
 import QuizTable from "@/components/Quiz/QuizTable";
 import QuizSearchBar from "@/components/Quiz/QuizSearchBar";
 import Loader from "@/components/Loader";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import { FaGamepad } from "react-icons/fa";
+import { Quiz } from "@/types/main-types/main";
 
 const QuizPage: FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
