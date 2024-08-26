@@ -1,4 +1,4 @@
-import { Utilisateur } from "@/types/entities-types";
+import { Utilisateur } from "@/types/main-types/main";
 import { FC } from "react";
 
 interface UtilisateurTableProps {

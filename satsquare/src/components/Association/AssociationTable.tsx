@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Association } from "@prisma/client";
 import { FaCertificate, FaCheck, FaCloudversify, FaCross, FaEdit, FaExclamationTriangle, FaEye, FaObjectGroup, FaObjectUngroup, FaRegFlushed, FaRemoveFormat, FaTrash } from "react-icons/fa";
 import ActionButtons from "../ActionButtons/page";
+import { Association } from "@/types/main-types/main";
 
 interface AssociationTableProps {
   associations: Association[];

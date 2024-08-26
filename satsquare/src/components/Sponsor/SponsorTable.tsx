@@ -1,5 +1,5 @@
+import { Sponsor } from '@/types/main-types/main';
 import { FC } from 'react';
-import { Sponsor } from '@prisma/client';
 
 interface SponsorTableProps {
   sponsors: Sponsor[];

@@ -1,28 +1,32 @@
-# Utiliser une image Node.js comme base
+# Use a Node.js image as the base
 FROM node:18-alpine
 
-# Définir le répertoire de travail dans le conteneur
+# Set the working directory in the container
 WORKDIR /app
 
-# Copier le fichier package.json et package-lock.json (s'ils existent)
+# Copy package.json and package-lock.json (if they exist)
 COPY package*.json ./
 
-# Installer les dépendances
+# Install dependencies
 RUN npm install
 
-# Copier le reste des fichiers de l'application
+# Copy the rest of the application code
 COPY . .
 
-# Construire l'application Next.js
+# # Generate Prisma client
+# RUN npx prisma generate
+
+# Build the Next.js application
 RUN npm run build
 
-# Migration des données
-RUN npx prisma db push
-# Seed des données
-RUN npx prisma seed
+# # Push database schema changes
+# RUN npx prisma db push
 
-# Exposer le port 3000 pour l'application Next.js
+# # Seed the database
+# RUN npx prisma seed
+
+# Expose port 3000 for Next.js and 5157 for any other service
 EXPOSE 3000 5157
 
-# Commande de démarrage de l'application
+# Start the application
 CMD ["npm", "start"]

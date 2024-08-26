@@ -1,5 +1,5 @@
+import { Sponsor } from "@/types/main-types/main";
 import { FC, useState, useEffect, FormEvent } from "react";
-import { Sponsor } from "@prisma/client";
 
 interface SponsorModalProps {
   sponsor?: Sponsor | null;
@@ -17,8 +17,8 @@ const SponsorModal: FC<SponsorModalProps> = ({
   const [formData, setFormData] = useState({
     nom: "",
     valide: false,
-    adresse_eclairage: "",
-    est_confirme: false,
+    adresseEclairage: "",
+    estConfirme: false,
   });
 
   useEffect(() => {
@@ -26,15 +26,15 @@ const SponsorModal: FC<SponsorModalProps> = ({
       setFormData({
         nom: sponsor.nom,
         valide: sponsor.valide === 1,
-        adresse_eclairage: sponsor.adresseEclairage,
-        est_confirme: sponsor.estConfirme,
+        adresseEclairage: sponsor.adresseEclairage,
+        estConfirme: sponsor.estConfirme,
       });
     } else {
       setFormData({
         nom: "",
         valide: false,
-        adresse_eclairage: "",
-        est_confirme: false,
+        adresseEclairage: "",
+        estConfirme: false,
       });
     }
   }, [sponsor]);
@@ -96,8 +96,8 @@ const SponsorModal: FC<SponsorModalProps> = ({
             </label>
             <input
               type="text"
-              name="adresse_eclairage"
-              value={formData.adresse_eclairage}
+              name="adresseEclairage"
+              value={formData.adresseEclairage}
               onChange={handleChange}
               className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
               required
@@ -128,18 +128,18 @@ const SponsorModal: FC<SponsorModalProps> = ({
             <div className="flex items-center justify-center space-x-2 w-1/2">
               <input
                 type="checkbox"
-                name="est_confirme"
-                id="est_confirme"
-                checked={formData.est_confirme}
+                name="estConfirme"
+                id="estConfirme"
+                checked={formData.estConfirme}
                 onChange={handleChange}
                 className="hidden"
               />
               <label
-                htmlFor="est_confirme"
+                htmlFor="estConfirme"
                 className="flex items-center space-x-2 cursor-pointer"
               >
                 <span
-                  className={`w-8 h-8 rounded-full border-4 ${formData.est_confirme ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
+                  className={`w-8 h-8 rounded-full border-4 ${formData.estConfirme ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
                 ></span>
                 <span className="text-sm font-medium text-gray-700">
                   Confirmé

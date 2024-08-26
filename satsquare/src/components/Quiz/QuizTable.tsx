@@ -1,6 +1,7 @@
 import { FC } from 'react';
-import { Quiz } from '@prisma/client';
+ 
 import ActionButtons from '../ActionButtons/page';
+import { Quiz } from '@/types/main-types/main';
 
 interface QuizTableProps {
   quizzes: Quiz[];

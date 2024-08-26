@@ -1,6 +1,5 @@
 "use client";
 import { FC, useEffect, useState } from "react";
- 
 import AssociationTable from "@/components/Association/AssociationTable";
 import AssociationSearchBar from "@/components/Association/AssociationSearchBar";
 import AssociationModal from "@/components/Association/AssociationModal";
@@ -8,7 +7,7 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
 import { FaHandsHelping } from "react-icons/fa";
-import { Association } from "@/types/entities-types";
+import { Association } from "@/types/main-types/main";
 
 const AssociationsPage: FC = () => {
   const [associations, setAssociations] = useState<Association[]>([]);
@@ -99,9 +98,13 @@ const AssociationsPage: FC = () => {
             onSearch={handleSearch}
           />
           <AssociationTable
-            associations={associations}
-            onEdit={(association) => openModal(association as Association)}
-            onDelete={(association) => openDeleteModal(association as Association)}
+            associations={associations.map(association => ({
+              ...association,
+              associationDons: [],
+              utilisateurs: []
+            }))}
+            onEdit={(association) => openModal({ ...association, associationDons: [], utilisateurs: [] })}
+            onDelete={(association) => openDeleteModal({ ...association, associationDons: [], utilisateurs: [] })}
           />
         </div>
         <AssociationModal

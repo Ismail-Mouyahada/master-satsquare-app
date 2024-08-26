@@ -26,9 +26,9 @@ async function main() {
     const association = await prisma.association.create({
       data: {
         nom: faker.company.name(),
-        adresse_eclairage: faker.address.streetAddress(),
+        adresseEclairage: faker.address.streetAddress(),
         valide: faker.datatype.boolean() ? 1 : 0,
-        est_confirme: faker.datatype.boolean(),
+        estConfirme: faker.datatype.boolean(),
         logo_url: faker.image.imageUrl(),
       },
     });
@@ -42,8 +42,8 @@ async function main() {
       data: {
         nom: faker.company.name(),
         valide: faker.datatype.boolean() ? 1 : 0,
-        adresse_eclairage: faker.address.streetAddress(),
-        est_confirme: faker.datatype.boolean(),
+        adresseEclairage: faker.address.streetAddress(),
+        estConfirme: faker.datatype.boolean(),
       },
     });
     sponsors.push(sponsor);

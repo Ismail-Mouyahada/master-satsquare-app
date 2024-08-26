@@ -42,7 +42,7 @@ describe("API Routes: Evenements", () => {
         ...requestData,
         commence_a: new Date(requestData.commence_a),
         termine_a: new Date(requestData.termine_a),
-        cree_le: new Date(),
+        creeLe: new Date(),
         mis_a_jour_le: new Date(),
       };
 
@@ -58,7 +58,7 @@ describe("API Routes: Evenements", () => {
         ...mockUpdatedEvent,
         commence_a: mockUpdatedEvent.commence_a.toISOString(),
         termine_a: mockUpdatedEvent.termine_a.toISOString(),
-        cree_le: mockUpdatedEvent.cree_le.toISOString(),
+        creeLe: mockUpdatedEvent.creeLe.toISOString(),
         mis_a_jour_le: mockUpdatedEvent.mis_a_jour_le.toISOString(),
       });
       expect(prisma.evenement.update).toHaveBeenCalledTimes(1);

@@ -41,8 +41,8 @@ function mapToUserDTO(user: any): UserDTO {
     pseudo: user.pseudo,
     email: user.email,
     role: user.role?.nom || null,
-    association_id: user.association_id,
-    sponsor_id: user.sponsor_id,
+    associationId: user.associationId,
+    sponsorId: user.sponsorId,
   };
 }
 

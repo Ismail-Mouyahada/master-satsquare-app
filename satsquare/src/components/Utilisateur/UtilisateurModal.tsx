@@ -1,6 +1,5 @@
 import { FC, useState, useEffect, FormEvent } from "react";
-import { Role } from "@prisma/client";
-import { Utilisateur } from "@/types/entities-types";
+import { Role, Utilisateur } from "@/types/main-types/main";
 
 interface UtilisateurModalProps {
   utilisateur?: Utilisateur | null;

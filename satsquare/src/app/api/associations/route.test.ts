@@ -23,11 +23,11 @@ describe("API Routes: Associations", () => {
         {
           id: 1,
           nom: "Association 1",
-          adresse_eclairage: "123 Street",
+          adresseEclairage: "123 Street",
           valide: 1,
-          est_confirme: true,
+          estConfirme: true,
           logo_url: "http://example.com/logo.png",
-          cree_le: new Date(),
+          creeLe: new Date(),
           mis_a_jour_le: new Date(),
         },
       ];
@@ -44,7 +44,7 @@ describe("API Routes: Associations", () => {
       expect(body).toEqual(
         mockAssociations.map((association) => ({
           ...association,
-          cree_le: association.cree_le.toISOString(),
+          creeLe: association.creeLe.toISOString(),
           mis_a_jour_le: association.mis_a_jour_le.toISOString(),
         }))
       );
@@ -55,11 +55,11 @@ describe("API Routes: Associations", () => {
         {
           id: 1,
           nom: "Test Association",
-          adresse_eclairage: "123 Street",
+          adresseEclairage: "123 Street",
           valide: 1,
-          est_confirme: true,
+          estConfirme: true,
           logo_url: "http://example.com/logo.png",
-          cree_le: new Date(),
+          creeLe: new Date(),
           mis_a_jour_le: new Date(),
         },
       ];
@@ -78,7 +78,7 @@ describe("API Routes: Associations", () => {
       expect(body).toEqual(
         mockAssociations.map((association) => ({
           ...association,
-          cree_le: association.cree_le.toISOString(),
+          creeLe: association.creeLe.toISOString(),
           mis_a_jour_le: association.mis_a_jour_le.toISOString(),
         }))
       );
@@ -104,9 +104,9 @@ describe("API Routes: Associations", () => {
         method: "POST",
         body: JSON.stringify({
           nom: "Association Test",
-          adresse_eclairage: "123 Test Street",
+          adresseEclairage: "123 Test Street",
           valide: 1,
-          est_confirme: true,
+          estConfirme: true,
           logo_url: "http://example.com/logo.png",
         }),
       });
@@ -114,11 +114,11 @@ describe("API Routes: Associations", () => {
       const mockAssociation = {
         id: 1,
         nom: "Association Test",
-        adresse_eclairage: "123 Test Street",
+        adresseEclairage: "123 Test Street",
         valide: 1,
-        est_confirme: true,
+        estConfirme: true,
         logo_url: "http://example.com/logo.png",
-        cree_le: new Date(),
+        creeLe: new Date(),
         mis_a_jour_le: new Date(),
       };
 
@@ -132,7 +132,7 @@ describe("API Routes: Associations", () => {
       expect(response.status).toBe(201);
       expect(body).toEqual({
         ...mockAssociation,
-        cree_le: mockAssociation.cree_le.toISOString(),
+        creeLe: mockAssociation.creeLe.toISOString(),
         mis_a_jour_le: mockAssociation.mis_a_jour_le.toISOString(),
       });
       expect(prisma.association.create).toHaveBeenCalledTimes(1);

@@ -1,5 +1,6 @@
+import { Evenement } from '@/types/main-types/main';
 import { FC } from 'react';
-import { Evenement } from '@prisma/client';
+ 
 
 interface EventTableProps {
   events: Evenement[];

@@ -7,7 +7,7 @@ import Loader from "@/components/Loader";
 import { FaDonate } from "react-icons/fa";
 import AssociationSelectList from "@/components/Association/Select/AssociationSelectList";
 import AssociationSelectSearchBar from "@/components/Association/Select/AssociationSelectSearchBar";
-import { Association } from "@/types/entities-types";
+import { Association } from "@/types/main-types/main";
 
 const AssociationsSelectPage: FC = () => {
   const [allAssociations, setAllAssociations] = useState<Association[]>([]);

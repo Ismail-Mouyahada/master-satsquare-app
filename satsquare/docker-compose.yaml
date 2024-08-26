@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-# Commenter Nextjs si vous souhaitez developer avec Prostgres en local
+  # Commenter Nextjs si vous souhaitez developer avec Prostgres en local
   nextjs:
     build: .
     ports:

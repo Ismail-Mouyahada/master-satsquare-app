@@ -1,5 +1,6 @@
+import { Evenement } from "@/types/main-types/main";
 import { FC, useState, useEffect, FormEvent } from "react";
-import { Evenement } from "@prisma/client";
+ 
 
 interface EventModalProps {
   event?: Evenement | null;

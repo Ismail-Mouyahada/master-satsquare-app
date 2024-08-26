@@ -1,6 +1,5 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Role } from "@prisma/client";
 import RoleTable from "@/components/Role/RoleTable";
 import RoleModal from "@/components/Role/RoleModal";
 import Sidebar from "@/components/Sidebar/page";
@@ -8,6 +7,8 @@ import Loader from "@/components/Loader";
 import { FaShieldAlt } from "react-icons/fa";
 import RolesearchBar from "@/components/Role/RoleSearchBar";
 import PageHeader from "@/components/PageHeader/PageHeader";
+// import { Role } from "@/types/main-types/main";
+import { Role } from "@/types/main-types/main";
 
 const RolePage: FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
@@ -94,12 +95,12 @@ const RolePage: FC = () => {
           <RolesearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <RoleTable
             roles={roles}
-            onEdit={openModal}
-            onDelete={openDeleteModal}
+            onEdit={(role: Role) => openModal({ ...role, utilisateurs: role.utilisateurs || [] })}
+            onDelete={(role: Role) => openDeleteModal({ ...role, utilisateurs: role.utilisateurs || [] })}
           />
         </div>
         <RoleModal
-          role={selectedRole}
+          role={selectedRole ? { ...selectedRole, utilisateurs: selectedRole.utilisateurs || [] } : null}
           isOpen={isModalOpen}
           onClose={closeModal}
           onSave={handleSave}

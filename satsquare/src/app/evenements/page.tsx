@@ -1,6 +1,5 @@
 "use client";
 import { FC, useEffect, useState } from "react";
- 
 import EventTable from "@/components/Event/EventTable";
 import EventSearchBar from "@/components/Event/EventSearchBar";
 import EventModal from "@/components/Event/EventModal";
@@ -8,7 +7,7 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
 import { FaCalculator } from "react-icons/fa";
-import { Evenement } from "@/types/entities-types";
+import { Evenement } from "@/types/main-types/main";
 
 const EventsPage: FC = () => {
   const [events, setEvents] = useState<Evenement[]>([]);
@@ -98,7 +97,7 @@ const EventsPage: FC = () => {
               ...event,
               userId: event.userId ?? null,
               dons: event.dons,
-              evenementsQuiz: event.evenementsQuiz
+              donAssociation: event.dons.length,
             }))}
             onEdit={(event) => openModal(event as Evenement)}
             onDelete={(event) => openDeleteModal(event as Evenement)}

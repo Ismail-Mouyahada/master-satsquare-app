@@ -1,28 +1,28 @@
 export interface Role {
   id: number;
   nom: string;
-  utilisateurs: Utilisateur[];
+  utilisateurs?: Utilisateur[];
 }
 
 export interface Utilisateur {
   id: number;
-  pseudo?: string;  // unique
-  email: string;    // unique
+  pseudo: string;
+  email: string;
   role?: Role;
-  roleId?: number;  // Foreign key for Role
+  role_id?: number;
   mot_de_passe: string;
   association?: Association;
-  associationId?: number;  // Foreign key for Association
-  statutCompte?: boolean;  // Default false
+  associationId?: number;
+  statut_compte: boolean;
   sponsor?: Sponsor;
-  sponsorId?: number;  // Foreign key for Sponsor
+  sponsorId?: number;
   creeLe: Date;
-  misAJourLe: Date;
-  walletId?: string;  // Optional field for wallet ID
-  balance?: bigint;   // Optional field for wallet balance in sats
-  quizzes: Quiz[];
-  evenements: Evenement[];
-  evenementsQuiz: EvenementsQuiz[];
+  mis_a_jour_le: Date;
+  walletId?: string; // Optional field for wallet ID
+  balance?: number;  // Optional field for wallet balance in sats
+  EvenementsQuiz: EvenementsQuiz[];
+  Evenement: Evenement[];
+  Quiz: Quiz[];
 }
 
 export interface Association {
@@ -31,11 +31,10 @@ export interface Association {
   adresseEclairage: string;
   valide: number;
   estConfirme: boolean;
-  logoUrl: string;  // Assuming logoUrl from the model
   creeLe: Date;
-  misAJourLe: Date;
-  utilisateurs: Utilisateur[];
-  associationDons: AssociationDon[];
+  mis_a_jour_le: Date;
+  Utilisateurs: Utilisateur[];
+  AssociationDons: AssociationDon[];
 }
 
 export interface Sponsor {
@@ -45,151 +44,112 @@ export interface Sponsor {
   adresseEclairage: string;
   estConfirme: boolean;
   creeLe: Date;
-  misAJourLe: Date;
-  utilisateurs: Utilisateur[];
-  dons: Don[];
+  mis_a_jour_le: Date;
+  Utilisateurs: Utilisateur[];
+  Dons: Don[];
 }
 
 export interface Evenement {
   id: number;
   nom: string;
   description: string;
-  utilisateur?: Utilisateur;
-  userId?: number;  // Foreign key for Utilisateur
-  commenceA: Date;
-  termineA: Date;
-  estPublic: boolean;
-  estGratuit: boolean;
-  satMinimum: number;
-  recompenseJoueurs: number;
-  donAssociation: number;
-  donPlateforme: number;
+  utilisateur: Utilisateur;
+  user_id: number;
+  commence_a: Date;
+  termine_a: Date;
+  est_public: boolean;
   creeLe: Date;
-  misAJourLe: Date;
-  dons: Don[];
-  evenementsQuiz: EvenementsQuiz[];
+  mis_a_jour_le: Date;
+  Dons: Don[];
+  EvenementsQuiz: EvenementsQuiz[];
 }
 
 export interface Don {
   id: number;
   sponsor: Sponsor;
-  sponsorId: number;  // Foreign key for Sponsor
+  sponsorId: number;
   evenement: Evenement;
-  evenementId: number;  // Foreign key for Evenement
+  evenement_id: number;
   montant: number;
   creeLe: Date;
-  misAJourLe: Date;
-  associationDons: AssociationDon[];
+  mis_a_jour_le: Date;
+  AssociationDons: AssociationDon[];
 }
 
 export interface AssociationDon {
   id: number;
   don: Don;
-  donId: number;  // Foreign key for Don
+  don_id: number;
   association: Association;
-  associationId: number;  // Foreign key for Association
+  associationId: number;
 }
 
 export interface Quiz {
   id: number;
-  room?: string;  // Optional field
-  manager?: string;  // Optional field
-  players: Player[];
+  titre: string;
+  utilisateur: Utilisateur | null;
+  user_id: number | null;
+  categorie: string;
+  creeLe: Date;
+  mis_a_jour_le: Date;
+  room?: string | null;
+  manager?: string | null;
   started: boolean;
   subject: string;
   password: string;
-  questions: Question[];
-  playersAnswers: PlayerAnswer[];
   roundStartTime: number;
   currentQuestion: number;
-  createdAt: Date;
-  updatedAt: Date;
-  utilisateur?: Utilisateur;
-  utilisateurId?: number;  // Foreign key for Utilisateur
-  evenementsQuiz: EvenementsQuiz[];
-}
-
-export interface Player {
-  id: number;
-  name: string;
-  quiz?: Quiz;
-  quizId?: number;  // Foreign key for Quiz
-  answers: PlayerAnswer[];
-}
-
-export interface Question {
-  id: number;
-  quiz: Quiz;
-  quizId: number;  // Foreign key for Quiz
-  time: number;
-  image?: string;  // Optional field
-  answers: string[];  // Store as JSON
-  cooldown: number;
-  question: string;
-  solution: number;  // Index of the correct answer
-  playersAnswers: PlayerAnswer[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface PlayerAnswer {
-  id: number;
-  player: Player;
-  playerId: number;  // Foreign key for Player
-  quiz: Quiz;
-  quizId: number;  // Foreign key for Quiz
-  question: Question;
-  questionId: number;  // Foreign key for Question
-  answer: number;  // Index of the selected answer
-  answeredAt: Date;
+  utilisateurId: number | null;
 }
 
 export interface EvenementsQuiz {
   id: number;
   score: number;
   evenement: Evenement;
-  evenementId: number;  // Foreign key for Evenement
+  evenement_id: number;
   quiz: Quiz;
-  quizId: number;  // Foreign key for Quiz
-  questionId: number;
-  reponseId: number;
+  quiz_id: number;
+  question_id: number;
+  reponse_id: number;
   utilisateur: Utilisateur;
-  userId: number;  // Foreign key for Utilisateur
-
-  // Adding unique constraint mapping from the Prisma schema
-  unique_event_quiz_question_response_user: {
-    evenementId: number;
-    quizId: number;
-    questionId: number;
-    reponseId: number;
-    userId: number;
-  };
+  user_id: number;
 }
 
-export interface TopScore {
+export interface Question {
   id: number;
-  username?: string;
-  room?: string;
-  points: number;
-  sujet?: string;
-  idQuiz?: number;
-  satsWinner?: number;
-  dateCreation: Date;
-  dateModification?: Date;
+  quiz: Quiz;
+  quiz_id: number;
+  texte_question: string;
+  Reponses: Reponse[];
+}
+
+export interface Reponse {
+  id: number;
+  question: Question;
+  question_id: number;
+  texte_reponse: string;
+  est_correcte: boolean;
 }
 
 export interface Game {
-  started: boolean;
-  manager?: string;
-  room?: string;
+  started: any;
+  manager: any;
+  room: any;
   currentQuestion: number;
   roundStartTime: number;
+  manager: string;
   questions: Question[];
   players: Player[];
   playersAnswer: PlayerAnswer[];
 }
 
-export interface QuestionSocket {
+export interface Player {
+  id: string;
+  username: string;
+  points: number;
+}
+
+export interface QuestionScoket {
   question: string;
   image?: string;
   answers: string[];
@@ -198,13 +158,19 @@ export interface QuestionSocket {
   time: number;
 }
 
+export interface PlayerAnswer {
+  id: string;
+  answer: string;
+  points: number;
+}
+
 export interface ShowRoomProps {
   data: {
     /* Define appropriate props for SHOW_ROOM */
   };
 }
 
-export interface ShowResponsesProps {
+interface ShowResponsesProps {
   data: {
     question: string;
     answers: string[];

@@ -1,12 +1,13 @@
-"use client"
-import { FC, useEffect, useState } from 'react';
-import { Quiz } from '@prisma/client';
-import QuizTable from '@/components/Quiz/QuizTable';
-import QuizSearchBar from '@/components/Quiz/QuizSearchBar';
-import Loader from '@/components/Loader';
-import PageHeader from '@/components/PageHeader/PageHeader';
-import Sidebar from '@/components/Sidebar/page';
-import { FaPlus } from 'react-icons/fa';
+"use client";
+import { FC, useEffect, useState } from "react";
+import QuizTable from "@/components/Quiz/QuizTable";
+import QuizSearchBar from "@/components/Quiz/QuizSearchBar";
+import Loader from "@/components/Loader";
+import PageHeader from "@/components/PageHeader/PageHeader";
+import Sidebar from "@/components/Sidebar/page";
+import { FaPlus } from "react-icons/fa";
+import { Quiz } from "@/types/main-types/main";
+ 
 
 const QuizPage: FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
@@ -19,12 +20,12 @@ const QuizPage: FC = () => {
     fetchQuizzes();
   }, []);
 
-  const fetchQuizzes = async (name: string = '') => {
+  const fetchQuizzes = async (name: string = "") => {
     setLoading(true);
     try {
       const response = await fetch(`/api/quizform?name=${name}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch quizzes');
+        throw new Error("Failed to fetch quizzes");
       }
       const data: Quiz[] = await response.json();
       setQuizzes(data);
@@ -74,9 +75,22 @@ const QuizPage: FC = () => {
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
         <div className="p-4 bg-slate-50 rounded-lg shadow-md">
-          <PageHeader title="Quiz" icon={<FaPlus className="scale-[1.5]" color="#6D6B81" />} />
+          <PageHeader
+            title="Quiz"
+            icon={<FaPlus className="scale-[1.5]" color="#6D6B81" />}
+          />
           <QuizSearchBar onSearch={handleSearch} />
-          <QuizTable quizzes={quizzes} onDelete={openDeleteModal} />
+          <QuizTable
+            quizzes={quizzes.map((quiz) => ({
+              ...quiz,
+              room: null,
+              manager: null,
+              started: false,
+              evenementsQuiz: [],
+            }))}
+              
+            onDelete={(quiz) => openDeleteModal(quiz)}
+          />
           {isDeleteModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="p-6 bg-slate-50 rounded-lg shadow-lg text-slate-500">
