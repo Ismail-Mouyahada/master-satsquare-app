@@ -1,15 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
+// Helper function to convert BigInt to string in the JSON response
+function handleBigInt(jsonObject: any) {
+  return JSON.parse(
+    JSON.stringify(jsonObject, (key, value) =>
+      typeof value === "bigint" ? value.toString() : value
+    )
+  );
+}
+
 // Helper function to fetch a quiz by ID
 async function getQuizById(id: string) {
   return prisma.quiz.findUnique({
     where: { id: Number(id) },
     include: {
       utilisateur: true,
-      Questions: {
+      questions: {
         include: {
-          Reponses: true,
+          playersAnswers: true,
         },
       },
     },
@@ -18,30 +27,29 @@ async function getQuizById(id: string) {
 
 // Helper function to update a quiz by ID
 async function updateQuizById(id: string, data: any) {
-  const { titre, categorie, questions } = data;
+  const { subject, password, questions } = data;
 
   return prisma.quiz.update({
     where: { id: Number(id) },
     data: {
-      titre,
-      categorie,
-      Questions: {
+      subject,
+      password,
+      questions: {
         deleteMany: {}, // delete existing questions
         create: questions.map((question: any) => ({
-          texte_question: question.texte_question,
-          Reponses: {
-            create: question.reponses.map((reponse: any) => ({
-              texte_reponse: reponse.texte_reponse,
-              est_correcte: reponse.est_correcte,
-            })),
-          },
+          question: question.question,
+          time: question.time,
+          cooldown: question.cooldown,
+          image: question.image,
+          solution: question.solution,
+          answers: question.answers,
         })),
       },
     },
     include: {
-      Questions: {
+      questions: {
         include: {
-          Reponses: true,
+          playersAnswers: true,
         },
       },
     },
@@ -69,7 +77,7 @@ export async function GET(req: NextRequest) {
     if (!quiz) {
       return NextResponse.json({ error: "Quiz not found" }, { status: 404 });
     }
-    return NextResponse.json(quiz, { status: 200 });
+    return NextResponse.json(handleBigInt(quiz), { status: 200 });
   } catch (error) {
     console.error(`Error fetching quiz with ID ${id}:`, error);
     return NextResponse.json(
@@ -91,7 +99,7 @@ export async function PUT(req: NextRequest) {
   try {
     const data = await req.json();
     const updatedQuiz = await updateQuizById(id, data);
-    return NextResponse.json(updatedQuiz, { status: 200 });
+    return NextResponse.json(handleBigInt(updatedQuiz), { status: 200 });
   } catch (error) {
     console.error(`Error updating quiz with ID ${id}:`, error);
     return NextResponse.json(

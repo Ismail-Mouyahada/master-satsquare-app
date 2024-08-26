@@ -1,163 +1,181 @@
+// prisma/seed.ts
 import { PrismaClient } from '@prisma/client';
-import { faker } from '@faker-js/faker';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
 async function main() {
   // Seed roles
-  await prisma.role.createMany({
-    data: [
-      { nom: 'Admin' },
-      { nom: 'User' },
-    ],
+  const adminRole = await prisma.role.create({
+    data: {
+      nom: 'Admin',
+    },
   });
 
-  const roleAdmin = await prisma.role.findFirst({ where: { nom: 'Admin' } });
-  const roleUser = await prisma.role.findFirst({ where: { nom: 'User' } });
-
-  if (!roleAdmin || !roleUser) {
-    throw new Error('Roles not found');
-  }
-
   // Seed associations
-  const associations = [];
-  for (let i = 0; i < 5; i++) {
-    const association = await prisma.association.create({
-      data: {
-        nom: faker.company.name(),
-        adresse_eclairage: faker.address.streetAddress(),
-        valide: faker.datatype.boolean() ? 1 : 0,
-        est_confirme: faker.datatype.boolean(),
-        logo_url: faker.image.imageUrl(),
-      },
-    });
-    associations.push(association);
-  }
+  const mathClub = await prisma.association.create({
+    data: {
+      nom: 'Math Club',
+      adresseEclairage: '123 Street, City',
+      valide: 1,
+      estConfirme: true,
+      logoUrl: 'https://example.com/logo.png',
+    },
+  });
 
   // Seed sponsors
-  const sponsors = [];
-  for (let i = 0; i < 5; i++) {
-    const sponsor = await prisma.sponsor.create({
-      data: {
-        nom: faker.company.name(),
-        valide: faker.datatype.boolean() ? 1 : 0,
-        adresse_eclairage: faker.address.streetAddress(),
-        est_confirme: faker.datatype.boolean(),
-      },
-    });
-    sponsors.push(sponsor);
-  }
+  const sponsorInc = await prisma.sponsor.create({
+    data: {
+      nom: 'Sponsor Inc.',
+      valide: 1,
+      adresseEclairage: '456 Avenue, City',
+      estConfirme: true,
+    },
+  });
 
-  // Seed utilisateurs
-  const utilisateurs = [];
-  for (let i = 0; i < 5; i++) {
-    const utilisateur = await prisma.utilisateur.create({
-      data: {
-        pseudo: faker.internet.userName(),
-        email: faker.internet.email(),
-        mot_de_passe: bcrypt.hashSync("password123", 10),
-        role: { connect: { id: roleAdmin.id } },
-        association: { connect: { id: associations[i % associations.length].id } },
-        sponsor: { connect: { id: sponsors[i % sponsors.length].id } },
-        statut_compte: faker.datatype.boolean(),
-      },
-    });
-    utilisateurs.push(utilisateur);
-  }
+  const motdepasse = await bcrypt.hash('hashed_password', 10)
+  // Seed utilisateurs (users)
+  const user1 = await prisma.utilisateur.create({
+    data: {
+      pseudo: 'User123'+ BigInt(100000000),
+      email: 'user12@example.com',
+      mot_de_passe: motdepasse,
+      statutCompte: true,
+      walletId: 'LN123456',
+      balance: BigInt(100000000),
+      roleId: adminRole.id,
+      associationId: mathClub.id,
+      sponsorId: sponsorInc.id,
+    },
+  });
 
-  // Seed evenements
-  const evenements = [];
-  for (let i = 0; i < 5; i++) {
-    const evenement = await prisma.evenement.create({
-      data: {
-        nom: faker.lorem.words(3),
-        description: faker.lorem.sentence(),
-        utilisateur: { connect: { id: utilisateurs[i % utilisateurs.length].id } },
-        commence_a: faker.date.future(),
-        termine_a: faker.date.future(),
-        est_public: faker.datatype.boolean(),
-        est_gratuit: faker.datatype.boolean(),
-        sat_minimum: faker.datatype.number({ min: 1, max: 100 }),
-        recompense_joueurs: faker.datatype.number({ min: 1, max: 1000 }),
-        don_association: faker.datatype.number({ min: 1, max: 1000 }),
-        don_plateforme: faker.datatype.number({ min: 1, max: 1000 }),
+  // Seed quiz
+  const quiz = await prisma.quiz.create({
+    data: {
+      room: null,
+      manager: null,
+      started: false,
+      subject: 'Programmation et Bitcoin',
+      password: 'PASSWORD',
+      roundStartTime: 0,
+      currentQuestion: 0,
+      utilisateurId: user1.id,
+      questions: {
+        create: [
+          {
+            time: 15,
+            answers: [
+              'Vitalik Buterin',
+              'Satoshi Nakamoto',
+              'Gavin Andresen',
+              'Charlie Lee',
+            ],
+            cooldown: 5,
+            question: 'Qui a inventé Bitcoin ?',
+            solution: 1,
+          },
+          {
+            time: 15,
+            image: 'https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=500&auto=webp',
+            answers: ['Swift', 'Kotlin', 'Python', 'JavaScript'],
+            cooldown: 5,
+            question:
+              "Quel langage de programmation est principalement utilisé pour le développement d'applications Android ?",
+            solution: 1,
+          },
+          {
+            time: 15,
+            answers: ['2005', '2008', '2010', '2012'],
+            cooldown: 5,
+            question: 'Quand le livre blanc de Bitcoin a-t-il été publié ?',
+            solution: 1,
+          },
+          {
+            time: 15,
+            answers: [
+              'Centralisation',
+              'Vitesse des transactions',
+              'Décentralisation',
+              "Faible consommation d'électricité",
+            ],
+            cooldown: 5,
+            question:
+              "Quel est le principal avantage de l'utilisation de la technologie blockchain ?",
+            solution: 2,
+          },
+          {
+            time: 15,
+            image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=500&auto=webp',
+            answers: ['Django', 'Laravel', 'React', 'Spring'],
+            cooldown: 5,
+            question: "Lequel des éléments suivants est un framework JavaScript pour le front-end ?",
+            solution: 2,
+          },
+          {
+            time: 15,
+            image: 'https://images.unsplash.com/photo-1543946607-ebfaab77d5a1?q=80&w=500&auto=webp',
+            answers: ['6,25 BTC', '12,5 BTC', '25 BTC', '50 BTC'],
+            cooldown: 5,
+            question: "Quelle est la récompense de bloc pour le minage d'un bloc Bitcoin ?",
+            solution: 0,
+          },
+          {
+            time: 15,
+            image: 'https://images.unsplash.com/photo-1581091870627-3c52cda4d0d9?q=80&w=500&auto=webp',
+            answers: ['HTML', 'CSS', 'PHP', 'XML'],
+            cooldown: 5,
+            question: 'Lequel des éléments suivants est utilisé pour le script côté serveur ?',
+            solution: 2,
+          },
+        ],
       },
-    });
-    evenements.push(evenement);
-  }
+    },
+  });
 
-  // Seed quizzes
-  const quizzes = [];
-  for (let i = 0; i < 5; i++) {
-    const quiz = await prisma.quiz.create({
-      data: {
-        titre: faker.lorem.words(3),
-        utilisateur: { connect: { id: utilisateurs[i % utilisateurs.length].id } },
-        categorie: faker.lorem.word(),
+  // Seed events
+  const event = await prisma.evenement.create({
+    data: {
+      nom: 'Math Championship',
+      description: 'A quiz competition on mathematics.',
+      commenceA: new Date('2024-09-01T10:00:00.000Z'),
+      termineA: new Date('2024-09-01T12:00:00.000Z'),
+      estPublic: true,
+      estGratuit: true,
+      satMinimum: 100,
+      recompenseJoueurs: 1000,
+      donAssociation: 500,
+      donPlateforme: 100,
+      userId: user1.id,
+      evenementsQuiz: {
+        create: {
+          quizId: quiz.id,
+          score: 100,
+          questionId: 1, // assuming the first question
+          reponseId: 1, // assuming the first answer
+          userId: user1.id,
+        },
       },
-    });
-    quizzes.push(quiz);
-  }
+    },
+  });
 
-  // Seed questions
-  const questions = [];
-  for (let i = 0; i < 5; i++) {
-    const question = await prisma.question.create({
-      data: {
-        quiz: { connect: { id: quizzes[i % quizzes.length].id } },
-        texte_question: faker.lorem.sentence(),
-      },
-    });
-    questions.push(question);
-  }
+  // Seed donations
+  const donation = await prisma.don.create({
+    data: {
+      sponsorId: sponsorInc.id,
+      evenementId: event.id,
+      montant: 1000.0,
+    },
+  });
 
-  // Seed reponses
-  for (const question of questions) {
-    await prisma.reponse.createMany({
-      data: [
-        { question_id: question.id, texte_reponse: faker.lorem.word(), est_correcte: true },
-        { question_id: question.id, texte_reponse: faker.lorem.word(), est_correcte: false },
-      ],
-    });
-  }
+  // Seed association donations
+  await prisma.associationDon.create({
+    data: {
+      donId: donation.id,
+      associationId: mathClub.id,
+    },
+  });
 
-  // Seed dons
-  const dons = [];
-  for (let i = 0; i < 5; i++) {
-    const don = await prisma.don.create({
-      data: {
-        sponsor: { connect: { id: sponsors[i % sponsors.length].id } },
-        evenement: { connect: { id: evenements[i % evenements.length].id } },
-        montant: faker.datatype.number({ min: 100, max: 10000 }),
-      },
-    });
-    dons.push(don);
-  }
-
-  // Seed association dons
-  for (const don of dons) {
-    await prisma.associationDon.create({
-      data: {
-        don: { connect: { id: don.id } },
-        association: { connect: { id: associations[dons.indexOf(don) % associations.length].id } },
-      },
-    });
-  }
-
-  // Seed evenements quizzes
-  for (const quiz of quizzes) {
-    await prisma.evenementsQuiz.create({
-      data: {
-        evenement: { connect: { id: evenements[quizzes.indexOf(quiz) % evenements.length].id } },
-        quiz: { connect: { id: quiz.id } },
-        question_id: questions[quizzes.indexOf(quiz) % questions.length].id,
-        utilisateur: { connect: { id: utilisateurs[quizzes.indexOf(quiz) % utilisateurs.length].id } },
-        reponse_id: 1, // Adjust this as necessary
-        score: faker.datatype.number({ min: 0, max: 100 }),
-      },
-    });
-  }
+  console.log('Seeding finished.');
 }
 
 main()

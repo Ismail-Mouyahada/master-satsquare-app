@@ -1,26 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
-// GET: Fetch all quizzes or search by title
+// Helper function to convert BigInt to string in the JSON response
+function handleBigInt(jsonObject: any) {
+  return JSON.parse(
+    JSON.stringify(jsonObject, (key, value) =>
+      typeof value === "bigint" ? value.toString() : value
+    )
+  );
+}
+
+// GET: Fetch all quizzes or search by subject
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const title = searchParams.get("title");
+    const subject = searchParams.get("subject");
 
     let quizzes;
-    if (title) {
+    if (subject) {
       quizzes = await prisma.quiz.findMany({
         where: {
-          titre: {
-            contains: title,
+          subject: {
+            contains: subject,
             mode: "insensitive",
           },
         },
         include: {
           utilisateur: true,
-          Questions: {
+          questions: {
             include: {
-              Reponses: true,
+              playersAnswers: true,
             },
           },
         },
@@ -29,20 +38,20 @@ export async function GET(req: NextRequest) {
       quizzes = await prisma.quiz.findMany({
         include: {
           utilisateur: true,
-          Questions: {
+          questions: {
             include: {
-              Reponses: true,
+              playersAnswers: true,
             },
           },
         },
       });
     }
 
-    return NextResponse.json(quizzes, { status: 200 });
+    return NextResponse.json(handleBigInt(quizzes), { status: 200 });
   } catch (error) {
     console.error("Error fetching quizzes:", error);
     return NextResponse.json(
-      { error: "An error occurred while fetching quizzes" },
+      { error: "An error occurred while fetching quizzes. Please try again later." },
       { status: 500 }
     );
   }
@@ -52,32 +61,31 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const { titre, user_id, categorie, questions } = data;
+    const { subject, utilisateurId, password, questions } = data;
 
     const newQuiz = await prisma.quiz.create({
       data: {
-        titre,
-        user_id,
-        categorie,
-        Questions: {
+        subject,
+        password,
+        utilisateur: { connect: { id: utilisateurId } },
+        questions: {
           create: questions.map((question: any) => ({
-            texte_question: question.texte_question,
-            Reponses: {
-              create: question.reponses.map((reponse: any) => ({
-                texte_reponse: reponse.texte_reponse,
-                est_correcte: reponse.est_correcte,
-              })),
-            },
+            question: question.question,
+            time: question.time,
+            cooldown: question.cooldown,
+            image: question.image,
+            solution: question.solution,
+            answers: question.answers,
           })),
         },
       },
     });
 
-    return NextResponse.json(newQuiz, { status: 201 });
+    return NextResponse.json(handleBigInt(newQuiz), { status: 201 });
   } catch (error) {
     console.error("Error creating quiz:", error);
     return NextResponse.json(
-      { error: "An error occurred while creating the quiz" },
+      { error: "An error occurred while creating the quiz. Please check your input and try again." },
       { status: 500 }
     );
   }

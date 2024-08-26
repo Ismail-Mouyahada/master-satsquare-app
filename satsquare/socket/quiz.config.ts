@@ -19,7 +19,7 @@ interface GameState {
   }
   
 // export const GAME_STATE_INIT    = async (): Promise<GameState> => {
-//     const response = await fetch("https://api.npoint.io/56c0df1861e25efada1a");
+//     const response = await fetch("http://localhost:3000/api/quizzes/1");
 //     const data = await response.json();
 //     return data as GameState;
 //   };

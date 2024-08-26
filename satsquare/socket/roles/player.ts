@@ -38,7 +38,7 @@ const Player = {
     socket.emit("game:successRoom", roomId);
   },
 
-  join: async (game: Game, _io: Server, socket: Socket, player: { username: string; room: string }): Promise<void> => {
+  join: async (game: Game, io: Server, socket: Socket, player: { username: string; room: string }): Promise<void> => {
     try {
       await usernameValidator.validate(player.username);
     } catch (error: any) {
@@ -71,9 +71,14 @@ const Player = {
       id: socket.id,
       points: 0,
     };
-    socket.to(player.room).emit("manager:newPlayer", { ...playerData });
 
     game.players.push(playerData);
+
+    // Emit to manager that a new player has joined
+    socket.to(player.room).emit("manager:newPlayer", { ...playerData });
+
+    // Emit the updated waiting list to all players
+    io.to(player.room).emit("game:updateWaitingList", game.players);
 
     socket.emit("game:successJoin");
   },

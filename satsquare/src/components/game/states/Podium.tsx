@@ -71,9 +71,9 @@ export default function Podium({ data }: any) {
           data: {
             evenement: { connect: { id: 1 } },
             quiz: { connect: { id: 1 } },
-            question_id: 1,
+            questionId: 1,
             utilisateur: { connect: { id: user.id } },
-            reponse_id: 1, // Adjust this as necessary
+            reponseId: 1, // Adjust this as necessary
             score: user.points ?? 111,
           },
         });
@@ -102,8 +102,9 @@ export default function Podium({ data }: any) {
         </div>
       )}
       <section className="relative flex flex-col items-center justify-between flex-1 w-full mx-auto max-w-7xl">
-        <h2 className="text-3xl font-bold text-center text-white anim-show drop-shadow-lg md:text-4xl lg:text-5xl">
+        <h2 className="text-3xl font-bold text-center my-4 text-white anim-show drop-shadow-lg md:text-4xl lg:text-5xl">
           {subject}
+     
         </h2>
 
         <div className={`grid w-full max-w-[800px] flex-1 grid-cols-${top.length === 1 ? '1' : top.length === 2 ? '2' : '3'} items-end justify-center justify-self-end overflow-y-hidden overflow-x-visible`}>

@@ -1,8 +1,10 @@
 
 .sidebar {
-    /* min-height: 100vh; */
+    min-height: 100vh !important;  
+    position: fixed;
+    margin-right: 1;
     width: 60px;
-    background: linear-gradient(180deg, #2a00d4, #269ed4);
+    background: linear-gradient(180deg, #2a00d4, #5e9cfb);
     display: flex;
     flex-direction: column;
     justify-items: center;

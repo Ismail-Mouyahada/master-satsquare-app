@@ -18,11 +18,11 @@ export async function POST(req: NextRequest) {
       data: {
         email,
         pseudo: username,
-        role_id: role,
+        roleId: 1,
         mot_de_passe: hashedPassword,
-        statut_compte: true,
-        cree_le: new Date(),
-        mis_a_jour_le: new Date(),
+        statutCompte: true,
+        creeLe: new Date(),
+        misAJourLe: new Date(),
       },
     });
 

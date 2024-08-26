@@ -22,6 +22,7 @@ export default function RootLayout({
     <html lang="fr">
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.ico"></link>
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" sizes="16x16." href="/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="512x512" href="/icon-512x512.png" />

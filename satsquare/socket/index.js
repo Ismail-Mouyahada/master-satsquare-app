@@ -45,7 +45,7 @@ io.on("connection", function (socket) {
         return manager_1.default.showLeaderboard(gameState, io, socket);
     });
     socket.on("disconnect", function () {
-        console.log("Utilisateur d\u00E9connect\u00E9 ".concat(socket.id));
+        // console.log(`Utilisateur déconnecté ${socket.id}`);
         if (gameState.manager === socket.id) {
             console.log("Réinitialisation du jeu");
             io.to(gameState.room).emit("game:reset");

@@ -16,15 +16,12 @@ export default function SignIn() {
 
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Sign-in attempt:', { email, password });
 
         const result = await signIn('credentials', {
             redirect: false,
             email,
             password,
         });
-
-        console.log('Sign-in result:', result);
 
         if (result?.error) {
             toast.error("la connexion a echouée, vos identifiants sont invalides ou expirés.");

@@ -1,46 +1,67 @@
-// src/app/api/get-wallet-details/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
+import { NextRequest, NextResponse } from 'next/server';
+import axios from 'axios';
+import prisma from '@/db/prisma';
+import { getToken } from 'next-auth/jwt'; // Import getToken for NextRequest context
 
-const LNBITS_API_KEY = process.env.LNBITS_API_KEY; // Ensure this is set
+const secret = process.env.NEXTAUTH_SECRET;
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const walletId = searchParams.get("walletId");
+    // Get the user session token
+    const token = await getToken({ req, secret });
 
-    if (!walletId) {
+    if (!token || !token.email) {
       return NextResponse.json(
-        { error: "Wallet ID is required" },
-        { status: 400 }
+        { error: 'Not authenticated', details: 'User session not found' },
+        { status: 401 }
       );
     }
 
-    const response = await axios.get(
-      `https://lightning.ismail-mouyahada.com/api/v1/auth?usr=${walletId}`,
-      {
-        headers: {
-          "X-Api-Key": LNBITS_API_KEY,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const email = token.email;
+    console.log('email:', email);
 
-    const wallet = response.data.wallets.find((w: any) => w.id === walletId);
+    const wallet = await prisma.utilisateur.findFirst({
+      where: {
+        email: email,
+      },
+    });
 
-    if (!wallet) {
-      return NextResponse.json({ error: "Wallet not found" }, { status: 404 });
+    console.log('wallet:', wallet);
+
+    if (!wallet || !wallet.walletId) {
+      return NextResponse.json(
+        { error: 'Failed to fetch wallet details', details: 'Wallet not found or Wallet ID missing' },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({
-      id: wallet.id,
-      name: wallet.name,
-      balance: wallet.balance_msat, // Assuming balance is in msat
-    });
+    const config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: 'https://lightning.ismail-mouyahada.com/api/v1/wallet',
+      headers: { 
+        'x-api-key': wallet.walletId,
+      },
+    };
+
+    const response = await axios.request(config);
+    console.log('response:', response.data);
+
+    return NextResponse.json(response.data, { status: 200 });
+
   } catch (error: any) {
-    console.error("Error fetching wallet details:", error.message || error);
+    if (axios.isAxiosError(error)) {
+      console.error('Axios error:', error.message);
+      return NextResponse.json(
+        { error: 'Failed to fetch wallet details from external API', details: error.message },
+        { status: error.response?.status || 500 }
+      );
+    }
+
+    console.error('Error fetching wallet details:', error.message || error);
+
     return NextResponse.json(
-      { error: "Failed to fetch wallet details" },
+      { error: 'Failed to fetch wallet details', details: error.message || 'Unknown error' },
       { status: 500 }
     );
   }

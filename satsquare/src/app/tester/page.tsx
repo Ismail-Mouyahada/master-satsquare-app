@@ -96,7 +96,7 @@ export default function Tester() {
         />
       )}
       {!loading && !gameOver && !complete && !!userAnswers[number] && (
-        <button className="btn-primary" onClick={handleNext}>
+        <button className="btn-primary mx-2" onClick={handleNext}>
          Suivant
         </button>
       )}

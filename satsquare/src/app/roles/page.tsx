@@ -83,7 +83,7 @@ const RolePage: FC = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
         <div className="p-4 bg-slate-50 rounded-lg shadow-md">
