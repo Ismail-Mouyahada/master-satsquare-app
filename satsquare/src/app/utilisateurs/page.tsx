@@ -84,7 +84,7 @@ const UtilisateursPage: FC = () => {
   // Filter utilisateurs locally without making an API call
   const handleSearch = (name: string) => {
     const filtered = utilisateurs.filter((utilisateur) =>
-      utilisateur.pseudo.toLowerCase().includes(name.toLowerCase())
+      utilisateur.pseudo?.toLowerCase().includes(name.toLowerCase())
     );
     setFilteredUtilisateurs(filtered);
   };
