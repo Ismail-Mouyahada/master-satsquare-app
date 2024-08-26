@@ -1,6 +1,6 @@
-// prisma/seed.ts
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
@@ -15,34 +15,34 @@ async function main() {
   // Seed associations
   const mathClub = await prisma.association.create({
     data: {
-      nom: 'Math Club',
-      adresseEclairage: '123 Street, City',
+      nom: faker.company.name(),
+      adresseEclairage: faker.address.streetAddress(),
       valide: 1,
       estConfirme: true,
-      logoUrl: 'https://example.com/logo.png',
+      logoUrl: faker.image.avatar(),
     },
   });
 
   // Seed sponsors
   const sponsorInc = await prisma.sponsor.create({
     data: {
-      nom: 'Sponsor Inc.',
+      nom: faker.company.name(),
       valide: 1,
-      adresseEclairage: '456 Avenue, City',
+      adresseEclairage: faker.address.streetAddress(),
       estConfirme: true,
     },
   });
 
-  const motdepasse = await bcrypt.hash('hashed_password', 10)
+  const motdepasse = await bcrypt.hash('hashed_password', 10);
   // Seed utilisateurs (users)
   const user1 = await prisma.utilisateur.create({
     data: {
-      pseudo: 'User123'+ BigInt(100000000),
-      email: 'user12@example.com',
+      pseudo: faker.internet.userName(),
+      email: faker.internet.email(),
       mot_de_passe: motdepasse,
       statutCompte: true,
-      walletId: 'LN123456',
-      balance: BigInt(100000000),
+      walletId: faker.finance.account(),
+      balance: BigInt(faker.finance.amount(100000000, 1000000000, 0)),
       roleId: adminRole.id,
       associationId: mathClub.id,
       sponsorId: sponsorInc.id,
@@ -55,8 +55,8 @@ async function main() {
       room: null,
       manager: null,
       started: false,
-      subject: 'Programmation et Bitcoin',
-      password: 'PASSWORD',
+      subject: faker.hacker.phrase(),
+      password: faker.internet.password(),
       roundStartTime: 0,
       currentQuestion: 0,
       utilisateurId: user1.id,
@@ -76,7 +76,7 @@ async function main() {
           },
           {
             time: 15,
-            image: 'https://images.unsplash.com/photo-1535223289827-42f1e9919769?q=80&w=500&auto=webp',
+            image: faker.image.urlPicsumPhotos(),
             answers: ['Swift', 'Kotlin', 'Python', 'JavaScript'],
             cooldown: 5,
             question:
@@ -105,7 +105,7 @@ async function main() {
           },
           {
             time: 15,
-            image: 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=500&auto=webp',
+            image: faker.image.urlPicsumPhotos(),
             answers: ['Django', 'Laravel', 'React', 'Spring'],
             cooldown: 5,
             question: "Lequel des éléments suivants est un framework JavaScript pour le front-end ?",
@@ -113,7 +113,7 @@ async function main() {
           },
           {
             time: 15,
-            image: 'https://images.unsplash.com/photo-1543946607-ebfaab77d5a1?q=80&w=500&auto=webp',
+            image: faker.image.urlPicsumPhotos(),
             answers: ['6,25 BTC', '12,5 BTC', '25 BTC', '50 BTC'],
             cooldown: 5,
             question: "Quelle est la récompense de bloc pour le minage d'un bloc Bitcoin ?",
@@ -121,7 +121,7 @@ async function main() {
           },
           {
             time: 15,
-            image: 'https://images.unsplash.com/photo-1581091870627-3c52cda4d0d9?q=80&w=500&auto=webp',
+            image: faker.image.urlLoremFlickr(),
             answers: ['HTML', 'CSS', 'PHP', 'XML'],
             cooldown: 5,
             question: 'Lequel des éléments suivants est utilisé pour le script côté serveur ?',
@@ -135,21 +135,21 @@ async function main() {
   // Seed events
   const event = await prisma.evenement.create({
     data: {
-      nom: 'Math Championship',
-      description: 'A quiz competition on mathematics.',
-      commenceA: new Date('2024-09-01T10:00:00.000Z'),
-      termineA: new Date('2024-09-01T12:00:00.000Z'),
+      nom: faker.company.bs(),
+      description: faker.lorem.paragraph(),
+      commenceA: faker.date.future(),
+      termineA: faker.date.future(),
       estPublic: true,
       estGratuit: true,
-      satMinimum: 100,
-      recompenseJoueurs: 1000,
-      donAssociation: 500,
-      donPlateforme: 100,
+      satMinimum: faker.datatype.number({ min: 50, max: 100 }),
+      recompenseJoueurs: faker.datatype.number({ min: 1000, max: 5000 }),
+      donAssociation: faker.datatype.number({ min: 100, max: 1000 }),
+      donPlateforme: faker.datatype.number({ min: 10, max: 100 }),
       userId: user1.id,
       evenementsQuiz: {
         create: {
           quizId: quiz.id,
-          score: 100,
+          score: faker.datatype.number({ min: 50, max: 100 }),
           questionId: 1, // assuming the first question
           reponseId: 1, // assuming the first answer
           userId: user1.id,
@@ -163,7 +163,7 @@ async function main() {
     data: {
       sponsorId: sponsorInc.id,
       evenementId: event.id,
-      montant: 1000.0,
+      montant: faker.datatype.number({ min: 1000, max: 5000 }),
     },
   });
 

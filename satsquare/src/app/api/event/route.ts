@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
-import { EvenementsQuiz } from '../../../types/datatypes';
+import { Evenement } from "@/types/main-types/main";
+
 
 // POST: Créer un nouveau événement
 export async function POST(req: NextRequest) {
   try {
-    let data;
+    let data : Evenement;
     try {
-      data = await req.json();
+      data    = await req.json();
     } catch (error) {
       return NextResponse.json({ error: "No body received." }, { status: 400 });
     }
@@ -20,25 +21,19 @@ export async function POST(req: NextRequest) {
       data: {
         nom: data.nom,
         description: data.description,
-        estPublic: data.est_public === "public",
-        estGratuit: data.participation === "free",
-        commenceA: new Date(data.commence_a),
-        termineA: new Date(data.termine_a),
-        satMinimum: data.sat_minimum,
-        recompenseJoueurs: data.recompense_joueurs,
-        donAssociation: data.don_association,
-        donPlateforme: data.don_plateforme,
-        evenementsQuiz: {
-          connect: data.quizzes.map((quizId: string) => ({
-            id: parseInt(quizId),
-          })),
-        },
-      },
-    });
+        estPublic: data.estPublic  || false,
+        estGratuit: data.estGratuit  ,
+        commenceA: new Date(data.commenceA),
+        termineA: new Date(data.termineA),
+        satMinimum: data.satMinimum,
+        recompenseJoueurs: data.recompenseJoueurs,
+        donAssociation: data.donAssociation,
+        donPlateforme: data.donPlateforme
+      }});
 
     return NextResponse.json(newEvent, { status: 201 });
   } catch (error) {
-    console.error("Error creating event:", error);
+    console.error("Erreur lors de la création de l'événement:", error);
     return NextResponse.json(
       { error: "An error occurred while creating the event" },
       { status: 500 }
