@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 interface UtilisateurSearchBarProps {
   onAdd: () => void;
@@ -14,16 +14,13 @@ const UtilisateurSearchBar: FC<UtilisateurSearchBarProps> = ({
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-  };
-
-  const handleSearchClick = () => {
-    onSearch(searchTerm);
+    onSearch(e.target.value); // Trigger search as user types
   };
 
   return (
     <div className="flex justify-between mb-4 space-x-2">
       <button
-        className="bg-[#EEEEEF] w-1/6 shadow-md text-[#6D6B81] font bold py-2 pr-4 rounded-md flex flex-row items-center justify-center"
+        className="bg-[#EEEEEF] w-2/6 shadow-md text-[#6D6B81] font bold py-2 pr-4 rounded-md flex flex-row items-center justify-center"
         onClick={onAdd}
       >
         {" "}
@@ -43,13 +40,6 @@ const UtilisateurSearchBar: FC<UtilisateurSearchBarProps> = ({
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <button
-          className="bg-action w-auto  p-3.5 rounded-md"
-          onClick={handleSearchClick}
-        >
-          {" "}
-          <FaSearch className="text-[#6D6B81] scale-125" />
-        </button>
       </div>
     </div>
   );

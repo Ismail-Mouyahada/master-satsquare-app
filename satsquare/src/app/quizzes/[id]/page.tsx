@@ -1,9 +1,10 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaBox, FaPlus, FaCopy, FaTrash, FaTimes } from "react-icons/fa";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast"; // For error handling
 
 interface Question {
   id: number;
@@ -13,25 +14,69 @@ interface Question {
   imageUrl: string;
 }
 
+interface UserDTO {
+  id: string;
+  email: string;
+  // Add other fields as necessary
+}
+
 const QuizForm = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const { id } = params;
+  const { data: session } = useSession(); // Get session data
+  const [userData, setUserData] = useState<UserDTO | null>(null); // Store user data
+
+  // Start with one empty question if in creation mode (id === "create")
+  const [questions, setQuestions] = useState<Question[]>(
+    id === "create"
+      ? [
+          {
+            id: 1,
+            text: "",
+            answers: ["", "", "", ""],
+            correctAnswer: null,
+            imageUrl: "",
+          },
+        ]
+      : []
+  );
+
   const [quizName, setQuizName] = useState("");
-  const [category, setCategory] = useState("");
-  const [questions, setQuestions] = useState<Question[]>([
-    {
-      id: 1,
-      text: "",
-      answers: ["", "", "", ""],
-      correctAnswer: null,
-      imageUrl: "",
-    },
-  ]);
-  const [selectedQuestion, setSelectedQuestion] = useState(questions[0].id);
+  const [selectedQuestion, setSelectedQuestion] = useState<number | null>(
+    id === "create" ? 1 : null
+  );
   const [isLoading, setIsLoading] = useState(false);
 
+  // Fetch user data based on email in session
   useEffect(() => {
-    if (id) {
+    const fetchUserData = async () => {
+      if (session?.user?.email) {
+        try {
+          const response = await fetch(
+            `/api/users?email=${session.user.email}`
+          );
+          if (!response.ok) {
+            throw new Error("Failed to fetch user data.");
+          }
+          const data: UserDTO = await response.json();
+          setUserData(data); // Set user data
+        } catch (error: any) {
+          console.error(
+            "Erreur lors de la récupération des données utilisateur:",
+            error
+          );
+          toast.error(
+            "Erreur lors de la récupération des données utilisateur."
+          );
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [session]);
+
+  useEffect(() => {
+    if (id !== "create") {
       fetchQuiz(id);
     }
   }, [id]);
@@ -44,18 +89,16 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
         throw new Error("Failed to fetch quiz");
       }
       const quiz = await response.json();
-      setQuizName(quiz.titre);
-      setCategory(quiz.categorie);
-      setQuestions(
-        quiz.Questions.map((q: any) => ({
-          id: q.id,
-          text: q.texte_question,
-          answers: q.Reponses.map((r: any) => r.texte_reponse),
-          correctAnswer: q.Reponses.findIndex((r: any) => r.est_correcte),
-          imageUrl: q.imageUrl,
-        }))
-      );
-      setSelectedQuestion(quiz.Questions[0].id);
+      setQuizName(quiz.subject); // Set quiz name
+      const loadedQuestions = quiz.questions.map((q: any, index: number) => ({
+        id: index + 1,
+        text: q.question,
+        answers: q.answers,
+        correctAnswer: q.solution,
+        imageUrl: q.image || "",
+      }));
+      setQuestions(loadedQuestions);
+      setSelectedQuestion(loadedQuestions[0]?.id || null); // Select the first question
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -99,10 +142,6 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
 
   const handleQuizNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuizName(e.target.value);
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCategory(e.target.value);
   };
 
   const handleQuestionChange = (id: number, text: string) => {
@@ -162,22 +201,32 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+
+    // Ensure we have the user ID before proceeding
+    if (!userData?.id) {
+      toast.error("User data not loaded yet.");
+      setIsLoading(false);
+      return;
+    }
+
     const payload = {
-      titre: quizName,
-      categorie: category,
+      subject: quizName,
+      utilisateurId: userData.id, // Add user ID here
+      password: "PASSWORD",
       questions: questions.map((q) => ({
-        texte_question: q.text,
-        reponses: q.answers.map((a, i) => ({
-          texte_reponse: a,
-          est_correcte: i === q.correctAnswer,
-        })),
-        imageUrl: q.imageUrl,
+        question: q.text,
+        answers: q.answers,
+        solution: q.correctAnswer,
+        image: q.imageUrl,
       })),
     };
 
     try {
-      const response = await fetch(`/api/quizzes/${id}`, {
-        method: id ? "PUT" : "POST",
+      const url = id === "create" ? `/api/quizzes` : `/api/quizzes/${id}`;
+      const method = id === "create" ? "POST" : "PUT";
+
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -197,7 +246,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
   };
 
   const handleDelete = async () => {
-    if (id) {
+    if (id && id !== "create") {
       try {
         const response = await fetch(`/api/quizzes/${id}`, {
           method: "DELETE",
@@ -225,14 +274,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
                 value={quizName}
                 onChange={handleQuizNameChange}
                 placeholder="Nom de Quiz"
-                className="text-xl font-bold text-left border border-none rounded-lg px-4 py-2 w-full bg-transparent text-white placeholder-[#e0e1e7]"
-              />
-              <input
-                type="text"
-                value={category}
-                onChange={handleCategoryChange}
-                placeholder="Catégorie"
-                className="text-xl font-bold text-left border border-none rounded-lg px-4 py-2 w-full bg-transparent text-white placeholder-[#e0e1e7] mt-2"
+                className="font-bold text-left border border-none rounded-lg px-4 py-2 w-full bg-transparent text-white placeholder-[#e0e1e7]"
               />
               <a
                 href="/quizzes"
@@ -264,7 +306,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
                 type="text"
                 value={questions.find((q) => q.id === selectedQuestion)?.text}
                 onChange={(e) =>
-                  handleQuestionChange(selectedQuestion, e.target.value)
+                  handleQuestionChange(selectedQuestion!, e.target.value)
                 }
                 placeholder="Une question dans un sujet de votre choix ?"
                 className="w-5/6 p-4 text-xl font-bold text-center border border-gray-300 rounded-lg"
@@ -284,12 +326,19 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
               )}
               {questions.find((q) => q.id === selectedQuestion)?.imageUrl && (
                 <div className="relative mt-4">
-                  <Image   src={ questions.find((q) => q.id === selectedQuestion)?.imageUrl ?? ''    }
+                  <Image
+                    src={
+                      questions.find((q) => q.id === selectedQuestion)
+                        ?.imageUrl ?? ""
+                    }
                     alt="Uploaded content"
+                    width={500}
+                    height={300}
                     className="object-contain w-full h-auto rounded-md max-h-64"
                   />
+
                   <button
-                    onClick={() => handleImageRemove(selectedQuestion)}
+                    onClick={() => handleImageRemove(selectedQuestion!)}
                     className="absolute p-2 text-white bg-red-500 rounded-full top-2 right-2"
                   >
                     <FaTimes />
@@ -300,45 +349,46 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
             <div className="grid grid-cols-2 gap-6 my-6">
               {questions
                 .find((q) => q.id === selectedQuestion)
-                ?.answers.map((answer, index) => (
-                  <div
-                    className="flex items-center bg-[#FCFCFC] p-8 shadow-md rounded-md"
-                    key={index}
-                  >
-                    <FaBox className="scale-[200%] text-slate-500" />
-                    <input
-                      type="text"
-                      value={answer}
-                      onChange={(e) =>
-                        handleAnswerChange(
-                          selectedQuestion,
-                          index,
-                          e.target.value
-                        )
+                ?.answers.map((answer, index) => {
+                  const correctAnswerIndex = questions.find(
+                    (q) => q.id === selectedQuestion
+                  )?.correctAnswer;
+                  const isCorrectAnswer = correctAnswerIndex === index;
+
+                  return (
+                    <div
+                      key={index}
+                      onClick={() =>
+                        handleCorrectAnswerChange(selectedQuestion!, index)
                       }
-                      placeholder={`Ajoute une réponse ${index + 1} ${
-                        index < 2 ? "(requis)" : "(facultatif)"
-                      }`}
-                      className="w-full px-4 py-2 bg-transparent border border-gray-300 border-none rounded-lg"
-                    />
-                    <input
-                      type="radio"
-                      name={`answer-${selectedQuestion}`}
-                      checked={
-                        (questions.find((q) => q.id === selectedQuestion)
-                          ?.correctAnswer ?? -1) === index
-                      }
-                      onChange={() =>
-                        handleCorrectAnswerChange(selectedQuestion, index)
-                      }
-                      className="mr-2 bg-transparent border-slate-400 bg-slate-300 scale-[200%] text-[#19ce6a]"
-                    />
-                  </div>
-                ))}
+                      className={`flex items-center cursor-pointer bg-[#FCFCFC] p-8 shadow-md rounded-md ${
+                        isCorrectAnswer ? "border-4 border-green-400" : ""
+                      } hover:border-green-300`}
+                    >
+                      <FaBox className="scale-[200%] text-slate-500 mr-4" />
+                      <input
+                        type="text"
+                        value={answer}
+                        onChange={(e) =>
+                          handleAnswerChange(
+                            selectedQuestion!,
+                            index,
+                            e.target.value
+                          )
+                        }
+                        placeholder={`Ajoute une réponse ${index + 1} ${
+                          index < 2 ? "(requis)" : "(facultatif)"
+                        }`}
+                        className="w-full px-4 py-2 bg-transparent border border-gray-300 rounded-lg"
+                        onClick={(e) => e.stopPropagation()} // Prevent div click event when typing
+                      />
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
-        <div className="w-1/6 p-4 ml-4 rounded-md bg-primary scroll-auto min-w-48">
+        <div className="w-1/6 p-4 ml-4 rounded-md bg-primary overflow-y-auto min-w-48 h-full max-h-screen">
           <div>
             {questions.map((question, index) => (
               <div

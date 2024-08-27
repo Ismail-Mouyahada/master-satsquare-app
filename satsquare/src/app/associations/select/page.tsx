@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect, useState, useCallback } from "react";
- 
+
 import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
@@ -56,16 +56,16 @@ const AssociationsSelectPage: FC = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Selection d'associations"
             icon={<FaDonate className="scale-[1.5]" color="#6D6B81" />}
           />
           <AssociationSelectSearchBar onSearch={handleSearch} />
-          <AssociationSelectList  associations={filteredAssociations} />
+          <AssociationSelectList associations={filteredAssociations} />
         </div>
       </div>
     </div>

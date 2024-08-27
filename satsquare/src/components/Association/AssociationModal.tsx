@@ -1,6 +1,5 @@
 import { Association } from "@/types/main-types/main";
 import { FC, useState, useEffect, FormEvent } from "react";
- 
 
 interface AssociationModalProps {
   association?: Association | null;
@@ -20,6 +19,7 @@ const AssociationModal: FC<AssociationModalProps> = ({
     valide: false,
     adresseEclairage: "",
     estConfirme: false,
+    logoUrl: "", // Updated state to use logoUrl
   });
 
   useEffect(() => {
@@ -29,6 +29,7 @@ const AssociationModal: FC<AssociationModalProps> = ({
         valide: association.valide === 1,
         adresseEclairage: association.adresseEclairage,
         estConfirme: association.estConfirme,
+        logoUrl: association.logoUrl || "", // Ensure it maps to the correct field
       });
     } else {
       setFormData({
@@ -36,6 +37,7 @@ const AssociationModal: FC<AssociationModalProps> = ({
         valide: false,
         adresseEclairage: "",
         estConfirme: false,
+        logoUrl: "",
       });
     }
   }, [association]);
@@ -46,6 +48,20 @@ const AssociationModal: FC<AssociationModalProps> = ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({
+          ...prev,
+          logoUrl: reader.result as string, // Convert the image to a base64 string
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -75,7 +91,7 @@ const AssociationModal: FC<AssociationModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-slate-50 p-6 rounded-lg shadow-lg max-w-md w-full">
+      <div className="bg-slate-50 p-6 rounded-lg shadow-lg max-w-md w-full max-h-[80vh] overflow-y-auto">
         <h2 className="text-2xl mb-4 text-[#8495B0]">
           {association ? "Modifier Association" : "Ajouter Association"}
         </h2>
@@ -106,6 +122,37 @@ const AssociationModal: FC<AssociationModalProps> = ({
               required
             />
           </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Image URL ou Télécharger une Image
+            </label>
+            <input
+              type="text"
+              name="logoUrl"
+              value={formData.logoUrl}
+              onChange={handleChange}
+              placeholder="URL de l'image"
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74] mb-2"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
+            />
+          </div>
+          {formData.logoUrl && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Aperçu de l'image
+              </label>
+              <img
+                src={formData.logoUrl}
+                alt="Aperçu de l'image"
+                className="w-full h-auto rounded-md"
+              />
+            </div>
+          )}
           <div className="flex mb-4">
             <div className="flex items-center justify-center space-x-2 w-1/2">
               <input
@@ -121,7 +168,11 @@ const AssociationModal: FC<AssociationModalProps> = ({
                 className="flex items-center space-x-2 cursor-pointer"
               >
                 <span
-                  className={`w-8 h-8 rounded-full border-4 ${formData.valide ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
+                  className={`w-8 h-8 rounded-full border-4 ${
+                    formData.valide
+                      ? "bg-black border-gray-300"
+                      : "bg-slate-50 border-gray-300"
+                  }`}
                 ></span>
                 <span className="text-sm font-medium text-gray-700">
                   Valide
@@ -142,7 +193,11 @@ const AssociationModal: FC<AssociationModalProps> = ({
                 className="flex items-center space-x-2 cursor-pointer"
               >
                 <span
-                  className={`w-8 h-8 rounded-full border-4 ${formData.estConfirme ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
+                  className={`w-8 h-8 rounded-full border-4 ${
+                    formData.estConfirme
+                      ? "bg-black border-gray-300"
+                      : "bg-slate-50 border-gray-300"
+                  }`}
                 ></span>
                 <span className="text-sm font-medium text-gray-700">
                   Confirmé

@@ -1,51 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
-// GET: Retrieve all questions
+// GET: Retrieve all quizzes
 export async function GET(req: NextRequest) {
   try {
-    const questions = await prisma.question.findMany({
+    const quizzes = await prisma.quiz.findMany({
       include: {
         playersAnswers: true,
+        questions: true,
       },
     });
-    return NextResponse.json(questions, { status: 200 });
+    return NextResponse.json(quizzes, { status: 200 });
   } catch (error) {
-    console.error("Error fetching questions:", error);
+    console.error("Error fetching quizzes:", error);
     return NextResponse.json(
-      { error: "An error occurred while fetching questions" },
+      { error: "An error occurred while fetching quizzes" },
       { status: 500 }
     );
   }
 }
 
-// POST: Create a new question
+// POST: Create a new quiz
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-
-    const { quizId, time, image, answers, cooldown, question, solution } = data;
-
-    const newQuestion = await prisma.question.create({
+    const { subject, password, Questions } = data;
+    const quiz = await prisma.quiz.create({
       data: {
-        quizId,
-        time,
-        image,
-        answers,
-        cooldown,
-        question,
-        solution,
-        playersAnswers: {
-          create: data.playersAnswers || [],
+        subject,
+        password,
+        questions: {
+          create: Questions,
         },
       },
     });
-
-    return NextResponse.json(newQuestion, { status: 201 });
+    return NextResponse.json(quiz, { status: 201 });
   } catch (error) {
-    console.error("Error creating question:", error);
+    console.error("Error creating quiz:", error);
     return NextResponse.json(
-      { error: "An error occurred while creating the question" },
+      { error: "An error occurred while creating the quiz" },
       { status: 500 }
     );
   }

@@ -5,12 +5,12 @@ import QuizSearchBar from "@/components/Quiz/QuizSearchBar";
 import Loader from "@/components/Loader";
 import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
-import { FaPlus } from "react-icons/fa";
+import { FaGamepad } from "react-icons/fa";
 import { Quiz } from "@/types/main-types/main";
- 
 
 const QuizPage: FC = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [filteredQuizzes, setFilteredQuizzes] = useState<Quiz[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -20,15 +20,16 @@ const QuizPage: FC = () => {
     fetchQuizzes();
   }, []);
 
-  const fetchQuizzes = async (name: string = "") => {
+  const fetchQuizzes = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/quizform?name=${name}`);
+      const response = await fetch(`/api/quizform`);
       if (!response.ok) {
         throw new Error("Failed to fetch quizzes");
       }
       const data: Quiz[] = await response.json();
       setQuizzes(data);
+      setFilteredQuizzes(data); // Initially, all quizzes are displayed
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -36,12 +37,15 @@ const QuizPage: FC = () => {
     }
   };
 
-  const handleSave = async () => {
-    await fetchQuizzes();
-  };
-
-  const handleSearch = (name: string) => {
-    fetchQuizzes(name);
+  const handleSearch = (searchTerm: string) => {
+    if (searchTerm) {
+      const filtered = quizzes.filter((quiz) =>
+        quiz.subject.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredQuizzes(filtered);
+    } else {
+      setFilteredQuizzes(quizzes); // Reset to all quizzes if search is cleared
+    }
   };
 
   const openDeleteModal = (quiz: Quiz) => {
@@ -56,13 +60,13 @@ const QuizPage: FC = () => {
 
   const handleDelete = async () => {
     if (quizToDelete) {
-      await fetch(`/api/quizform/${quizToDelete.id}`, {
+      await fetch(`/api/quizzes/${quizToDelete.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
-      handleSave();
+      fetchQuizzes(); // Refetch quizzes after deletion
       closeDeleteModal();
     }
   };
@@ -71,26 +75,16 @@ const QuizPage: FC = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Quiz"
-            icon={<FaPlus className="scale-[1.5]" color="#6D6B81" />}
+            icon={<FaGamepad className="scale-[1.5]" color="#6D6B81" />}
           />
           <QuizSearchBar onSearch={handleSearch} />
-          <QuizTable
-            quizzes={quizzes.map((quiz) => ({
-              ...quiz,
-              room: null,
-              manager: null,
-              started: false,
-              evenementsQuiz: [],
-            }))}
-              
-            onDelete={(quiz) => openDeleteModal(quiz)}
-          />
+          <QuizTable quizzes={filteredQuizzes} onDelete={openDeleteModal} />
           {isDeleteModalOpen && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="p-6 bg-slate-50 rounded-lg shadow-lg text-slate-500">
