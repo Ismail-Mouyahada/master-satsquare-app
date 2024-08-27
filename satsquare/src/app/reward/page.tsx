@@ -53,7 +53,7 @@ const RewardsPage: FC = () => {
     <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Récompenses"
             icon={<FaDonate className="scale-[1.5]" color="#6D6B81" />}

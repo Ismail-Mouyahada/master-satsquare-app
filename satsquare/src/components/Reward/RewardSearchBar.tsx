@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import { FC, useState, useEffect } from "react";
+import { FaSearch } from "react-icons/fa";
 
 interface RewardSearchBarProps {
   onSearch: (name: string) => void;
@@ -8,12 +8,17 @@ interface RewardSearchBarProps {
 const RewardSearchBar: FC<RewardSearchBarProps> = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Debounce search input
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      onSearch(searchTerm);
+    }, 300); // Adjust the delay (ms) as needed
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, onSearch]);
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-  };
-
-  const handleSearchClick = () => {
-    onSearch(searchTerm);
   };
 
   return (
@@ -26,12 +31,6 @@ const RewardSearchBar: FC<RewardSearchBarProps> = ({ onSearch }) => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <button
-          className="bg-action w-auto p-3.5 rounded-md"
-          onClick={handleSearchClick}
-        >
-          <FaSearch className="text-[#6D6B81] scale-125" />
-        </button>
       </div>
     </div>
   );

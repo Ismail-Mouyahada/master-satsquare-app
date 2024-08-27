@@ -100,7 +100,9 @@ const ProfileDetail: React.FC = () => {
           });
         } catch (error) {
           console.error("Error fetching wallet details:", error);
-          toast.error("Erreur lors de la récupération des détails du portefeuille.");
+          toast.error(
+            "Erreur lors de la récupération des détails du portefeuille."
+          );
         }
       } else {
         setWalletDetails(null);
@@ -165,7 +167,9 @@ const ProfileDetail: React.FC = () => {
       });
 
       if (!disassociateResponse.ok) {
-        throw new Error("Échec de la dissociation du portefeuille dans la base de données.");
+        throw new Error(
+          "Échec de la dissociation du portefeuille dans la base de données."
+        );
       }
 
       setUserData((prevData) =>
@@ -203,7 +207,8 @@ const ProfileDetail: React.FC = () => {
       if (!updateResponse.ok) {
         const data = await updateResponse.json();
         throw new Error(
-          data.message || "Échec de la mise à jour de l'ID du portefeuille dans la base de données."
+          data.message ||
+            "Échec de la mise à jour de l'ID du portefeuille dans la base de données."
         );
       }
 
@@ -226,7 +231,9 @@ const ProfileDetail: React.FC = () => {
             );
 
             if (!response.ok) {
-              throw new Error("Échec de la récupération des détails du portefeuille");
+              throw new Error(
+                "Échec de la récupération des détails du portefeuille"
+              );
             }
 
             const data = await response.json();
@@ -288,9 +295,7 @@ const ProfileDetail: React.FC = () => {
       toast.success("Facture créée avec succès.");
       setOpenInvoiceModal(false);
     } catch (error: any) {
-      toast.error(
-        error.message || "Erreur lors de la création de la facture."
-      );
+      toast.error(error.message || "Erreur lors de la création de la facture.");
     }
   };
 
@@ -357,9 +362,7 @@ const ProfileDetail: React.FC = () => {
       router.push("/");
       setOpenDeleteModal(false);
     } catch (error: any) {
-      toast.error(
-        error.message || "Erreur lors de la suppression du compte."
-      );
+      toast.error(error.message || "Erreur lors de la suppression du compte.");
     }
   };
 
@@ -440,9 +443,7 @@ const ProfileDetail: React.FC = () => {
               },
             ].map((item, index) => (
               <div key={index} className={sectionStyle}>
-                <span className="ml-2 p-2 text-yellow-500">
-                  {item.icon}
-                </span>
+                <span className="ml-2 p-2 text-yellow-500">{item.icon}</span>
                 <span className="ml-2 p-2 font-bold text-yellow-500">
                   {item.label}
                 </span>
@@ -544,12 +545,9 @@ const ProfileDetail: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex justify-between pt-40 my-6">
+        <div className="flex justify-between pt-4 my-6">
           <div className="flex">
-            <button
-              className={buttonStyle}
-              onClick={handleActivateSponsorMode}
-            >
+            <button className={buttonStyle} onClick={handleActivateSponsorMode}>
               <FaDonate className="scale-[150%] mx-2 text-[#514F69]" />
               <span className="font-bold">Activer le mode sponsor</span>
             </button>
@@ -734,7 +732,9 @@ const ProfileDetail: React.FC = () => {
                     try {
                       const text = await navigator.clipboard.readText();
                       setInvoice(text);
-                      toast.success("Invoice collée depuis le presse-papiers !");
+                      toast.success(
+                        "Invoice collée depuis le presse-papiers !"
+                      );
                     } catch (err) {
                       toast.error("Erreur lors du collage du presse-papiers.");
                     }
