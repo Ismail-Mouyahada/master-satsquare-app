@@ -171,13 +171,14 @@ export default function GameWrapper({ children, textNext, onNext, manager }: Pro
         )}
       </div>
 
-      {manager && waitingList.length > 0 && (
-        <div className="bg-gray-700 bg-opacity-55 text-white  rounded-md m-3 px-4 py-2">
-          <h3 className="font-light  text-xl my-4">+ Liste des joueurs en attente</h3>
+      {manager &&   waitingList.length > 0 && (
+        <div className="bg-gray-700 bg-opacity-55 text-white rounded-md m-3 px-4 py-2">
+          <h3 className="font-light text-xl my-4">+ Liste des joueurs en attente</h3>
           <ul>
-            {waitingList.map((user: any)  => (
-              <li   className="flex flex-row items-center justify-between my-2 p-3 rounded-md bg-slate-500 bg-opacity-55 text-white" key={user.id}>
-                <div className="flex flex-row"><FaUserCircle className="mr-2 scale-150  " /><p className="font-extrabold"> {user.username || ''}</p></div> <p className="text-bold  py-2 px-4  rounded-full bg-slate-800 bg-opacity-45">{user.points} pt</p>
+            {waitingList.map((user: any) => (
+              <li className="flex flex-row items-center justify-center my-2 p-3 rounded-md bg-slate-500 bg-opacity-55 text-white" key={user.id}>
+                <div className="flex flex-row"><FaUserCircle className="mr-2 scale-150" /><p className="font-extrabold"> {user.username || ''}</p></div>
+                
               </li>
             ))}
           </ul>

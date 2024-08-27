@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { GAME_STATE_INIT } from "../quiz.config.js";
+import { getGameState } from "../quiz.config.js";
 import generateRoomId from "../utils/generateRoomId.js";
 import { abortCooldown, cooldown, sleep } from "../utils/cooldown.js";
 import deepClone from "../utils/deepClone.js";
@@ -143,7 +143,7 @@ const Manager = {
         console.error("Error saving top scores:", error);
       }
 
-      Object.assign(game, deepClone(GAME_STATE_INIT));
+      Object.assign(game, deepClone(getGameState));
       return;
     }
 

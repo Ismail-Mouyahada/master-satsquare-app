@@ -261,4 +261,3 @@ NEXT_PUBLIC_SOCKET_URL="wss://yourproductionurl.com/socket"
 
 SatSquare peut être démarré facilement en local pour le développement, en test ou en production, avec ou sans Docker. En suivant ce guide, vous pouvez configurer votre environnement en fonction de vos besoins et démarrer rapidement le développement ou le déploiement de l'application.
 
-Si vous avez besoin de plus d'informations ou rencontrez des problèmes, consultez la documentation ou demandez de l'aide dans votre équipe.

@@ -1,32 +1,31 @@
 version: '3.8'
+
 services:
   nextjs:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ismailmouyahada/satsquare:latest
     container_name: nextjs-app
     restart: always
     ports:
-      - 3000:3000
+      - "3000:3000"
     depends_on:
       - postgres
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}
-      - NEXTAUTH_SECRET=your-nextauth-secret
-      - NEXT_PUBLIC_SITE_URL=http://nextjs:3000
-      - NEXT_PUBLIC_SOCKET_URL=http://nextjs:5157
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - NEXT_PUBLIC_SOCKET_URL=${NEXT_PUBLIC_SOCKET_URL}
 
   postgres:
     image: postgres:16
     container_name: postgres-db
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
-      POSTGRES_USER=postgres
-      POSTGRES_PASSWORD=yourpassword
-      POSTGRES_DB=sat_square_db
-      POSTGRES_PORT=5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PORT: ${POSTGRES_PORT}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
