@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { FaCertificate, FaCheck, FaCloudversify, FaCross, FaEdit, FaExclamationTriangle, FaEye, FaObjectGroup, FaObjectUngroup, FaRegFlushed, FaRemoveFormat, FaTrash } from "react-icons/fa";
+import { FaCheck, FaExclamationTriangle } from "react-icons/fa";
 import ActionButtons from "../ActionButtons/page";
 import { Association } from "@/types/main-types/main";
 
@@ -20,10 +20,9 @@ const AssociationTable: FC<AssociationTableProps> = ({
 
   return (
     <div className="bg-[#F3F3FF] p-4 rounded-lg overflow-x-auto text-slate-600">
-    <table className="min-w-full bg-slate-50 border">
-      <thead>
-        <tr className="bg-[#EDF2FF]">
- 
+      <table className="min-w-full bg-slate-50 border">
+        <thead>
+          <tr className="bg-[#EDF2FF]">
             <th className="p-8 text-center rounded-md">Nom</th>
             <th className="p-8 font-semibold rounded-md">Adresse</th>
             <th className="p-8 font-semibold rounded-md ">Valide</th>
@@ -40,24 +39,31 @@ const AssociationTable: FC<AssociationTableProps> = ({
               </td>
               <td className="border px-4 py-2  justify-center ">
                 {association.valide ? (
-                 <span className="text-green-400  "><FaCheck className="scale-[1.5]"/></span>
+                  <span className="text-green-400  ">
+                    <FaCheck className="scale-[1.5]" />
+                  </span>
                 ) : (
-                  <span className="text-red-400"><FaExclamationTriangle className="scale-[1.5]"/></span>
+                  <span className="text-red-400">
+                    <FaExclamationTriangle className="scale-[1.5]" />
+                  </span>
                 )}
               </td>
               <td className="border px-4 py-2  ">
                 {association.estConfirme ? (
-                  <span className="text-green-400  "><FaCheck className="scale-[1.5]"/></span>
+                  <span className="text-green-400  ">
+                    <FaCheck className="scale-[1.5]" />
+                  </span>
                 ) : (
-                  <span className="text-red-400"><FaExclamationTriangle className="scale-[1.5]"/></span>
+                  <span className="text-red-400">
+                    <FaExclamationTriangle className="scale-[1.5]" />
+                  </span>
                 )}
               </td>
               <ActionButtons
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onView={handleView}
-              association={association}
-            />
+                onEdit={onEdit}
+                onDelete={onDelete}
+                association={association}
+              />
             </tr>
           ))}
         </tbody>

@@ -1,6 +1,4 @@
 import { FC } from "react";
-
-import ActionButtons from "../ActionButtons/page";
 import { Quiz } from "@/types/main-types/main";
 
 interface QuizTableProps {

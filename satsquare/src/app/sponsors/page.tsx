@@ -11,6 +11,7 @@ import { Sponsor } from "@/types/main-types/main";
 
 const SponsorsPage: FC = () => {
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+  const [initialSponsors, setInitialSponsors] = useState<Sponsor[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -22,15 +23,16 @@ const SponsorsPage: FC = () => {
     fetchSponsors();
   }, []);
 
-  const fetchSponsors = async (name: string = "") => {
+  const fetchSponsors = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/sponsors?name=${name}`);
+      const response = await fetch(`/api/sponsors`);
       if (!response.ok) {
         throw new Error("Failed to fetch sponsors");
       }
       const data: Sponsor[] = await response.json();
       setSponsors(data);
+      setInitialSponsors(data);
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -76,7 +78,14 @@ const SponsorsPage: FC = () => {
   };
 
   const handleSearch = (name: string) => {
-    fetchSponsors(name);
+    if (name === "") {
+      setSponsors(initialSponsors);
+    } else {
+      const filteredSponsors = initialSponsors.filter((sponsor) =>
+        sponsor.nom.toLowerCase().includes(name.toLowerCase())
+      );
+      setSponsors(filteredSponsors);
+    }
   };
 
   if (loading) return <Loader />;
@@ -86,7 +95,7 @@ const SponsorsPage: FC = () => {
     <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Sponsors"
             icon={<FaDonate className="scale-[1.5]" color="#6D6B81" />}
