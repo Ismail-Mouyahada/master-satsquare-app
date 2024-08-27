@@ -18,11 +18,11 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { UserDTO } from "@/types/userDto";
 import QRCode from "qrcode.react"; // Import QRCode from the library
-import { useSocketContext } from "@/context/socket";
+import { useApiHook } from "@/hook/useApiHook";
 
 const ProfileDetail: React.FC = () => {
+  const { data, error, loading, fetchData, postData } = useApiHook<any>();
   const { data: session } = useSession();
-  const { socket } = useSocketContext();
   const [userData, setUserData] = useState<UserDTO | null>(null);
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -46,32 +46,6 @@ const ProfileDetail: React.FC = () => {
   } | null>(null);
 
   const router = useRouter();
-
-
-  useEffect(() => {
-    if (socket && userData?.walletId) {
-      socket.emit("wallet:connect",  userData?.walletId);
-
-      socket.on("wallet:balance", (data) => {
-        const balance = BigInt(data.balance) / BigInt(1000);
-        setWalletDetails({
-          id: data.id,
-          name: data.name,
-          balance: Number(balance),
-        });
-        toast.success("Wallet details updated.");
-      });
-
-      socket.on("game:errorMessage", (message) => {
-        toast.error(message);
-      });
-
-      return () => {
-        socket.off("wallet:balance");
-        socket.off("game:errorMessage");
-      };
-    }
-  }, [socket,  userData?.walletId]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -100,47 +74,50 @@ const ProfileDetail: React.FC = () => {
     fetchUserData();
   }, [session]);
 
-  // useEffect(() => {
-  //   const fetchWalletDetails = async () => {
-  //     if (userData?.walletId) {
-  //       try {
-  //         const response = await fetch(
-  //           `/api/get-wallet-details?walletId=${userData.walletId}`,
-  //           {
-  //             method: "GET",
-  //             headers: {
-  //               "Content-Type": "application/json",
-  //             },
-  //           }
-  //         );
+  useEffect( () => {
+    const fetchWalletDetails = async () => {
+      if (userData!=null) {
+        try {
 
-  //         if (!response.ok) {
-  //           throw new Error("Failed to fetch wallet details");
-  //         }
+          fetchData
+          const response = await fetch(
+            `/api/get-wallet-details`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
-  //         const data = await response.json();
-  //         const balance = BigInt(data.balance) / BigInt(1000);
+          if (!response.ok) {
+            throw new Error("Failed to fetch wallet details");
+          }
 
-  //         setWalletDetails({
-  //           id: data.id,
-  //           name: data.name,
-  //           balance: Number(balance),
-  //         });
-  //       } catch (error) {
-  //         console.error("Error fetching wallet details:", error);
-  //         toast.error("Erreur lors de la récupération des détails du portefeuille.");
-  //       }
-  //     } else {
-  //       setWalletDetails(null);
-  //     }
-  //   };
+          const data = await response.json();
+          const balance = BigInt(data.balance) / BigInt(1000);
 
-  //   fetchWalletDetails();
+          setWalletDetails({
+            id: data.id,
+            name: data.name,
+            balance: Number(balance),
+          });
+        } catch (error) {
+          console.error("Error fetching wallet details:", error);
+          toast.error(
+            "Erreur lors de la récupération des détails du portefeuille."
+          );
+        }
+      } else {
+        setWalletDetails(null);
+      }
+    };
 
-  //   const intervalId = setInterval(fetchWalletDetails, 10000); // Poll every 10 seconds
+    fetchWalletDetails();
 
-  //   return () => clearInterval(intervalId); // Cleanup on component unmount
-  // }, [userData]);
+ 
+ 
+  }, [userData]);
 
   const handlePasswordReset = async () => {
     if (newPassword !== confirmPassword) {
@@ -193,7 +170,9 @@ const ProfileDetail: React.FC = () => {
       });
 
       if (!disassociateResponse.ok) {
-        throw new Error("Échec de la dissociation du portefeuille dans la base de données.");
+        throw new Error(
+          "Échec de la dissociation du portefeuille dans la base de données."
+        );
       }
 
       setUserData((prevData) =>
@@ -231,7 +210,8 @@ const ProfileDetail: React.FC = () => {
       if (!updateResponse.ok) {
         const data = await updateResponse.json();
         throw new Error(
-          data.message || "Échec de la mise à jour de l'ID du portefeuille dans la base de données."
+          data.message ||
+            "Échec de la mise à jour de l'ID du portefeuille dans la base de données."
         );
       }
 
@@ -244,7 +224,7 @@ const ProfileDetail: React.FC = () => {
         if (walletIdInput) {
           try {
             const response = await fetch(
-              `/api/get-wallet-details?walletId=${walletIdInput}`,
+              `/api/get-wallet-details`,
               {
                 method: "GET",
                 headers: {
@@ -254,7 +234,9 @@ const ProfileDetail: React.FC = () => {
             );
 
             if (!response.ok) {
-              throw new Error("Échec de la récupération des détails du portefeuille");
+              throw new Error(
+                "Échec de la récupération des détails du portefeuille"
+              );
             }
 
             const data = await response.json();
@@ -316,9 +298,7 @@ const ProfileDetail: React.FC = () => {
       toast.success("Facture créée avec succès.");
       setOpenInvoiceModal(false);
     } catch (error: any) {
-      toast.error(
-        error.message || "Erreur lors de la création de la facture."
-      );
+      toast.error(error.message || "Erreur lors de la création de la facture.");
     }
   };
 
@@ -385,9 +365,7 @@ const ProfileDetail: React.FC = () => {
       router.push("/");
       setOpenDeleteModal(false);
     } catch (error: any) {
-      toast.error(
-        error.message || "Erreur lors de la suppression du compte."
-      );
+      toast.error(error.message || "Erreur lors de la suppression du compte.");
     }
   };
 
@@ -468,9 +446,7 @@ const ProfileDetail: React.FC = () => {
               },
             ].map((item, index) => (
               <div key={index} className={sectionStyle}>
-                <span className="ml-2 p-2 text-yellow-500">
-                  {item.icon}
-                </span>
+                <span className="ml-2 p-2 text-yellow-500">{item.icon}</span>
                 <span className="ml-2 p-2 font-bold text-yellow-500">
                   {item.label}
                 </span>
@@ -572,12 +548,9 @@ const ProfileDetail: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex justify-between pt-40 my-6">
+        <div className="flex justify-between pt-4 my-6">
           <div className="flex">
-            <button
-              className={buttonStyle}
-              onClick={handleActivateSponsorMode}
-            >
+            <button className={buttonStyle} onClick={handleActivateSponsorMode}>
               <FaDonate className="scale-[150%] mx-2 text-[#514F69]" />
               <span className="font-bold">Activer le mode sponsor</span>
             </button>
@@ -762,7 +735,9 @@ const ProfileDetail: React.FC = () => {
                     try {
                       const text = await navigator.clipboard.readText();
                       setInvoice(text);
-                      toast.success("Invoice collée depuis le presse-papiers !");
+                      toast.success(
+                        "Invoice collée depuis le presse-papiers !"
+                      );
                     } catch (err) {
                       toast.error("Erreur lors du collage du presse-papiers.");
                     }

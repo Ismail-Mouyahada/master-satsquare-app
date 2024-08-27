@@ -39,8 +39,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var socket_io_1 = require("socket.io");
 var manager_1 = require("./roles/manager");
 var player_1 = require("./roles/player");
+var cooldown_1 = require("./utils/cooldown");
 var quiz_config_1 = require("./quiz.config");
 var client_1 = require("@prisma/client");
+var wallet_1 = require("./wallet");
 var gameState;
 var prisma = new client_1.PrismaClient();
 var io = new socket_io_1.Server({
@@ -52,8 +54,55 @@ var io = new socket_io_1.Server({
 io.listen(5157);
 io.on('connection', function (socket) {
     console.log("User connected ".concat(socket.id));
+    // Handle wallet connection
+    socket.on('wallet:connect', function (walletId) { return __awaiter(void 0, void 0, void 0, function () {
+        var walletDetails, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, (0, wallet_1.fetchWalletDetails)(walletId)];
+                case 1:
+                    walletDetails = _a.sent();
+                    socket.emit('wallet:balance', walletDetails);
+                    // Subscribe to wallet balance updates (pseudo-code, replace with actual implementation)
+                    // subscribeToBalanceUpdates(walletId, (newBalance) => {
+                    //   io.to(socket.id).emit('wallet:balanceUpdate', { balance: newBalance });
+                    // });
+                    console.log('Wallet connected', walletDetails);
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_1 = _a.sent();
+                    console.error('Error fetching wallet details:', error_1);
+                    socket.emit('wallet:errorMessage', 'Failed to connect to wallet.');
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); });
+    // Handle receiving payments
+    // socket.on('wallet:receivePayment', async (invoice: string) => {
+    //   try {
+    //     const paymentResult = await processPayment(invoice); // Replace with your payment processing logic
+    //     if (paymentResult.success) {
+    //       const walletDetails = await fetchWalletDetails(paymentResult.walletId);
+    //       io.to(socket.id).emit('wallet:paymentReceived', {
+    //         success: true,
+    //         walletDetails,
+    //       });
+    //     } else {
+    //       socket.emit('wallet:paymentFailed', {
+    //         success: false,
+    //         message: paymentResult.message,
+    //       });
+    //     }
+    //   } catch (error) {
+    //     console.error('Error processing payment:', error);
+    //     socket.emit('wallet:errorMessage', 'Payment processing failed.');
+    //   }
+    // });
     socket.on('game:selectQuiz', function (quizId) { return __awaiter(void 0, void 0, void 0, function () {
-        var error_1;
+        var error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -64,69 +113,65 @@ io.on('connection', function (socket) {
                     socket.emit('game:quizSelected', { success: true, gameState: gameState });
                     return [3 /*break*/, 3];
                 case 2:
-                    error_1 = _a.sent();
-                    socket.emit('game:errorMessage', error_1.message);
+                    error_2 = _a.sent();
+                    socket.emit('game:errorMessage', error_2.message);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
         });
     }); });
-    io.on('connection', function (socket) {
-        console.log("User connected: ".concat(socket.id));
-        socket.on('requestQuizzes', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var quizzes, error_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, prisma.quiz.findMany({
-                                select: {
-                                    id: true,
-                                    subject: true,
-                                },
-                            })];
-                    case 1:
-                        quizzes = _a.sent();
-                        socket.emit('quizzesList', quizzes);
-                        return [3 /*break*/, 3];
-                    case 2:
-                        error_2 = _a.sent();
-                        console.error('Error fetching quizzes:', error_2);
-                        socket.emit('game:errorMessage', 'Failed to load quizzes.');
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); });
-        socket.on('requestAssociations', function () { return __awaiter(void 0, void 0, void 0, function () {
-            var quizzes, error_3;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, prisma.association.findMany({
-                                select: {
-                                    id: true,
-                                    valide: true,
-                                    logoUrl: true,
-                                    adresseEclairage: true,
-                                },
-                            })];
-                    case 1:
-                        quizzes = _a.sent();
-                        socket.emit('associationsList', quizzes);
-                        return [3 /*break*/, 3];
-                    case 2:
-                        error_3 = _a.sent();
-                        console.error('Error fetching Associations:', error_3);
-                        socket.emit('game:errorMessage', 'Failed to load Associations.');
-                        return [3 /*break*/, 3];
-                    case 3: return [2 /*return*/];
-                }
-            });
-        }); });
-        // Other socket event handlers...
-    });
+    socket.on('requestQuizzes', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var quizzes, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, prisma.quiz.findMany({
+                            select: {
+                                id: true,
+                                subject: true,
+                            },
+                        })];
+                case 1:
+                    quizzes = _a.sent();
+                    socket.emit('quizzesList', quizzes);
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_3 = _a.sent();
+                    console.error('Error fetching quizzes:', error_3);
+                    socket.emit('game:errorMessage', 'Failed to load quizzes.');
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); });
+    socket.on('requestAssociations', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var quizzes, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, prisma.association.findMany({
+                            select: {
+                                id: true,
+                                valide: true,
+                                logoUrl: true,
+                                adresseEclairage: true,
+                            },
+                        })];
+                case 1:
+                    quizzes = _a.sent();
+                    socket.emit('associationsList', quizzes);
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _a.sent();
+                    console.error('Error fetching Associations:', error_4);
+                    socket.emit('game:errorMessage', 'Failed to load Associations.');
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    }); });
     socket.on('player:checkRoom', function (roomId) {
         return player_1.default.checkRoom(gameState, io, socket, roomId);
     });
@@ -154,19 +199,36 @@ io.on('connection', function (socket) {
     socket.on('manager:showLeaderboard', function () {
         return manager_1.default.showLeaderboard(gameState, io, socket);
     });
-    // socket.on('disconnect', () => {
-    //   console.log(`User disconnected ${socket.id}`);
-    //   if (gameState.manager === socket.id) {
-    //     console.log('Resetting game');
-    //     io.to(gameState.room).emit('game:reset');
-    //     gameState = null;
-    //     abortCooldown();
-    //     return;
-    //   }
-    //   const playerIndex = gameState.players.findIndex((p: { id: any }) => p.id === socket.id);
-    //   if (playerIndex !== -1) {
-    //     const player = gameState.players.splice(playerIndex, 1)[0];
-    //     io.to(gameState.manager).emit('manager:removePlayer', player.id);
-    //   }
-    // });
+    socket.on('wallet:connect', function (wallet) { return __awaiter(void 0, void 0, void 0, function () {
+        var walletdetails;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    console.log('Wallet connected');
+                    return [4 /*yield*/, (0, wallet_1.fetchWalletDetails)(wallet)];
+                case 1:
+                    walletdetails = _a.sent();
+                    socket.emit('wallet:balance', walletdetails);
+                    console.log(walletdetails);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    socket.on('disconnect', function () {
+        console.log("User disconnected ".concat(socket.id));
+        if (gameState && gameState.manager === socket.id) {
+            console.log('Resetting game');
+            io.to(gameState.room).emit('game:reset');
+            gameState = null;
+            (0, cooldown_1.abortCooldown)();
+            return;
+        }
+        if (gameState) {
+            var playerIndex = gameState.players.findIndex(function (p) { return p.id === socket.id; });
+            if (playerIndex !== -1) {
+                var player = gameState.players.splice(playerIndex, 1)[0];
+                io.to(gameState.manager).emit('manager:removePlayer', player.id);
+            }
+        }
+    });
 });
