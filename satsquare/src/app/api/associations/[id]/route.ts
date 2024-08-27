@@ -1,6 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/db/prisma";
 
+// GET: Retrieve an existing association by ID
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { id } = params;
+  try {
+    const association = await prisma.association.findUnique({
+      where: { id: Number(id) },
+    });
+    if (association) {
+      return NextResponse.json(association, { status: 200 });
+    } else {
+      return NextResponse.json(
+        { error: "Association not found" },
+        { status: 404 }
+      );
+    }
+  } catch (error) {
+    console.error("Error retrieving association:", error);
+    return NextResponse.json(
+      { error: "An error occurred while retrieving the association" },
+      { status: 500 }
+    );
+  }
+}
+
 // PUT: Mettre à jour une association existante
 export async function PUT(
   req: NextRequest,

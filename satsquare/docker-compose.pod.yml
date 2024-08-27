@@ -1,0 +1,22 @@
+# docker-compose.prod.yml
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "3000:3000"
+      - "5157:5157"
+    env_file:
+      - .env.prod
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres_prod
+      POSTGRES_PASSWORD: prod_password
+      POSTGRES_DB: sat_square_prod_db
+    ports:
+      - "5432:5432"

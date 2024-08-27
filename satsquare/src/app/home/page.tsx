@@ -10,6 +10,7 @@ import Room from "@/components/game/join/Room";
 import { usePlayerContext } from "@/context/player";
 import { useSocketContext } from "@/context/socket";
 import Username from "@/components/game/join/Username/page";
+import SelectQuiz from '../../components/game/SelectQuiz';
 
 export default function Home() {
   const { player } = usePlayerContext();
@@ -35,7 +36,7 @@ export default function Home() {
       </div>
 
       <Image src={logo} className="mb-6" alt="logo" />
-
+     
       {!player ? <Room /> : <Username  />}
     </section>
   );

@@ -15,8 +15,11 @@ COPY . .
 
 # Build-time arguments for environment variables
 ARG DATABASE_URL
+
 ARG NEXT_AUTH_SECRET
+
 ARG NEXT_PUBLIC_SITE_URL
+
 ARG NEXT_PUBLIC_SOCKET_URL
 
 # Set environment variables based on build-time arguments
@@ -44,4 +47,4 @@ RUN npm run build
 EXPOSE 3000 5157
 
 # Start the application
-CMD ["npm", "start"]
+ENTRYPOINT ["npm", "run","all-start"]

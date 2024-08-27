@@ -7,6 +7,7 @@ import logo from "@/assets/logo-header.png";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
 import { socket } from "@/context/socket";
 import { FaUser } from "react-icons/fa";
+import SelectQuiz from "./game/SelectQuiz";
 
 export default function ManagerPassword() {
   const [loading, setLoading] = useState(false);
@@ -30,6 +31,7 @@ export default function ManagerPassword() {
   useEffect(() => {
     const handleErrorMessage = (message: Renderable | ValueFunction<Renderable, Toast>) => {
       toast.error(message);
+      setLoading(false);
     };
 
     socket.on("game:errorMessage", handleErrorMessage);
@@ -54,6 +56,7 @@ export default function ManagerPassword() {
             <FaUser className="text-5xl text-white" />
           </div>
         </div>
+        <SelectQuiz />
         <Input
           type="password"
           onChange={handleChange}

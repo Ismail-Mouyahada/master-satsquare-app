@@ -18,9 +18,11 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { UserDTO } from "@/types/userDto";
 import QRCode from "qrcode.react"; // Import QRCode from the library
+import { useSocketContext } from "@/context/socket";
 
 const ProfileDetail: React.FC = () => {
   const { data: session } = useSession();
+  const { socket } = useSocketContext();
   const [userData, setUserData] = useState<UserDTO | null>(null);
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -44,6 +46,32 @@ const ProfileDetail: React.FC = () => {
   } | null>(null);
 
   const router = useRouter();
+
+
+  useEffect(() => {
+    if (socket && userData?.walletId) {
+      socket.emit("wallet:connect",  userData?.walletId);
+
+      socket.on("wallet:balance", (data) => {
+        const balance = BigInt(data.balance) / BigInt(1000);
+        setWalletDetails({
+          id: data.id,
+          name: data.name,
+          balance: Number(balance),
+        });
+        toast.success("Wallet details updated.");
+      });
+
+      socket.on("game:errorMessage", (message) => {
+        toast.error(message);
+      });
+
+      return () => {
+        socket.off("wallet:balance");
+        socket.off("game:errorMessage");
+      };
+    }
+  }, [socket,  userData?.walletId]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -72,47 +100,47 @@ const ProfileDetail: React.FC = () => {
     fetchUserData();
   }, [session]);
 
-  useEffect(() => {
-    const fetchWalletDetails = async () => {
-      if (userData?.walletId) {
-        try {
-          const response = await fetch(
-            `/api/get-wallet-details?walletId=${userData.walletId}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
+  // useEffect(() => {
+  //   const fetchWalletDetails = async () => {
+  //     if (userData?.walletId) {
+  //       try {
+  //         const response = await fetch(
+  //           `/api/get-wallet-details?walletId=${userData.walletId}`,
+  //           {
+  //             method: "GET",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //             },
+  //           }
+  //         );
 
-          if (!response.ok) {
-            throw new Error("Failed to fetch wallet details");
-          }
+  //         if (!response.ok) {
+  //           throw new Error("Failed to fetch wallet details");
+  //         }
 
-          const data = await response.json();
-          const balance = BigInt(data.balance) / BigInt(1000);
+  //         const data = await response.json();
+  //         const balance = BigInt(data.balance) / BigInt(1000);
 
-          setWalletDetails({
-            id: data.id,
-            name: data.name,
-            balance: Number(balance),
-          });
-        } catch (error) {
-          console.error("Error fetching wallet details:", error);
-          toast.error("Erreur lors de la récupération des détails du portefeuille.");
-        }
-      } else {
-        setWalletDetails(null);
-      }
-    };
+  //         setWalletDetails({
+  //           id: data.id,
+  //           name: data.name,
+  //           balance: Number(balance),
+  //         });
+  //       } catch (error) {
+  //         console.error("Error fetching wallet details:", error);
+  //         toast.error("Erreur lors de la récupération des détails du portefeuille.");
+  //       }
+  //     } else {
+  //       setWalletDetails(null);
+  //     }
+  //   };
 
-    fetchWalletDetails();
+  //   fetchWalletDetails();
 
-    const intervalId = setInterval(fetchWalletDetails, 10000); // Poll every 10 seconds
+  //   const intervalId = setInterval(fetchWalletDetails, 10000); // Poll every 10 seconds
 
-    return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [userData]);
+  //   return () => clearInterval(intervalId); // Cleanup on component unmount
+  // }, [userData]);
 
   const handlePasswordReset = async () => {
     if (newPassword !== confirmPassword) {
