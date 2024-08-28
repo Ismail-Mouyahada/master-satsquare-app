@@ -205,7 +205,7 @@ jobs:
       - name: Notify Discord
         uses: discord-actions/message@v2
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: "On est la les BG"
           username: "Github"
           avatar: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
@@ -214,19 +214,19 @@ jobs:
         if: success()
         uses: discord-actions/message@v2
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: "Bah Oui ça marche mon gasr 🗺 "
 
       - name: Notify Discord
         if: failure()
         uses: discord-actions/message@v2
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: "Ops tu as glissé mon pote ☣ "
           
       - name: Notify Discord
         if: ${{ always() && contains(needs.*.result, 'failure') }}
         uses: discord-actions/message@v2
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: "C'était presque bon mon kiki ! 😇 "
