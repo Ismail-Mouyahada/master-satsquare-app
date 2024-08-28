@@ -1,5 +1,5 @@
-import { FC, useState, useEffect } from "react";
-import { FaPlus, FaSearch } from "react-icons/fa";
+import React, { FC, useState, useEffect } from 'react';
+import { FaPlus } from 'react-icons/fa';
 
 interface RoleSearchBarProps {
   onAdd: () => void;
@@ -7,8 +7,8 @@ interface RoleSearchBarProps {
 }
 
 const RoleSearchBar: FC<RoleSearchBarProps> = ({ onAdd, onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(searchTerm);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(searchTerm);
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -18,11 +18,11 @@ const RoleSearchBar: FC<RoleSearchBarProps> = ({ onAdd, onSearch }) => {
     return () => {
       clearTimeout(handler); // Cleanup timeout if user continues typing
     };
-  }, [searchTerm]);
+  }, [searchTerm]); // Dependency array updated to include searchTerm
 
   useEffect(() => {
     onSearch(debouncedSearchTerm); // Trigger search with debounced term
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, onSearch]); // Dependency array updated to include onSearch
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);

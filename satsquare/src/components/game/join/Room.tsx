@@ -121,11 +121,7 @@ export default function Room() {
             Retour à l'accueil
           </Link>
         </div>
-        <div className="flex items-center justify-center mb-4 w-full">
-          <div className="flex flex-col items-center">
-            <Authlight />
-          </div>
-        </div>
+       
 
       </div>
 
