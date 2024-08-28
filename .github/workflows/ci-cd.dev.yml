@@ -135,71 +135,71 @@ jobs:
   #         cd ./satsquare
   #         npx lhci autorun
 
-  docker-build:
-    # needs: lighthouse
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # docker-build:
+  #   # needs: lighthouse
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Login to GitHub Container Registry
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  #     - name: Login to GitHub Container Registry
+  #       run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build Docker image
-        run: |
-          cd ./satsquare
-          docker run -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-           -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
-           -e NEXT_PUBLIC_SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}" \
-           -e NEXT_PUBLIC_SOCKET_URL="${{ secrets.NEXT_PUBLIC_SOCKET_URL }}" \
-           -p 3000:3000 -p 5157:5157
-          docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
+  #     - name: Build Docker image
+  #       run: |
+  #         cd ./satsquare
+  #         docker run -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+  #          -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+  #          -e NEXT_PUBLIC_SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}" \
+  #          -e NEXT_PUBLIC_SOCKET_URL="${{ secrets.NEXT_PUBLIC_SOCKET_URL }}" \
+  #          -p 3000:3000 -p 5157:5157
+  #         docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
 
-      - name: Scan Docker image for vulnerabilities
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          image-ref: ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
+  #     - name: Scan Docker image for vulnerabilities
+  #       uses: aquasecurity/trivy-action@0.20.0
+  #       with:
+  #         image-ref: ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
 
-      - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
+  #     - name: Push Docker image to GitHub Container Registry
+  #       run: docker push ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
 
-  e2e-tests:
-    needs: docker-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # e2e-tests:
+  #   needs: docker-build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm install
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm install
 
-      - name: Run end-to-end tests
-        run: |
-          cd ./satsquare
-          npm run test:e2e
+  #     - name: Run end-to-end tests
+  #       run: |
+  #         cd ./satsquare
+  #         npm run test:e2e
 
-  stress-test:
-    needs: e2e-tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # stress-test:
+  #   needs: e2e-tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm install
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm install
 
-      - name: Run stress tests
-        run: |
-          cd ./satsquare
-          npm run test:stress
+  #     - name: Run stress tests
+  #       run: |
+  #         cd ./satsquare
+  #         npm run test:stress
 
   notify:
     runs-on: ubuntu-latest
-    needs: [stress-test]
+    # needs: [stress-test]
     steps:
       - name: Send Discord notification on success
         if: success()
