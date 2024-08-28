@@ -17,25 +17,22 @@ env:
   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
 jobs:
-
-
   lint:
-      needs: deps-vulnerability
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-  
-        - name: Install dependencies
-          run: |
-            cd ./satsquare
-            npm ci
-  
-        - name: Run Linting
-          run: |
-            cd ./satsquare
-            npm run lint
+    needs: deps-vulnerability
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm ci
+
+      - name: Run Linting
+        run: |
+          cd ./satsquare
+          npm run lint
 
   build:
     needs: [lint]
@@ -46,51 +43,22 @@ jobs:
 
       - name: Run end-to-end tests
         run: |
-              export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
-              export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
-              export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
-              export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-              export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
-              export REDIS_URL="redis://localhost:6379"
-              cd ./satsquare
-            
-              npm install
-              npx prisma generate
-              npx prisma db push
-              npm run seed
-              npm run build
-   
+          export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
+          export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
+          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
+          export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+          export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
+          export REDIS_URL="redis://localhost:6379"
+          cd ./satsquare
 
+          npm install
+          npx prisma generate
+          npx prisma db push
+          npm run seed
+          npm run build
 
-  # docker-build:
-  #   # needs: lighthouse
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Login to GitHub Container Registry
-  #       run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-  #     - name: Build Docker image
-  #       run: |
-  #         cd ./satsquare
-  #         docker run -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-  #          -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
-  #          -e NEXT_PUBLIC_SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}" \
-  #          -e NEXT_PUBLIC_SOCKET_URL="${{ secrets.NEXT_PUBLIC_SOCKET_URL }}" \
-  #          -p 3000:3000 -p 5157:5157
-  #         docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
-
-  #     - name: Scan Docker image for vulnerabilities
-  #       uses: aquasecurity/trivy-action@0.20.0
-  #       with:
-  #         image-ref: ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
-
-  #     - name: Push Docker image to GitHub Container Registry
-  #       run: docker push ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
   unit-tests:
-    needs:  [build]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -106,9 +74,9 @@ jobs:
         run: |
           cd ./satsquare
           npm run test
-  
+
   e2e-tests:
-    needs:  [build]
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -116,40 +84,23 @@ jobs:
 
       - name: Run end-to-end tests
         run: |
-              export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
-              export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
-              export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
-              export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-              export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
-              export REDIS_URL="redis://localhost:6379"
-              cd ./satsquare
-            
-              npm install
-              npx prisma generate
-              npx prisma db push
-              npm run seed
-              npm run build
-              # npm run test:e2e 
+          export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
+          export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
+          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
+          export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+          export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
+          export REDIS_URL="redis://localhost:6379"
+          cd ./satsquare
 
-  # stress-test:
-  #   needs: e2e-tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm install
-
-  #     - name: Run stress tests
-  #       run: |
-  #         cd ./satsquare
-  #         npm run test:stress
+          npm install
+          npx prisma generate
+          npx prisma db push
+          npm run seed
+          npm run build
+          # npm run test:e2e
 
   deps-vulnerability:
-    needs: [e2e-tests,build,unit-tests]
+    needs: [e2e-tests, build, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -177,7 +128,7 @@ jobs:
           npm audit --audit-level=moderate
 
   codecov:
-    needs: [e2e-tests,build,unit-tests]
+    needs: [e2e-tests, build, unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -200,7 +151,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   security:
-    needs: [e2e-tests,build,unit-tests]
+    needs: [e2e-tests, build, unit-tests]
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -213,11 +164,11 @@ jobs:
         uses: actions/checkout@v3
       - uses: mobb-dev/codeql-mobb-fixer-action@v1.1
         with:
-          mobb-api-token: 'ifdAADCTnQNVbDFjpWfNY19g1zDGMt'
+          mobb-api-token: "ifdAADCTnQNVbDFjpWfNY19g1zDGMt"
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
   lighthouse:
-    needs: [codecov,security,deps-vulnerability]
+    needs: [codecov, security, deps-vulnerability]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -232,36 +183,64 @@ jobs:
         run: |
           cd ./satsquare
           npx lhci autorun
+
   notify:
-      needs: [lighthouse]
-      runs-on: ubuntu-latest
-      # needs: [stress-test]
-      steps:
-        - name: Notify Discord
-          uses: discord-actions/message@v2
-          with:
-            webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-            message: "On est la les BG"
-            username: "SatSuqare Developement BOT"
-            # avatar: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-   
-        - name: Notify Discord
-          if: success()
-          uses: discord-actions/message@v2
-          with:
-            webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-            message: "Bah Oui ça marche mon gasr 🗺 "
-  
-        - name: Notify Discord
-          if: failure()
-          uses: discord-actions/message@v2
-          with:
-            webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-            message: "Ops tu as glissé mon pote ☣ "
-            
-        - name: Notify Discord
-          if: ${{ always() && contains(needs.*.result, 'failure') }}
-          uses: discord-actions/message@v2
-          with:
-            webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-            message: "C'était presque bon mon kiki ! 😇 "
+    needs: [lighthouse]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Discord
+        uses: discord-actions/message@v2
+        with:
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+          message: "On est la les BG"
+          username: "SatSuqare Development BOT"
+          # avatar: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+
+      - name: Notify Discord
+        if: success()
+        uses: discord-actions/message@v2
+        with:
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+          message: "Bah Oui ça marche mon gars 🗺"
+
+      - name: Notify Discord
+        if: failure()
+        uses: discord-actions/message@v2
+        with:
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+          message: "Ops tu as glissé mon pote ☣"
+
+      - name: Notify Discord
+        if: ${{ always() && contains(needs.*.result, 'failure') }}
+        uses: discord-actions/message@v2
+        with:
+          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+          message: "C'était presque bon mon kiki ! 😇"
+
+# docker-build:
+#   # needs: lighthouse
+#   runs-on: ubuntu-latest
+#   steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v3
+
+#     - name: Login to GitHub Container Registry
+#       run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+#     - name: Build Docker image
+#       run: |
+#         cd ./satsquare
+#         docker run -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+#          -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+#          -e NEXT_PUBLIC_SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}" \
+#          -e NEXT_PUBLIC_SOCKET_URL="${{ secrets.NEXT_PUBLIC_SOCKET_URL }}" \
+#          -p 3000:3000 -p 5157:5157
+#         docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
+
+#     - name: Scan Docker image for vulnerabilities
+#       uses: aquasecurity/trivy-action@0.20.0
+#       with:
+#         image-ref: ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
+
+#     - name: Push Docker image to GitHub Container Registry
+#       run: docker push ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
