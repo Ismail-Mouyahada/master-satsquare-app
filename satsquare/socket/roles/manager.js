@@ -152,7 +152,7 @@ var Manager = {
                     console.error("Error saving top scores:", error_1);
                     return [3 /*break*/, 5];
                 case 5:
-                    Object.assign(game, (0, deepClone_js_1.default)(quiz_config_js_1.GAME_STATE_INIT));
+                    Object.assign(game, (0, deepClone_js_1.default)(quiz_config_js_1.getGameState));
                     return [2 /*return*/];
                 case 6:
                     socket.emit("game:status", {

@@ -34,10 +34,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const response = await fetch(`https://lightning.ismail-mouyahada.com/api/v1/auth?usr=${wallet.walletId}`, {
+    const response = await fetch(`https://lightning.ismail-mouyahada.com/api/v1/wallet`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'X-API-Key': wallet.walletId,
       },
     });
 

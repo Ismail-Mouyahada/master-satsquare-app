@@ -18,8 +18,10 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { UserDTO } from "@/types/userDto";
 import QRCode from "qrcode.react"; // Import QRCode from the library
+import { useApiHook } from "@/hook/useApiHook";
 
 const ProfileDetail: React.FC = () => {
+  const { data, error, loading, fetchData, postData } = useApiHook<any>();
   const { data: session } = useSession();
   const [userData, setUserData] = useState<UserDTO | null>(null);
   const [oldPassword, setOldPassword] = useState<string>("");
@@ -72,12 +74,14 @@ const ProfileDetail: React.FC = () => {
     fetchUserData();
   }, [session]);
 
-  useEffect(() => {
+  useEffect( () => {
     const fetchWalletDetails = async () => {
-      if (userData?.walletId) {
+      if (userData!=null) {
         try {
+
+        
           const response = await fetch(
-            `/api/get-wallet-details?walletId=${userData.walletId}`,
+            `/api/get-wallet-details`,
             {
               method: "GET",
               headers: {
@@ -111,9 +115,8 @@ const ProfileDetail: React.FC = () => {
 
     fetchWalletDetails();
 
-    const intervalId = setInterval(fetchWalletDetails, 10000); // Poll every 10 seconds
-
-    return () => clearInterval(intervalId); // Cleanup on component unmount
+ 
+ 
   }, [userData]);
 
   const handlePasswordReset = async () => {
@@ -221,7 +224,7 @@ const ProfileDetail: React.FC = () => {
         if (walletIdInput) {
           try {
             const response = await fetch(
-              `/api/get-wallet-details?walletId=${walletIdInput}`,
+              `/api/get-wallet-details`,
               {
                 method: "GET",
                 headers: {

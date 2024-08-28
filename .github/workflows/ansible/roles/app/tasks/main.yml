@@ -1,0 +1,17 @@
+---
+    - name: Create environment file
+      template:
+        src: .env.j2
+        dest: /home/{{ ansible_user }}/docker/{{ env }}/.env
+        mode: '0644'
+    
+    - name: Pull the latest image
+      command: docker-compose -f /home/{{ ansible_user }}/docker/{{ env }}/{{ docker_compose_file }} pull
+      args:
+        chdir: /home/{{ ansible_user }}/docker/{{ env }}
+    
+    - name: Restart the application
+      command: docker-compose -f /home/{{ ansible_user }}/docker/{{ env }}/{{ docker_compose_file }} up -d
+      args:
+        chdir: /home/{{ ansible_user }}/docker/{{ env }}
+    

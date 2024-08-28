@@ -1,0 +1,18 @@
+---
+    - name: Create Docker Compose directory
+      file:
+        path: /home/{{ ansible_user }}/docker/{{ env }}
+        state: directory
+        mode: '0755'
+    
+    - name: Copy Docker Compose file
+      template:
+        src: docker-compose.yml.j2
+        dest: /home/{{ ansible_user }}/docker/{{ env }}/{{ docker_compose_file }}
+        mode: '0644'
+    
+    - name: Start Docker Compose
+      command: docker-compose -f /home/{{ ansible_user }}/docker/{{ env }}/{{ docker_compose_file }} up -d
+      args:
+        chdir: /home/{{ ansible_user }}/docker/{{ env }}
+    
