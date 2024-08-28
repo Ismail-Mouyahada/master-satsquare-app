@@ -1,4 +1,5 @@
 import { Association } from "@/types/main-types/main";
+import Image from "next/image";
 import { FC, useState, useEffect, FormEvent } from "react";
 
 interface AssociationModalProps {
@@ -146,7 +147,7 @@ const AssociationModal: FC<AssociationModalProps> = ({
               <label className="block text-sm font-medium text-gray-700">
                 Aperçu de l'image
               </label>
-              <img
+              <Image
                 src={formData.logoUrl}
                 alt="Aperçu de l'image"
                 className="w-full h-auto rounded-md"

@@ -79,7 +79,7 @@ const ProfileDetail: React.FC = () => {
       if (userData!=null) {
         try {
 
-          fetchData
+        
           const response = await fetch(
             `/api/get-wallet-details`,
             {

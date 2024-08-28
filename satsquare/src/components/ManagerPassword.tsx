@@ -61,7 +61,7 @@ export default function ManagerPassword() {
           type="password"
           onChange={handleChange}
           onKeyDown={handleKeyDown}
-          placeholder="Mot de passe de l'admin"
+          placeholder="Code de gestionnaire de session"
         />
         <Button onClick={handleCreate} disabled={loading}>
           Soumettre
