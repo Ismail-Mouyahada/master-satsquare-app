@@ -182,9 +182,10 @@ jobs:
               cd ./satsquare
             
               npm install
-              npx prisma migrate resolve --applied "init"
-              npx prisma migrate deploy
+              npx prisma generate
+              npx prisma db push
               npm run seed
+   
     
       - name: Run end-to-end tests
         run: |
