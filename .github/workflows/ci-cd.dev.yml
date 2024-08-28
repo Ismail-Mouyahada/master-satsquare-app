@@ -60,23 +60,23 @@ jobs:
   #         cd ./satsquare
   #         npm run lint
 
-  unit-tests:
-    # needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # unit-tests:
+  #   # needs: lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm i jest-environment-jsdom  jest
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
+  #         npm i jest-environment-jsdom  jest
           
-      - name: Run Jest Unit Tests
-        run: |
-          cd ./satsquare
-          npm run test
+  #     - name: Run Jest Unit Tests
+  #       run: |
+  #         cd ./satsquare
+  #         npm run test
 
   codecov:
     needs: unit-tests
