@@ -5,7 +5,7 @@ services:
       - "3000:3000"
       - "5157:5157"
     environment:
-      DATABASE_URL: "postgresql://satsquare_z45c_user:oFMPADTGdqmKobe4AEeJA1c0t549yVZ3@dpg-cr6ndeaj1k6c73d7ae90-a.frankfurt-postgres.render.com/satsquare_z45c"
+      DATABASE_URL: "postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare"
       NEXTAUTH_SECRET: "CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
       NEXT_PUBLIC_SITE_URL: "http://app:3000"
       NEXT_PUBLIC_SOCKET_URL: "ws://app:5157"
@@ -17,4 +17,4 @@ services:
     ports:
       - "8080:8080"
     environment:
-      ADMINER_DEFAULT_SERVER: "dpg-coqtmei0si5c7398hrl0-a.frankfurt-postgres.render.com"
+      ADMINER_DEFAULT_SERVER: "dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com"
