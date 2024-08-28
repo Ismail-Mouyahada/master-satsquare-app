@@ -72,8 +72,8 @@ jobs:
   #       run: |
   #         cd ./satsquare
   #         npm ci
-  #         npm i jest-environment-jsdom  jest
-          
+  #         npm i jest-environment-jsdom jest
+
   #     - name: Run Jest Unit Tests
   #       run: |
   #         cd ./satsquare
@@ -90,7 +90,7 @@ jobs:
   #       run: |
   #         cd ./satsquare
   #         npm ci
-  #         npm i jest-environment-jsdom  jest
+  #         npm i jest-environment-jsdom jest
 
   #     - name: Run tests and generate coverage report
   #       run: |
@@ -216,6 +216,7 @@ jobs:
         with:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
           message: "Bah Oui ça marche mon gasr 🗺 "
+
       - name: Notify Discord
         if: failure()
         uses: discord-actions/message@v2
@@ -229,4 +230,3 @@ jobs:
         with:
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK_URL }}
           message: "C'était presque bon mon kiki ! 😇 "
- 
