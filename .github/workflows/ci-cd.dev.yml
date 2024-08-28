@@ -33,6 +33,11 @@ jobs:
           npm ci
           npm update
 
+      - name: Install jest-environment-jsdom
+        run: |
+          cd ./satsquare
+          npm install jest-environment-jsdom --save-dev
+
       - name: Audit npm dependencies
         run: |
           cd ./satsquare
