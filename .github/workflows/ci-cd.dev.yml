@@ -228,19 +228,25 @@ jobs:
         if: success() # Notifie en cas de succès
         uses: discord-actions/message@v2
         with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "Bah Oui ça marche mon gars 🗺"
+          webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
+          message: "l'application tourne en développement, félicitations 🎊"
+          username: "Dev BOT Satsquare"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
       - name: Notify Discord
         if: failure() # Notifie en cas d'échec
         uses: discord-actions/message@v2
         with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "Ops tu as glissé mon pote ☣"
+          webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
+          message: "Attention il y a un soucis dans la mis en développement ☣"
+          username: "Dev BOT Satsquare"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
       - name: Notify Discord
         if: ${{ always() && contains(needs.*.result, 'failure') }} # Notifie si une partie du pipeline a échoué
         uses: discord-actions/message@v2
         with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "C'était presque bon mon kiki ! 😇"
+          webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
+          message: "Une des étapes a due échouée ! 😇"
+          username: "Dev BOT Satsquare"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
