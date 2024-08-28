@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         
       - name: Install dependencies
         run: |
@@ -37,6 +37,7 @@ jobs:
           dedupe_issues: true
       
   lint:
+    needs: [deps-vulnerability]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -49,6 +50,7 @@ jobs:
         run: npm run lint
         
   unit-tests:
+    needs: [deps-vulnerability]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -61,6 +63,7 @@ jobs:
         run: npm run test:watch
         
   codecov:
+    needs: [deps-vulnerability,unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
