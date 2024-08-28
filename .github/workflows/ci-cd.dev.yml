@@ -213,45 +213,45 @@ jobs:
           npm run seed
           npm run build
           cd ./satsquare
-          docker build -t ghcr.io/ismail-mouyahada/master-satsquare-app:dev -f Dockerfile.dev . # Construit l'image Docker
+          docker build -t ghcr.io/ismail-mouyahada/master-satsquare-app:dev-${{ github.sha }} -f Dockerfile.dev . # Construit l'image Docker
   
       - name: Scan Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:dev # Scanne l'image Docker pour les vulnérabilités
+          image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:dev-${{ github.sha }} # Scanne l'image Docker pour les vulnérabilités
   
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:dev # Pousse l'image Docker vers le registre
+        run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:dev-${{ github.sha }} # Pousse l'image Docker vers le registre
 
   # Job pour notifier l'état de la pipeline sur Discord
-  notify:
-    # needs: [docker-build,lighthouse]
-    runs-on: ubuntu-latest
-    steps:
+  # notify:
+  #   # needs: [docker-build,lighthouse]
+  #   runs-on: ubuntu-latest
+  #   steps:
     
-      - name: Notify Discord
-        if: success() # Notifie en cas de succès
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
-          message: "l'application tourne en développement, félicitations 🎊"
-          username: "Dev BOT Satsquare"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+  #     - name: Notify Discord
+  #       if: success() # Notifie en cas de succès
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
+  #         message: "l'application tourne en développement, félicitations 🎊"
+  #         username: "Dev BOT Satsquare"
+  #         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
-      - name: Notify Discord
-        if: failure() # Notifie en cas d'échec
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
-          message: "Attention il y a un soucis dans la mis en développement ☣"
-          username: "Dev BOT Satsquare"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+  #     - name: Notify Discord
+  #       if: failure() # Notifie en cas d'échec
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
+  #         message: "Attention il y a un soucis dans la mis en développement ☣"
+  #         username: "Dev BOT Satsquare"
+  #         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
-      - name: Notify Discord
-        if: ${{ always() && contains(needs.*.result, 'failure') }} # Notifie si une partie du pipeline a échoué
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
-          message: "Une des étapes a due échouée ! 😇"
-          username: "Dev BOT Satsquare"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+  #     - name: Notify Discord
+  #       if: ${{ always() && contains(needs.*.result, 'failure') }} # Notifie si une partie du pipeline a échoué
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278397332521615431/d5AIBE5oEI25FsHe8bXQaXoBYLmZ1voBFxyDjhbjJ1RucDvxXzTeegmNJ0Tc89f4SlH8"
+  #         message: "Une des étapes a due échouée ! 😇"
+  #         username: "Dev BOT Satsquare"
+  #         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
