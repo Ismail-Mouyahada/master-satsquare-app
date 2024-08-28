@@ -182,7 +182,7 @@ jobs:
 
   # Job pour construire l'image Docker et la pousser vers le registre
   docker-build:
-    needs: lighthouse
+    # needs: lighthouse
     runs-on: ubuntu-latest
     permissions:
       contents: read
