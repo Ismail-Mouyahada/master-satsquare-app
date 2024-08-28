@@ -207,12 +207,12 @@ jobs:
         uses: actions/checkout@v3
   
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3.3.0
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-   
+          password: ${{ secrets.GHCR_PAT }}  # Use a PAT with write:packages scope
+  
       - name: Build Docker image
         run: |
           export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
