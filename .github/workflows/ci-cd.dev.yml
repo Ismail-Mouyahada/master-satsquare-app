@@ -17,90 +17,90 @@ env:
   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
 jobs:
-  # deps-vulnerability:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  deps-vulnerability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Create lock file
-  #       run: |
-  #         cd ./satsquare
-  #         npm install --package-lock-only
+      - name: Create lock file
+        run: |
+          cd ./satsquare
+          npm install --package-lock-only
 
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm ci
-  #         npm update
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm ci
+          npm update
 
-  #     - name: Install jest-environment-jsdom
-  #       run: |
-  #         cd ./satsquare
-  #         npm install jest-environment-jsdom --save-dev
+      - name: Install jest-environment-jsdom
+        run: |
+          cd ./satsquare
+          npm install jest-environment-jsdom --save-dev
 
-  #     - name: Audit npm dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm audit --audit-level=moderate
+      - name: Audit npm dependencies
+        run: |
+          cd ./satsquare
+          npm audit --audit-level=moderate
 
-  # lint:
-  #   needs: deps-vulnerability
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  lint:
+    needs: deps-vulnerability
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm ci
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm ci
 
-  #     - name: Run Linting
-  #       run: |
-  #         cd ./satsquare
-  #         npm run lint
+      - name: Run Linting
+        run: |
+          cd ./satsquare
+          npm run lint
 
-  # unit-tests:
-  #   # needs: lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  unit-tests:
+    # needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm ci
-  #         npm i jest-environment-jsdom jest
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm ci
+          npm i jest-environment-jsdom jest
 
-  #     - name: Run Jest Unit Tests
-  #       run: |
-  #         cd ./satsquare
-  #         npm run test
+      - name: Run Jest Unit Tests
+        run: |
+          cd ./satsquare
+          npm run test
 
-  # codecov:
-  #   # needs: unit-tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  codecov:
+    # needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm ci
-  #         npm i jest-environment-jsdom jest
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm ci
+          npm i jest-environment-jsdom jest
 
-  #     - name: Run tests and generate coverage report
-  #       run: |
-  #         cd ./satsquare
-  #         npm run test -- --coverage
+      - name: Run tests and generate coverage report
+        run: |
+          cd ./satsquare
+          npm run test -- --coverage
 
-  #     - name: Upload coverage to Codecov
-  #       uses: codecov/codecov-action@v3
-  #       with:
-  #         token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   # security:
   #   # needs: codecov
@@ -119,22 +119,22 @@ jobs:
   #         mobb-api-token: ${{ secrets.MOBB_API_TOKEN }}
   #         github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  # lighthouse:
-  #   # needs: security
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  lighthouse:
+    # needs: security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm install
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm install
 
-  #     - name: Run Lighthouse CI
-  #       run: |
-  #         cd ./satsquare
-  #         npx lhci autorun
+      - name: Run Lighthouse CI
+        run: |
+          cd ./satsquare
+          npx lhci autorun
 
   # docker-build:
   #   # needs: lighthouse
@@ -164,39 +164,39 @@ jobs:
   #     - name: Push Docker image to GitHub Container Registry
   #       run: docker push ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
 
-  # e2e-tests:
-  #   needs: docker-build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  e2e-tests:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm install
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm install
 
-  #     - name: Run end-to-end tests
-  #       run: |
-  #         cd ./satsquare
-  #         npm run test:e2e
+      - name: Run end-to-end tests
+        run: |
+          cd ./satsquare
+          npm run test:e2e
 
-  # stress-test:
-  #   needs: e2e-tests
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+  stress-test:
+    needs: e2e-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Install dependencies
-  #       run: |
-  #         cd ./satsquare
-  #         npm install
+      - name: Install dependencies
+        run: |
+          cd ./satsquare
+          npm install
 
-  #     - name: Run stress tests
-  #       run: |
-  #         cd ./satsquare
-  #         npm run test:stress
+      - name: Run stress tests
+        run: |
+          cd ./satsquare
+          npm run test:stress
 
   notify:
     runs-on: ubuntu-latest
