@@ -230,4 +230,4 @@ jobs:
           image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:dev-${{ github.sha }}
   
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:dev-${{ github.sha }}
+        run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:latest
