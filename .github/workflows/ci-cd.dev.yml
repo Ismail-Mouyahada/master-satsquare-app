@@ -160,7 +160,7 @@ jobs:
           - name: SonarCloud Scan
             uses: sonarsource/sonarcloud-github-action@v3.0.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
             env:
-              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+              SONAR_TOKEN: '859694093c1e15aa22f0a01bd5192bfb22a77887'
 
   lighthouse:
     # needs: [codecov, security, deps-vulnerability]
