@@ -1,6 +1,5 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Association } from "@prisma/client";
 import AssociationTable from "@/components/Association/AssociationTable";
 import AssociationSearchBar from "@/components/Association/AssociationSearchBar";
 import AssociationModal from "@/components/Association/AssociationModal";
@@ -8,9 +7,13 @@ import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
 import { FaHandsHelping } from "react-icons/fa";
+import { Association } from "@/types/main-types/main";
 
 const AssociationsPage: FC = () => {
   const [associations, setAssociations] = useState<Association[]>([]);
+  const [initialAssociations, setInitialAssociations] = useState<Association[]>(
+    []
+  ); // Store the initial list
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -24,15 +27,16 @@ const AssociationsPage: FC = () => {
     fetchAssociations();
   }, []);
 
-  const fetchAssociations = async (name: string = "") => {
+  const fetchAssociations = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/associations?name=${name}`);
+      const response = await fetch(`/api/associations`);
       if (!response.ok) {
         throw new Error("Failed to fetch associations");
       }
       const data: Association[] = await response.json();
       setAssociations(data);
+      setInitialAssociations(data); // Store the initial data
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -78,17 +82,24 @@ const AssociationsPage: FC = () => {
   };
 
   const handleSearch = (name: string) => {
-    fetchAssociations(name);
+    if (name === "") {
+      setAssociations(initialAssociations); // Reset to the initial data if search is cleared
+    } else {
+      const filteredAssociations = initialAssociations.filter((association) =>
+        association.nom.toLowerCase().includes(name.toLowerCase())
+      );
+      setAssociations(filteredAssociations);
+    }
   };
 
   if (loading) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Associations"
             icon={<FaHandsHelping className="scale-[1.5]" color="#6D6B81" />}
@@ -98,9 +109,25 @@ const AssociationsPage: FC = () => {
             onSearch={handleSearch}
           />
           <AssociationTable
-            associations={associations}
-            onEdit={openModal}
-            onDelete={openDeleteModal}
+            associations={associations.map((association) => ({
+              ...association,
+              associationDons: [],
+              utilisateurs: [],
+            }))}
+            onEdit={(association) =>
+              openModal({
+                ...association,
+                associationDons: [],
+                utilisateurs: [],
+              })
+            }
+            onDelete={(association) =>
+              openDeleteModal({
+                ...association,
+                associationDons: [],
+                utilisateurs: [],
+              })
+            }
           />
         </div>
         <AssociationModal

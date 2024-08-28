@@ -18,11 +18,11 @@ export async function POST(req: NextRequest) {
       data: {
         email,
         pseudo: username,
-        role_id: role,
+        roleId: 1,
         mot_de_passe: hashedPassword,
-        statut_compte: true,
-        cree_le: new Date(),
-        mis_a_jour_le: new Date(),
+        statutCompte: true,
+        creeLe: new Date(),
+        misAJourLe: new Date(),
       },
     });
 
@@ -41,8 +41,8 @@ function mapToUserDTO(user: any): UserDTO {
     pseudo: user.pseudo,
     email: user.email,
     role: user.role?.nom || null,
-    association_id: user.association_id,
-    sponsor_id: user.sponsor_id,
+    associationId: user.associationId,
+    sponsorId: user.sponsorId,
   };
 }
 

@@ -5,7 +5,7 @@ const quizzesSimules = [
       titre: "Quiz 1",
       user_id: 1,
       categorie: "Catégorie 1",
-      cree_le: new Date("2024-05-06"),
+      creeLe: new Date("2024-05-06"),
       mis_a_jour_le: new Date("2024-05-06"),
       // Relation avec le modèle Utilisateur
       utilisateur: {
@@ -13,10 +13,10 @@ const quizzesSimules = [
         pseudo: "utilisateur1",
         role_id: 1,
         mot_de_passe: "motdepasse123",
-        association_id: 1,
+        associationId: 1,
         statut_compte: true,
-        sponsor_id: 1,
-        cree_le: new Date("2024-05-06"),
+        sponsorId: 1,
+        creeLe: new Date("2024-05-06"),
         mis_a_jour_le: new Date("2024-05-06"),
       },
       // Relation avec le modèle Question

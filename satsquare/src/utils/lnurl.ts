@@ -1,24 +1,25 @@
-import { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
+import crypto from 'crypto';
+import * as secp256k1 from 'secp256k1';
+import { Buffer } from 'buffer';
 
-export default function LNURLAuthProvider<P>(options: any): OAuthConfig<P> {
-  return {
-    id: "lnurl-auth",
-    name: "LNURL-auth",
-    type: "oauth",
-    version: "2.0",
-    scope: "openid email profile",
-    params: { grant_type: "authorization_code" },
-    accessTokenUrl: `${process.env.NEXTAUTH_URL}/oauth/token`,
-    requestTokenUrl: `${process.env.NEXTAUTH_URL}/oauth/authorize`,
-    authorizationUrl: `${process.env.NEXTAUTH_URL}/oauth/authorize?response_type=code`,
-    profileUrl: `${process.env.NEXTAUTH_URL}/oauth/me`,
-    async profile(profile: any) {
-      return {
-        id: profile.id,
-        name: profile.name,
-        email: profile.email,
-      };
-    },
-    ...options,
-  };
+export const verifySignature = (k1: string, pubKeyHex: string, signatureHex: string): boolean => {
+  const k1Buffer = new Uint8Array(Buffer.from(k1, 'hex'));
+  const pubKeyBuffer = new Uint8Array(Buffer.from(pubKeyHex, 'hex'));
+  const sigBuffer = new Uint8Array(Buffer.from(signatureHex, 'hex'));
+
+  if (!secp256k1.publicKeyVerify(pubKeyBuffer)) {
+    return false;
+  }
+
+  return secp256k1.ecdsaVerify(sigBuffer, k1Buffer, pubKeyBuffer);
 }
+ 
+export const generateRandomK1 = (): string => {
+  return crypto.randomBytes(32).toString('hex');
+};
+ 
+export const generateLNURLAuth = (action: 'login' | 'register' | 'link' | 'auth'): string => {
+  const k1 = generateRandomK1();
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL+'/lightning';  
+  return `${baseUrl}?tag=login&k1=${k1}&action=${action}`;
+};

@@ -11,8 +11,10 @@ import Circle from "@/components/icons/Circle";
 import Rhombus from "@/components/icons/Rhombus";
 import Square from "@/components/icons/Square";
 import Triangle from "@/components/icons/Triangle";
+import * as dotenv from "dotenv"
+dotenv.config()
 
-export const WEBSOCKET_URL = "http://localhost:5157";
+export const WEBSOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL ;
 
 export const ANSWERS_COLORS = [
   "bg-red-500",

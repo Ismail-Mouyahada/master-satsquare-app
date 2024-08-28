@@ -16,15 +16,12 @@ export default function SignIn() {
 
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Sign-in attempt:', { email, password });
 
         const result = await signIn('credentials', {
             redirect: false,
             email,
             password,
         });
-
-        console.log('Sign-in result:', result);
 
         if (result?.error) {
             toast.error("la connexion a echouée, vos identifiants sont invalides ou expirés.");
@@ -49,6 +46,7 @@ export default function SignIn() {
                         <input
                             id="email"
                             type="email"
+                            placeholder="E-mail ..."
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
@@ -59,6 +57,7 @@ export default function SignIn() {
                         <input
                             id="password"
                             type="password"
+                            placeholder="Mot de passe ..."
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"

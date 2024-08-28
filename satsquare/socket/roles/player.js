@@ -75,7 +75,7 @@ var Player = {
             }
         });
     }); },
-    join: function (game, _io, socket, player) { return __awaiter(void 0, void 0, void 0, function () {
+    join: function (game, io, socket, player) { return __awaiter(void 0, void 0, void 0, function () {
         var error_2, playerData;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -110,8 +110,11 @@ var Player = {
                         id: socket.id,
                         points: 0,
                     };
-                    socket.to(player.room).emit("manager:newPlayer", __assign({}, playerData));
                     game.players.push(playerData);
+                    // Emit to manager that a new player has joined
+                    socket.to(player.room).emit("manager:newPlayer", __assign({}, playerData));
+                    // Emit the updated waiting list to all players
+                    io.to(player.room).emit("game:updateWaitingList", game.players);
                     socket.emit("game:successJoin");
                     return [2 /*return*/];
             }

@@ -1,5 +1,6 @@
+import { Role } from "@/types/main-types/main";
 import { FC } from "react";
-import { Role } from "@prisma/client";
+ 
 
 interface RoleTableProps {
   roles: Role[];

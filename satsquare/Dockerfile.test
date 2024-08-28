@@ -1,0 +1,23 @@
+# Dockerfile.test
+FROM node:18-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Set environment variables for testing
+ENV NODE_ENV=test
+
+# Expose ports for testing
+EXPOSE 3000 5157
+
+# Run tests
+CMD ["npm", "run", "test:e2e"]

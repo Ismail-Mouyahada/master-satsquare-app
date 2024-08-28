@@ -41,6 +41,8 @@ var generateRoomId_js_1 = require("../utils/generateRoomId.js");
 var cooldown_js_1 = require("../utils/cooldown.js");
 var deepClone_js_1 = require("../utils/deepClone.js");
 var round_js_1 = require("../utils/round.js");
+var client_1 = require("@prisma/client");
+var prisma = new client_1.PrismaClient();
 var Manager = {
     createRoom: function (game, io, socket, password) {
         if (game.password !== password) {
@@ -110,28 +112,60 @@ var Manager = {
         }
         (0, cooldown_js_1.abortCooldown)();
     },
-    showLeaderboard: function (game, io, socket) {
-        if (!game.questions[game.currentQuestion + 1]) {
-            socket.emit("game:status", {
-                name: "FINISH",
-                data: {
-                    subject: game.subject,
-                    top: game.players
-                        .slice(0, 3)
-                        .sort(function (a, b) { return b.points - a.points; }),
-                },
-            });
-            Object.assign(game, (0, deepClone_js_1.default)(quiz_config_js_1.GAME_STATE_INIT));
-            return;
-        }
-        socket.emit("game:status", {
-            name: "SHOW_LEADERBOARD",
-            data: {
-                leaderboard: game.players
-                    .sort(function (a, b) { return b.points - a.points; })
-                    .slice(0, 5),
-            },
+    showLeaderboard: function (game, io, socket) { return __awaiter(void 0, void 0, void 0, function () {
+        var topPlayers, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!!game.questions[game.currentQuestion + 1]) return [3 /*break*/, 6];
+                    socket.emit("game:status", {
+                        name: "FINISH",
+                        data: {
+                            subject: game.subject,
+                            top: game.players
+                                .slice(0, 3)
+                                .sort(function (a, b) { return b.points - a.points; }),
+                        },
+                    });
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    topPlayers = game.players
+                        .sort(function (a, b) { return b.points - a.points; })
+                        .slice(0, 3);
+                    if (!(topPlayers.length > 0)) return [3 /*break*/, 3];
+                    return [4 /*yield*/, prisma.topScore.createMany({
+                            data: topPlayers.map(function (player) { return ({
+                                username: player.username,
+                                points: player.points,
+                                room: player.room,
+                                satsWinner: player.points, // Assuming satsWinner is equal to points
+                                sujet: game.subject,
+                            }); }),
+                        })];
+                case 2:
+                    _a.sent();
+                    _a.label = 3;
+                case 3: return [3 /*break*/, 5];
+                case 4:
+                    error_1 = _a.sent();
+                    console.error("Error saving top scores:", error_1);
+                    return [3 /*break*/, 5];
+                case 5:
+                    Object.assign(game, (0, deepClone_js_1.default)(quiz_config_js_1.getGameState));
+                    return [2 /*return*/];
+                case 6:
+                    socket.emit("game:status", {
+                        name: "SHOW_LEADERBOARD",
+                        data: {
+                            leaderboard: game.players
+                                .sort(function (a, b) { return b.points - a.points; })
+                                .slice(0, 5),
+                        },
+                    });
+                    return [2 /*return*/];
+            }
         });
-    },
+    }); },
 };
 exports.default = Manager;

@@ -1,6 +1,5 @@
 import { FC, useState, useEffect, FormEvent } from "react";
-import { Role } from "@prisma/client";
-import { Utilisateur } from "@/types/entities-types";
+import { Role, Utilisateur } from "@/types/main-types/main";
 
 interface UtilisateurModalProps {
   utilisateur?: Utilisateur | null;
@@ -26,10 +25,10 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
   useEffect(() => {
     if (utilisateur) {
       setFormData({
-        pseudo: utilisateur.pseudo,
-        email: utilisateur.email,
-        mot_de_passe: utilisateur.mot_de_passe,
-        role_id: utilisateur.role_id,
+        pseudo: utilisateur.pseudo || "",
+        email: utilisateur.email || "",
+        mot_de_passe: utilisateur.mot_de_passe || "",
+        role_id: utilisateur.roleId || null,
       });
     } else {
       setFormData({
@@ -69,7 +68,7 @@ const UtilisateurModal: FC<UtilisateurModalProps> = ({
     e.preventDefault();
     const payload = {
       ...formData,
-      role_id: formData.role_id ? Number(formData.role_id) : null, // Convert role_id to number
+      roleId: formData.role_id ? Number(formData.role_id) : null, // Convert role_id to number
       statut_compte: true,
     };
     const method = utilisateur ? "PUT" : "POST";

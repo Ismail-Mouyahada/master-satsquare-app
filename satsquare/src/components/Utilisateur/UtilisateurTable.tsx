@@ -1,4 +1,4 @@
-import { Utilisateur } from "@/types/entities-types";
+import { Utilisateur } from "@/types/main-types/main";
 import { FC } from "react";
 
 interface UtilisateurTableProps {
@@ -33,21 +33,21 @@ const UtilisateurTable: FC<UtilisateurTableProps> = ({
               <td className="border px-4 py-2">{utilisateur.email}</td>
               <td className="border px-4 py-2">{utilisateur.role?.nom}</td>
               <td className="border px-4 py-2">
-                {utilisateur.sponsor_id ? (
+                {utilisateur.sponsorId ? (
                   <span className="text-green-500">✔️</span>
                 ) : (
                   <span className="text-red-500">❌</span>
                 )}
               </td>
               <td className="border px-4 py-2">
-                {utilisateur.association_id ? (
+                {utilisateur.associationId ? (
                   <span className="text-green-500">✔️</span>
                 ) : (
                   <span className="text-red-500">❌</span>
                 )}
               </td>
               <td className="border px-4 py-2">
-                {new Date(utilisateur.cree_le).toLocaleString()}
+                {new Date(utilisateur.creeLe).toLocaleString()}
               </td>
               <td className="border px-4 py-2 space-x-2">
                 <button

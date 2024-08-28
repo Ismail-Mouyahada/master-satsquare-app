@@ -1,9 +1,12 @@
 import { Server, Socket } from "socket.io";
-import { GAME_STATE_INIT } from "../quiz.config.js";
+import { getGameState } from "../quiz.config.js";
 import generateRoomId from "../utils/generateRoomId.js";
 import { abortCooldown, cooldown, sleep } from "../utils/cooldown.js";
 import deepClone from "../utils/deepClone.js";
 import { startRound } from "../utils/round.js";
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 
 interface PlayerData {
   username: string;
@@ -107,7 +110,7 @@ const Manager = {
     abortCooldown();
   },
 
-  showLeaderboard: (game: Game, io: Server, socket: Socket) => {
+  showLeaderboard: async (game: Game, io: Server, socket: Socket) => {
     if (!game.questions[game.currentQuestion + 1]) {
       socket.emit("game:status", {
         name: "FINISH",
@@ -119,7 +122,28 @@ const Manager = {
         },
       });
 
-      Object.assign(game, deepClone(GAME_STATE_INIT));
+      // Save top scores to the database, handling cases with fewer than 3 players
+      try {
+        const topPlayers = game.players
+          .sort((a, b) => b.points - a.points)
+          .slice(0, 3);
+
+        if (topPlayers.length > 0) {
+          await prisma.topScore.createMany({
+            data: topPlayers.map(player => ({
+              username: player.username,
+              points: player.points,
+              room: player.room,
+              satsWinner: player.points, // Assuming satsWinner is equal to points
+              sujet: game.subject,
+            })),
+          });
+        }
+      } catch (error) {
+        console.error("Error saving top scores:", error);
+      }
+
+      Object.assign(game, deepClone(getGameState));
       return;
     }
 
@@ -132,6 +156,7 @@ const Manager = {
       },
     });
   },
+
 };
 
 export default Manager;

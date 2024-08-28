@@ -1,4 +1,5 @@
 "use client";
+
 import { FC, useEffect, useState } from "react";
 import UtilisateurTable from "@/components/Utilisateur/UtilisateurTable";
 import UtilisateurModal from "@/components/Utilisateur/UtilisateurModal";
@@ -7,10 +8,12 @@ import Loader from "@/components/Loader";
 import { FaUser } from "react-icons/fa";
 import UtilisateursearchBar from "@/components/Utilisateur/UtilisateurSearchBar";
 import PageHeader from "@/components/PageHeader/PageHeader";
-import { Utilisateur } from "@/types/entities-types";
+import { Utilisateur } from "@/types/main-types/main";
 import ProfileDetail from "@/components/ProfileDetail/ProfileDetail";
+import { useSession } from "next-auth/react";
 
 const UtilisateursPage: FC = () => {
+  const { data: session, status } = useSession();
   const [utilisateurs, setUtilisateurs] = useState<Utilisateur[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -89,12 +92,20 @@ const UtilisateursPage: FC = () => {
     <div className="flex flex-row w-full h-full">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full ">
-        <div className="h-full p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="min-h-full ml-[4em] p-4 bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Profil"
             icon={<FaUser className="scale-[1.5]" color="#6D6B81" />}
           />
-          <ProfileDetail />
+          {status === "loading" ? (
+            <Loader />
+          ) : status === "authenticated" ? (
+            <div>
+              <ProfileDetail />
+            </div>
+          ) : (
+            <p>User not authenticated</p>
+          )}
         </div>
       </div>
     </div>

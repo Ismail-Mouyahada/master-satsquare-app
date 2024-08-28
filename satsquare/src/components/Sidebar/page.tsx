@@ -31,8 +31,8 @@ const links = [
   { href: "/reward", icon: <FaDonate />, tooltip: "Récompenses" },
   { href: "/evenements", icon: <FaCalendarAlt />, tooltip: "Evenements" },
   { href: "/profile", icon: <FaUserAlt />, tooltip: "Profile" },
-  { href: "/lightning", icon: <FaLightbulb />, tooltip: "Lightning" },
-  { href: "/configurations", icon: <FaCogs />, tooltip: "Configurations" },
+  { href: "https://lightning.ismail-mouyahada.com/", icon: <FaLightbulb />, tooltip: "Lightning" },
+  // { href: "/configurations", icon: <FaCogs />, tooltip: "Configurations" },
 ];
 
 const Sidebar: React.FC = () => {

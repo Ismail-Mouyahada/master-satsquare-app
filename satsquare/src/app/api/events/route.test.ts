@@ -32,7 +32,7 @@ describe("API Routes: Evenements", () => {
           recompense_joueurs: 100,
           don_association: 50,
           don_plateforme: 20,
-          cree_le: new Date(),
+          creeLe: new Date(),
           mis_a_jour_le: new Date(),
         },
       ];
@@ -49,7 +49,7 @@ describe("API Routes: Evenements", () => {
           ...event,
           commence_a: event.commence_a.toISOString(),
           termine_a: event.termine_a.toISOString(),
-          cree_le: event.cree_le.toISOString(),
+          creeLe: event.creeLe.toISOString(),
           mis_a_jour_le: event.mis_a_jour_le.toISOString(),
         }))
       );
@@ -69,7 +69,7 @@ describe("API Routes: Evenements", () => {
           recompense_joueurs: 100,
           don_association: 50,
           don_plateforme: 20,
-          cree_le: new Date(),
+          creeLe: new Date(),
           mis_a_jour_le: new Date(),
         },
       ];
@@ -88,7 +88,7 @@ describe("API Routes: Evenements", () => {
           ...event,
           commence_a: event.commence_a.toISOString(),
           termine_a: event.termine_a.toISOString(),
-          cree_le: event.cree_le.toISOString(),
+          creeLe: event.creeLe.toISOString(),
           mis_a_jour_le: event.mis_a_jour_le.toISOString(),
         }))
       );
@@ -133,7 +133,7 @@ describe("API Routes: Evenements", () => {
         ...requestData,
         commence_a: new Date(requestData.commence_a),
         termine_a: new Date(requestData.termine_a),
-        cree_le: new Date(),
+        creeLe: new Date(),
         mis_a_jour_le: new Date(),
       };
 
@@ -147,7 +147,7 @@ describe("API Routes: Evenements", () => {
         ...mockNewEvent,
         commence_a: mockNewEvent.commence_a.toISOString(),
         termine_a: mockNewEvent.termine_a.toISOString(),
-        cree_le: mockNewEvent.cree_le.toISOString(),
+        creeLe: mockNewEvent.creeLe.toISOString(),
         mis_a_jour_le: mockNewEvent.mis_a_jour_le.toISOString(),
       });
       expect(prisma.evenement.create).toHaveBeenCalledTimes(1);

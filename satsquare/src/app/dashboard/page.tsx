@@ -18,10 +18,10 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="w-full bg-[#F3F3FF] flex min-h-screen">
+      <div className="w-full   bg-[#F3F3FF] flex min-h-screen">
         <Sidebar />
 
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md w-full flex flex-col justify-between">
+        <div className="p-4   bg-slate-50 rounded-lg shadow-md w-full flex flex-col justify-between">
           <PageHeader
             title="Dashboard"
             icon={<FaHome className="scale-[1.5]" color="#6D6B81" />}

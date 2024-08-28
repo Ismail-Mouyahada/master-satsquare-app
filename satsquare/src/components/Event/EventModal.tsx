@@ -1,5 +1,5 @@
+import { Evenement } from "@/types/main-types/main";
 import { FC, useState, useEffect, FormEvent } from "react";
-import { Evenement } from "@prisma/client";
 
 interface EventModalProps {
   event?: Evenement | null;
@@ -19,7 +19,12 @@ const EventModal: FC<EventModalProps> = ({
     description: "",
     commence_a: "",
     termine_a: "",
-    est_public: false,
+    estPublic: false,
+    estGratuit: false,
+    satMinimum: 0,
+    recompenseJoueurs: 0,
+    donAssociation: 0,
+    donPlateforme: 0,
   });
 
   useEffect(() => {
@@ -27,9 +32,14 @@ const EventModal: FC<EventModalProps> = ({
       setFormData({
         nom: event.nom,
         description: event.description,
-        commence_a: new Date(event.commence_a).toISOString().substring(0, 16),
-        termine_a: new Date(event.termine_a).toISOString().substring(0, 16),
-        est_public: event.est_public,
+        commence_a: new Date(event.commenceA).toISOString().substring(0, 16),
+        termine_a: new Date(event.termineA).toISOString().substring(0, 16),
+        estPublic: event.estPublic,
+        estGratuit: event.estGratuit,
+        satMinimum: event.satMinimum || 0,
+        recompenseJoueurs: event.recompenseJoueurs || 0,
+        donAssociation: event.donAssociation || 0,
+        donPlateforme: event.donPlateforme || 0,
       });
     } else {
       setFormData({
@@ -37,7 +47,12 @@ const EventModal: FC<EventModalProps> = ({
         description: "",
         commence_a: "",
         termine_a: "",
-        est_public: false,
+        estPublic: false,
+        estGratuit: false,
+        satMinimum: 0,
+        recompenseJoueurs: 0,
+        donAssociation: 0,
+        donPlateforme: 0,
       });
     }
   }, [event]);
@@ -63,9 +78,16 @@ const EventModal: FC<EventModalProps> = ({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const payload = {
-      ...formData,
-      commence_a: new Date(formData.commence_a),
-      termine_a: new Date(formData.termine_a),
+      nom: formData.nom,
+      description: formData.description,
+      commenceA: new Date(formData.commence_a.replace("T", " ") + ":00"), // Ensure time is preserved
+      termineA: new Date(formData.termine_a.replace("T", " ") + ":00"), // Ensure time is preserved
+      estPublic: formData.estPublic,
+      estGratuit: formData.estGratuit,
+      satMinimum: parseInt(formData.satMinimum.toString(), 10), // Convert to a number
+      recompenseJoueurs: parseInt(formData.recompenseJoueurs.toString(), 10), // Convert to a number
+      donAssociation: parseInt(formData.donAssociation.toString(), 10), // Convert to a number
+      donPlateforme: parseInt(formData.donPlateforme.toString(), 10), // Convert to a number
     };
     const method = event ? "PUT" : "POST";
     const url = event ? `/api/events/${event.id}` : "/api/events";
@@ -142,24 +164,101 @@ const EventModal: FC<EventModalProps> = ({
               required
             />
           </div>
-          <div className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              name="est_public"
-              id="est_public"
-              checked={formData.est_public}
-              onChange={handleChange}
-              className="hidden"
-            />
-            <label
-              htmlFor="est_public"
-              className="flex items-center space-x-2 cursor-pointer"
-            >
-              <span
-                className={`w-8 h-8 rounded-full border-4 ${formData.est_public ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
-              ></span>
-              <span className="text-sm font-medium text-gray-700">Public</span>
-            </label>
+          <div className="flex mb-4">
+            <div className="flex items-center justify-center space-x-2 w-1/2">
+              <input
+                type="checkbox"
+                name="estPublic"
+                id="estPublic"
+                checked={formData.estPublic}
+                onChange={handleChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="estPublic"
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <span
+                  className={`w-8 h-8 rounded-full border-4 ${formData.estPublic ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
+                ></span>
+                <span className="text-sm font-medium text-gray-700">
+                  Public
+                </span>
+              </label>
+            </div>
+            <div className="flex items-center justify-center space-x-2 w-1/2">
+              <input
+                type="checkbox"
+                name="estGratuit"
+                id="estGratuit"
+                checked={formData.estGratuit}
+                onChange={handleChange}
+                className="hidden"
+              />
+              <label
+                htmlFor="estGratuit"
+                className="flex items-center space-x-2 cursor-pointer"
+              >
+                <span
+                  className={`w-8 h-8 rounded-full border-4 ${formData.estGratuit ? "bg-black border-gray-300" : "bg-slate-50 border-gray-300"}`}
+                ></span>
+                <span className="text-sm font-medium text-gray-700">
+                  Gratuit
+                </span>
+              </label>
+            </div>
+          </div>
+          <div className="flex mb-4">
+            <div className="flex items-center justify-center space-x-2 w-1/2 mx-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Sat Minimum
+              </label>
+              <input
+                type="number"
+                name="satMinimum"
+                value={formData.satMinimum}
+                onChange={handleChange}
+                className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
+              />
+            </div>
+            <div className="flex items-center justify-center space-x-2 w-1/2 mx-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Récompense Joueurs
+              </label>
+              <input
+                type="number"
+                name="recompenseJoueurs"
+                value={formData.recompenseJoueurs}
+                onChange={handleChange}
+                className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
+              />
+            </div>
+          </div>
+          <div className="flex mb-4">
+            <div className="flex items-center justify-center space-x-2 w-1/2 mx-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Don Association
+              </label>
+              <input
+                type="number"
+                name="donAssociation"
+                value={formData.donAssociation}
+                onChange={handleChange}
+                className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
+              />
+            </div>
+            <div className="flex items-center justify-center space-x-2 w-1/2 mx-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Don Plateforme
+              </label>
+              <input
+                type="number"
+                name="donPlateforme"
+                value={formData.donPlateforme}
+                onChange={handleChange}
+                className="w-full px-8 py-3 border-none rounded-md shadow outline-none bg-slate-100 text-[#6a6b74]"
+              />
+            </div>
           </div>
           <div className="flex justify-end space-x-4">
             <button

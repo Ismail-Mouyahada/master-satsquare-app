@@ -1,16 +1,17 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { Evenement } from "@prisma/client";
-import EventTable from "@/components/Event/EventTable";
-import EventSearchBar from "@/components/Event/EventSearchBar";
-import EventModal from "@/components/Event/EventModal";
-import PageHeader from "@/components/PageHeader/PageHeader";
 import Sidebar from "@/components/Sidebar/page";
 import Loader from "@/components/Loader";
-import { FaCalculator } from "react-icons/fa";
+import { FaCalendarAlt } from "react-icons/fa";
+import PageHeader from "@/components/PageHeader/PageHeader";
+import { Evenement } from "@/types/main-types/main";
+import EventSearchBar from "@/components/Event/EventSearchBar";
+import EventTable from "@/components/Event/EventTable";
+import EventModal from "@/components/Event/EventModal";
 
 const EventsPage: FC = () => {
   const [events, setEvents] = useState<Evenement[]>([]);
+  const [initialEvents, setInitialEvents] = useState<Evenement[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -22,15 +23,16 @@ const EventsPage: FC = () => {
     fetchEvents();
   }, []);
 
-  const fetchEvents = async (name: string = "") => {
+  const fetchEvents = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/events?name=${name}`);
+      const response = await fetch(`/api/events`);
       if (!response.ok) {
         throw new Error("Failed to fetch events");
       }
       const data: Evenement[] = await response.json();
       setEvents(data);
+      setInitialEvents(data); // Save the initial list for filtering
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -38,8 +40,15 @@ const EventsPage: FC = () => {
     }
   };
 
-  const handleSave = async () => {
-    await fetchEvents();
+  const handleSearch = (name: string) => {
+    if (name === "") {
+      setEvents(initialEvents); // Reset to initial list if search term is empty
+    } else {
+      const filteredEvents = initialEvents.filter((event) =>
+        event.nom.toLowerCase().includes(name.toLowerCase())
+      );
+      setEvents(filteredEvents);
+    }
   };
 
   const openModal = (event: Evenement | null = null) => {
@@ -70,26 +79,22 @@ const EventsPage: FC = () => {
           "Content-Type": "application/json",
         },
       });
-      handleSave();
+      fetchEvents();
       closeDeleteModal();
     }
-  };
-
-  const handleSearch = (name: string) => {
-    fetchEvents(name);
   };
 
   if (loading) return <Loader />;
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="flex flex-row w-full">
+    <div className="flex flex-row w-full min-h-screen">
       <Sidebar />
       <div className="bg-[#F3F3FF] w-full">
-        <div className="p-4 bg-slate-50 rounded-lg shadow-md">
+        <div className="p-4 ml-[4em] bg-slate-50 rounded-lg shadow-md">
           <PageHeader
             title="Evenements"
-            icon={<FaCalculator className="scale-[1.5]" color="#6D6B81" />}
+            icon={<FaCalendarAlt className="scale-[1.5]" color="#6D6B81" />}
           />
           <EventSearchBar onAdd={() => openModal()} onSearch={handleSearch} />
           <EventTable
@@ -98,12 +103,14 @@ const EventsPage: FC = () => {
             onDelete={openDeleteModal}
           />
         </div>
-        <EventModal
-          event={selectedEvent}
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onSave={handleSave}
-        />
+        {isModalOpen && (
+          <EventModal
+            event={selectedEvent}
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onSave={fetchEvents}
+          />
+        )}
         {isDeleteModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="p-6 bg-slate-50 rounded-lg shadow-lg text-slate-500">

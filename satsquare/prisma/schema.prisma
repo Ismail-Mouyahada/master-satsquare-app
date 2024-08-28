@@ -7,49 +7,110 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Quiz {
+  id              Int             @id @default(autoincrement())
+  room            String? // room can be null
+  manager         String? // manager can be null
+  players         Player[]        @relation("QuizPlayers")
+  started         Boolean         @default(false)
+  subject         String
+  password        String
+  questions       Question[]      @relation("QuizQuestions")
+  playersAnswers  PlayersAnswer[] @relation("QuizPlayersAnswers")
+  roundStartTime  Int             @default(0)
+  currentQuestion Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  utilisateur   Utilisateur? @relation(fields: [utilisateurId], references: [id], onDelete: Cascade)
+  utilisateurId Int?
+
+  evenementsQuiz EvenementsQuiz[] // Relation to EvenementsQuiz
+}
+
+model Player {
+  id      Int             @id @default(autoincrement())
+  name    String
+  quiz    Quiz?           @relation("QuizPlayers", fields: [quizId], references: [id], onDelete: Cascade)
+  quizId  Int?
+  answers PlayersAnswer[] @relation("PlayerAnswers")
+}
+
+model Question {
+  id             Int             @id @default(autoincrement())
+  quiz           Quiz            @relation("QuizQuestions", fields: [quizId], references: [id], onDelete: Cascade)
+  quizId         Int
+  time           Int
+  image          String? // image can be null
+  answers        Json // Store as JSON
+  cooldown       Int
+  question       String
+  solution       Int // index of the correct answer
+  playersAnswers PlayersAnswer[] @relation("QuestionAnswers")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model PlayersAnswer {
+  id         Int      @id @default(autoincrement())
+  player     Player   @relation("PlayerAnswers", fields: [playerId], references: [id], onDelete: Cascade)
+  playerId   Int
+  quiz       Quiz     @relation("QuizPlayersAnswers", fields: [quizId], references: [id], onDelete: Cascade)
+  quizId     Int
+  question   Question @relation("QuestionAnswers", fields: [questionId], references: [id], onDelete: Cascade)
+  questionId Int
+  answer     Int // index of the selected answer
+  answeredAt DateTime @default(now())
+}
+
 model Utilisateur {
-  id             Int              @id @default(autoincrement())
-  pseudo         String           @unique
-  email          String           @unique
-  role_id        Int?
-  mot_de_passe   String
-  association_id Int?
-  statut_compte  Boolean
-  sponsor_id     Int?
-  cree_le        DateTime         @default(now())
-  mis_a_jour_le  DateTime         @updatedAt
-  Evenement      Evenement[]
-  EvenementsQuiz EvenementsQuiz[]
-  Quiz           Quiz[]
-  association    Association?     @relation(fields: [association_id], references: [id], onDelete: Cascade)
-  role           Role?            @relation(fields: [role_id], references: [id], onDelete: Cascade)
-  sponsor        Sponsor?         @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
-  Game           Game[]
+  id            Int      @id @default(autoincrement())
+  pseudo        String?  @unique
+  email         String   @unique
+  roleId        Int?
+  mot_de_passe  String
+  associationId Int?
+  statutCompte  Boolean? @default(false)
+  sponsorId     Int?
+  creeLe        DateTime @default(now())
+  misAJourLe    DateTime @updatedAt
+  walletId      String? // Optional field for the LNbits wallet ID
+  balance       BigInt?
+
+  quizzes        Quiz[]
+  evenements     Evenement[]
+  evenementsQuiz EvenementsQuiz[]
+
+  association Association? @relation(fields: [associationId], references: [id], onDelete: Cascade)
+  role        Role?        @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  sponsor     Sponsor?     @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
 }
 
 model Association {
-  id                Int              @id @default(autoincrement())
-  nom               String
-  adresse_eclairage String
-  valide            Int
-  est_confirme      Boolean
-  logo_url          String
-  cree_le           DateTime         @default(now())
-  mis_a_jour_le     DateTime         @updatedAt
-  AssociationDons   AssociationDon[]
-  Utilisateurs      Utilisateur[]
+  id               Int      @id @default(autoincrement())
+  nom              String
+  adresseEclairage String
+  valide           Int
+  estConfirme      Boolean
+  logoUrl          String
+  creeLe           DateTime @default(now())
+  misAJourLe       DateTime @updatedAt
+
+  associationDons AssociationDon[]
+  utilisateurs    Utilisateur[]
 }
 
 model Sponsor {
-  id                Int           @id @default(autoincrement())
-  nom               String
-  valide            Int
-  adresse_eclairage String
-  est_confirme      Boolean
-  cree_le           DateTime      @default(now())
-  mis_a_jour_le     DateTime      @updatedAt
-  Dons              Don[]
-  Utilisateurs      Utilisateur[]
+  id               Int      @id @default(autoincrement())
+  nom              String
+  valide           Int
+  adresseEclairage String
+  estConfirme      Boolean
+  creeLe           DateTime @default(now())
+  misAJourLe       DateTime @updatedAt
+
+  dons         Don[]
+  utilisateurs Utilisateur[]
 }
 
 model Role {
@@ -59,103 +120,71 @@ model Role {
 }
 
 model Evenement {
-  id                 Int              @id @default(autoincrement())
-  nom                String
-  description        String
-  user_id            Int?
-  commence_a         DateTime
-  termine_a          DateTime
-  est_public         Boolean
-  est_gratuit        Boolean
-  sat_minimum        Int
-  recompense_joueurs Int
-  don_association    Int
-  don_plateforme     Int
-  cree_le            DateTime         @default(now())
-  mis_a_jour_le      DateTime         @updatedAt
-  Dons               Don[]
-  utilisateur        Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  EvenementsQuiz     EvenementsQuiz[]
+  id                Int      @id @default(autoincrement())
+  nom               String
+  description       String
+  userId            Int?
+  commenceA         DateTime
+  termineA          DateTime
+  estPublic         Boolean
+  estGratuit        Boolean
+  satMinimum        Int
+  recompenseJoueurs Int
+  donAssociation    Int
+  donPlateforme     Int
+  creeLe            DateTime @default(now())
+  misAJourLe        DateTime @updatedAt
+
+  dons           Don[]
+  utilisateur    Utilisateur?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evenementsQuiz EvenementsQuiz[]
 }
 
 model Don {
-  id              Int              @id @default(autoincrement())
-  sponsor_id      Int
-  evenement_id    Int
-  montant         Float
-  cree_le         DateTime         @default(now())
-  mis_a_jour_le   DateTime         @updatedAt
-  AssociationDons AssociationDon[]
-  evenement       Evenement        @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
-  sponsor         Sponsor          @relation(fields: [sponsor_id], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  sponsorId   Int
+  evenementId Int
+  montant     Float
+  creeLe      DateTime @default(now())
+  misAJourLe  DateTime @updatedAt
+
+  associationDons AssociationDon[]
+  evenement       Evenement        @relation(fields: [evenementId], references: [id], onDelete: Cascade)
+  sponsor         Sponsor          @relation(fields: [sponsorId], references: [id], onDelete: Cascade)
 }
 
 model AssociationDon {
-  id             Int         @id @default(autoincrement())
-  don_id         Int
-  association_id Int
-  association    Association @relation(fields: [association_id], references: [id], onDelete: Cascade)
-  don            Don         @relation(fields: [don_id], references: [id], onDelete: Cascade)
-}
-
-model Quiz {
-  id             Int              @id @default(autoincrement())
-  titre          String
-  user_id        Int?
-  categorie      String
-  cree_le        DateTime         @default(now())
-  mis_a_jour_le  DateTime         @updatedAt
-  EvenementsQuiz EvenementsQuiz[]
-  Questions      Question[]
-  utilisateur    Utilisateur?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  Game           Game[]
+  id            Int         @id @default(autoincrement())
+  donId         Int
+  associationId Int
+  association   Association @relation(fields: [associationId], references: [id], onDelete: Cascade)
+  don           Don         @relation(fields: [donId], references: [id], onDelete: Cascade)
 }
 
 model EvenementsQuiz {
-  id           Int         @id @default(autoincrement())
-  score        Int
-  evenement_id Int
-  quiz_id      Int
-  question_id  Int
-  reponse_id   Int
-  user_id      Int
-  evenement    Evenement   @relation(fields: [evenement_id], references: [id], onDelete: Cascade)
-  quiz         Quiz        @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
-  utilisateur  Utilisateur @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  id          Int @id @default(autoincrement())
+  score       Int
+  evenementId Int
+  quizId      Int
+  questionId  Int
+  reponseId   Int
+  userId      Int
 
-  @@unique([evenement_id, quiz_id, question_id, reponse_id, user_id], name: "unique_event_quiz_question_response_user")
+  evenement   Evenement   @relation(fields: [evenementId], references: [id], onDelete: Cascade)
+  quiz        Quiz        @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  utilisateur Utilisateur @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([evenementId, quizId, questionId, reponseId, userId], name: "unique_event_quiz_question_response_user")
 }
 
-model Question {
-  id             Int       @id @default(autoincrement())
-  quiz_id        Int?
-  texte_question String
-  quiz           Quiz?     @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
-  Reponses       Reponse[]
-}
-
-model Reponse {
-  id            Int       @id @default(autoincrement())
-  question_id   Int?
-  texte_reponse String
-  est_correcte  Boolean
-  question      Question? @relation(fields: [question_id], references: [id], onDelete: Cascade)
-}
-
-model Game {
-  id                Int              @id @default(autoincrement())
-  room              String           @unique
-  password          String
-  manager_id        Int?
-  started           Boolean          @default(false)
-  subject           String
-  currentQuestion   Int              @default(0)
-  roundStartTime    DateTime?
-  players           Json
-  playersAnswer     Json
-  cree_le           DateTime         @default(now())
-  mis_a_jour_le     DateTime         @updatedAt
-  utilisateur       Utilisateur?     @relation(fields: [manager_id], references: [id], onDelete: Cascade)
-  quiz_id           Int?
-  quiz              Quiz?            @relation(fields: [quiz_id], references: [id], onDelete: Cascade)
+model TopScore {
+  id               Int       @id @default(autoincrement())
+  username         String?
+  room             String?
+  points           Int       @default(0)
+  sujet            String?
+  idQuiz           Int?
+  satsWinner       Float?    @default(0)
+  dateCreation     DateTime  @default(now())
+  dateModification DateTime? @updatedAt
 }

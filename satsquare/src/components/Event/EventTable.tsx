@@ -1,5 +1,6 @@
+import { Evenement } from '@/types/main-types/main';
 import { FC } from 'react';
-import { Evenement } from '@prisma/client';
+ 
 
 interface EventTableProps {
   events: Evenement[];
@@ -26,10 +27,10 @@ const EventTable: FC<EventTableProps> = ({ events, onEdit, onDelete }) => {
             <tr key={event.id}>
               <td className="border px-4 py-2">{event.nom}</td>
               <td className="border px-4 py-2">{event.description}</td>
-              <td className="border px-4 py-2">{new Date(event.commence_a).toLocaleString()}</td>
-              <td className="border px-4 py-2">{new Date(event.termine_a).toLocaleString()}</td>
+              <td className="border px-4 py-2">{new Date(event.commenceA).toLocaleString()}</td>
+              <td className="border px-4 py-2">{new Date(event.termineA).toLocaleString()}</td>
               <td className="border px-4 py-2">
-                {event.est_public ? <span className="text-green-500">✔️</span> : <span className="text-red-500">❌</span>}
+                {event.estPublic ? <span className="text-green-500">✔️</span> : <span className="text-red-500">❌</span>}
               </td>
               <td className="border px-4 py-2 space-x-2">
                 <button className="bg-action p-2 rounded-md" onClick={() => onEdit(event)}>✏️</button>

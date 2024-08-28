@@ -1,11 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useQRCode } from 'next-qrcode';
+import { useQRCode } from "next-qrcode";
 import { useSocketContext } from "@/context/socket";
 import GameWrapper from "@/components/game/GameWrapper/page";
 import ManagerPassword from "@/components/ManagerPassword";
 import { GAME_STATES, GAME_STATE_COMPONENTS_MANAGER } from "../constants/db";
+
+interface GameStatus {
+  name: string;
+  data: any;
+  question: any;
+}
 
 export default function Manager() {
   const { Canvas } = useQRCode();
@@ -21,8 +27,8 @@ export default function Manager() {
 
   useEffect(() => {
     if (isMounted) {
-      const savedState = localStorage.getItem('gameState');
-      const savedInviteCode = localStorage.getItem('inviteCode');
+      const savedState = localStorage.getItem("gameState");
+      const savedInviteCode = localStorage.getItem("inviteCode");
 
       if (savedState) {
         setState(JSON.parse(savedState));
@@ -34,7 +40,12 @@ export default function Manager() {
   }, [isMounted]);
 
   useEffect(() => {
-    const handleGameStatus = (status: { name: any; data: any; question: any; }) => {
+    const handleGameStatus = (status: GameStatus) => {
+      if (!status || !status.name) {
+        console.error("Invalid status received:", status);
+        return;
+      }
+
       console.log("Received game status:", status); // Debugging log
       setState((prevState) => {
         const newState = {
@@ -49,8 +60,8 @@ export default function Manager() {
             current: status.question,
           },
         };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('gameState', JSON.stringify(newState));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("gameState", JSON.stringify(newState));
         }
         return newState;
       });
@@ -59,8 +70,8 @@ export default function Manager() {
     const handleInviteCode = (roomInvite: string) => {
       console.log("Received invite code:", roomInvite); // Debugging log
       setInviteCode(roomInvite);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('inviteCode', roomInvite);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("inviteCode", roomInvite);
       }
 
       setState((prevState) => {
@@ -75,8 +86,8 @@ export default function Manager() {
             },
           },
         };
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('gameState', JSON.stringify(newState));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("gameState", JSON.stringify(newState));
         }
         return newState;
       });
@@ -112,15 +123,15 @@ export default function Manager() {
         socket.emit("manager:nextQuestion");
         break;
       default:
+        console.log("No matching case for state:", state.status.name);
         socket.emit("manager:startGame");
-        console.log("No matching case for state:", state.status.name);  
     }
   };
 
   const handleLogout = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('gameState');
-      localStorage.removeItem('inviteCode');
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("gameState");
+      localStorage.removeItem("inviteCode");
     }
     setState({
       ...GAME_STATES,

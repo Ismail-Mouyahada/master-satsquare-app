@@ -63,7 +63,7 @@ export default function Podium({ data }: any) {
 
   const saveResults = useCallback(async () => {
     try {
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < top.length; i++) {
         const user = top[i];
         if (!user) continue;
 
@@ -71,9 +71,9 @@ export default function Podium({ data }: any) {
           data: {
             evenement: { connect: { id: 1 } },
             quiz: { connect: { id: 1 } },
-            question_id: 1,
+            questionId: 1,
             utilisateur: { connect: { id: user.id } },
-            reponse_id: 1, // Adjust this as necessary
+            reponseId: 1, // Adjust this as necessary
             score: user.points ?? 111,
           },
         });
@@ -102,82 +102,89 @@ export default function Podium({ data }: any) {
         </div>
       )}
       <section className="relative flex flex-col items-center justify-between flex-1 w-full mx-auto max-w-7xl">
-        <h2 className="text-3xl font-bold text-center text-white anim-show drop-shadow-lg md:text-4xl lg:text-5xl">
+        <h2 className="text-3xl font-bold text-center my-4 text-white anim-show drop-shadow-lg md:text-4xl lg:text-5xl">
           {subject}
+     
         </h2>
 
-        <div className={`grid w-full max-w-[800px] flex-1 grid-cols-3 items-end justify-center justify-self-end overflow-y-hidden overflow-x-visible`}>
-          <div
-            className={clsx(
-              "z-20 flex h-[50%] w-full translate-y-full flex-col items-center justify-center gap-3 opacity-0 transition-all",
-              { "!translate-y-0 opacity-100": apparition >= 2 },
-            )}
-          >
-            <p
+        <div className={`grid w-full max-w-[800px] flex-1 grid-cols-${top.length === 1 ? '1' : top.length === 2 ? '2' : '3'} items-end justify-center justify-self-end overflow-y-hidden overflow-x-visible`}>
+          {top[1] && (
+            <div
               className={clsx(
-                "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
-                { "anim-balanced": apparition >= 4 },
+                "z-20 flex h-[50%] w-full translate-y-full flex-col items-center justify-center gap-3 opacity-0 transition-all",
+                { "!translate-y-0 opacity-100": apparition >= 2 },
               )}
             >
-              {top[1]?.username || "Pas de nom"}
-            </p>
-            <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
-              <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-zinc-400 bg-zinc-500 drop-shadow-lg">
-                <span className="drop-shadow-md">2</span>
+              <p
+                className={clsx(
+                  "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
+                  { "anim-balanced": apparition >= 4 },
+                )}
+              >
+                {top[1]?.username || "Pas de nom"}
               </p>
-              <p className="text-2xl font-bold text-white drop-shadow-lg">
-                {top[1]?.points ?? 0}
-              </p>
+              <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
+                <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-zinc-400 bg-zinc-500 drop-shadow-lg">
+                  <span className="drop-shadow-md">2</span>
+                </p>
+                <p className="text-2xl font-bold text-white drop-shadow-lg">
+                  {top[1]?.points ?? 0}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
-          <div
-            className={clsx(
-              "z-30 flex h-[60%] w-full translate-y-full flex-col items-center gap-3 opacity-0 transition-all",
-              { "!translate-y-0 opacity-100": apparition >= 3 },
-            )}
-          >
-            <p
+          {top[0] && (
+            <div
               className={clsx(
-                "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white opacity-0 drop-shadow-lg md:text-4xl",
-                { "anim-balanced opacity-100": apparition >= 4 },
+                "z-30 flex h-[60%] w-full translate-y-full flex-col items-center gap-3 opacity-0 transition-all",
+                { "!translate-y-0 opacity-100": apparition >= 3 },
               )}
             >
-              {top[0]?.username || "Pas de nom"}
-            </p>
-            <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
-              <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-400 bg-amber-300 drop-shadow-lg">
-                <span className="drop-shadow-md">1</span>
+              <p
+                className={clsx(
+                  "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white opacity-0 drop-shadow-lg md:text-4xl",
+                  { "anim-balanced opacity-100": apparition >= 4 },
+                )}
+              >
+                {top[0]?.username || "Pas de nom"}
               </p>
-              <p className="text-2xl font-bold text-white drop-shadow-lg">
-                {top[0]?.points ?? 0} 
-              </p>
-            </div> 
-          </div>
-
-          <div
-            className={clsx(
-              "z-10 flex h-[40%] w-full translate-y-full flex-col items-center gap-3 opacity-0 transition-all",
-              { "!translate-y-0 opacity-100": apparition >= 1 },
-            )}
-          >
-            <p
-              className={clsx(
-                "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
-                { "anim-balanced": apparition >= 4 },
-              )}
-            >
-              {top[2]?.username || "Personne"}
-            </p>
-            <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
-              <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-800 bg-amber-700 drop-shadow-lg">
-                <span className="drop-shadow-md">3</span>
-              </p>
-              <p className="text-2xl font-bold text-white drop-shadow-lg">
-                {top[2]?.points ?? 0}
-              </p>
+              <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
+                <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-400 bg-amber-300 drop-shadow-lg">
+                  <span className="drop-shadow-md">1</span>
+                </p>
+                <p className="text-2xl font-bold text-white drop-shadow-lg">
+                  {top[0]?.points ?? 0} 
+                </p>
+              </div> 
             </div>
-          </div>
+          )}
+
+          {top[2] && (
+            <div
+              className={clsx(
+                "z-10 flex h-[40%] w-full translate-y-full flex-col items-center gap-3 opacity-0 transition-all",
+                { "!translate-y-0 opacity-100": apparition >= 1 },
+              )}
+            >
+              <p
+                className={clsx(
+                  "overflow-visible whitespace-nowrap text-center text-2xl font-bold text-white drop-shadow-lg md:text-4xl",
+                  { "anim-balanced": apparition >= 4 },
+                )}
+              >
+                {top[2]?.username || "Personne"}
+              </p>
+              <div className="flex flex-col items-center w-full h-full gap-4 pt-6 text-center shadow-2xl rounded-t-md bg-primary">
+                <p className="flex items-center justify-center text-3xl font-bold text-white border-4 rounded-full aspect-square h-14 border-amber-800 bg-amber-700 drop-shadow-lg">
+                  <span className="drop-shadow-md">3</span>
+                </p>
+                <p className="text-2xl font-bold text-white drop-shadow-lg">
+                  {top[2]?.points ?? 0}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </>

@@ -1,7 +1,6 @@
+import { Role } from "@/types/main-types/main";
 import { FC, useState, useEffect, FormEvent } from "react";
-import { Sponsor } from "@prisma/client";
-import { Role } from "@prisma/client";
-
+ 
 interface RoleModalProps {
   role?: Role | null;
   isOpen: boolean;

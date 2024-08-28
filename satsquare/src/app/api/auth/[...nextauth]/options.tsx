@@ -1,27 +1,22 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
- 
 import prisma from "@/db/prisma";
- 
 
-export const authOptions = {
+// Define auth options
+export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/auth/signin", // Custom sign-in page
+    signIn: "/auth/signin",
   },
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "jsmith@gmail.com",
-        },
-        password: { label: "Mot de passe", type: "password" },
+        email: { label: "Email", type: "text", placeholder: "jsmith@gmail.com" },
+        password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials?.password || !credentials?.email) {
           return null;
         }
@@ -32,19 +27,12 @@ export const authOptions = {
           },
         });
 
-        if (
-          user &&
-          (await bcrypt.compare(credentials.password, user.mot_de_passe))
-        ) {
+        if (user && await bcrypt.compare(credentials.password, user.mot_de_passe)) {
           return user;
         }
 
         return null;
       },
     }),
-     
- 
-  ] 
+  ],
 };
-
-export default NextAuth(authOptions);

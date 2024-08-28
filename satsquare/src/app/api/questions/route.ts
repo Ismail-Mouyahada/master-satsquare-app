@@ -11,19 +11,22 @@ export async function GET(req: NextRequest) {
       const question = await prisma.question.findUnique({
         where: { id: Number(id) },
         include: {
-          Reponses: true,
+          playersAnswers: true,
         },
       });
+
       if (!question) {
         return NextResponse.json({ error: "Question not found" }, { status: 404 });
       }
+
       return NextResponse.json(question, { status: 200 });
     } else {
       const questions = await prisma.question.findMany({
         include: {
-          Reponses: true,
+          playersAnswers: true,
         },
       });
+
       return NextResponse.json(questions, { status: 200 });
     }
   } catch (error) {
@@ -44,14 +47,29 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No body received." }, { status: 400 });
     }
 
-    const { texte_question, quiz_id, Reponses } = data;
+    const {
+      quiz,
+      quizId,
+      time,
+      image,
+      answers,
+      cooldown,
+      question,
+      solution,
+      playersAnswers,
+    } = data;
+
     const newQuestion = await prisma.question.create({
       data: {
-        texte_question,
-        quiz_id,
-        Reponses: {
-          create: Reponses,
-        },
+        quiz,
+        quizId,
+        time,
+        image,
+        answers,
+        cooldown,
+        question,
+        solution,
+        playersAnswers,
       },
     });
 
@@ -81,15 +99,16 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "No body received." }, { status: 400 });
     }
 
-    const { texte_question, quiz_id, Reponses } = data;
+    const { questionText, quizId, answers } = data;
+
     const updatedQuestion = await prisma.question.update({
       where: { id: Number(id) },
       data: {
-        texte_question,
-        quiz_id,
-        Reponses: {
-          deleteMany: {}, // Delete existing reponses
-          create: Reponses, // Create new reponses
+        question: questionText,
+        quizId,
+        playersAnswers: {
+          deleteMany: {}, // Delete existing answers
+          create: answers, // Create new answers
         },
       },
     });
