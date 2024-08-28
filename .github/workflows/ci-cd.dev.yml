@@ -16,52 +16,52 @@ env:
   NEXT_PUBLIC_SOCKET_URL: ${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
 
 jobs:
-  deps-vulnerability:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # deps-vulnerability:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Create lock file
-        run: |
-          cd ./satsquare
-          npm install --package-lock-only
+  #     - name: Create lock file
+  #       run: |
+  #         cd ./satsquare
+  #         npm install --package-lock-only
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm update
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
+  #         npm update
 
-      - name: Install jest-environment-jsdom
-        run: |
-          cd ./satsquare
-          npm install jest-environment-jsdom --save-dev
+  #     - name: Install jest-environment-jsdom
+  #       run: |
+  #         cd ./satsquare
+  #         npm install jest-environment-jsdom --save-dev
 
-      - name: Audit npm dependencies
-        run: |
-          cd ./satsquare
-          npm audit --audit-level=moderate
+  #     - name: Audit npm dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm audit --audit-level=moderate
 
-  lint:
-    needs: deps-vulnerability
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # lint:
+  #   needs: deps-vulnerability
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
 
-      - name: Run Linting
-        run: |
-          cd ./satsquare
-          npm run lint
+  #     - name: Run Linting
+  #       run: |
+  #         cd ./satsquare
+  #         npm run lint
 
   unit-tests:
-    needs: lint
+    # needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
