@@ -200,7 +200,7 @@ jobs:
   #         message: "C'était presque bon mon kiki ! 😇"
 
   docker-build:
-    needs: lighthouse
+    # needs: lighthouse
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
