@@ -28,7 +28,7 @@ jobs:
             cd ./satsquare
             npm ci
     
-      - uses: oke-py/npm-audit-action@v2.4
+      - uses: oke-py/npm-audit-action@v2
         with:
           audit_level: moderate
           github_token: ${{ secrets.GITHUB_TOKEN }}
