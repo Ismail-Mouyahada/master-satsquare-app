@@ -210,8 +210,8 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: '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'
+          username: 'Ismail-Mouyahada'
+          password: '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'
    
       - name: Build Docker image
         run: |
