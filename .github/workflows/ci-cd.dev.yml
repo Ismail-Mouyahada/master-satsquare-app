@@ -27,6 +27,7 @@ jobs:
         run: |
             cd ./satsquare
             npm ci
+            npm update
     
       - uses: oke-py/npm-audit-action@v2
         with:
@@ -41,10 +42,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: npm install
+        run: |
+            cd ./satsquare
+            npm ci
 
       - name: Run Linting
         run: npm run lint
@@ -54,10 +57,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: npm install
+        run: |
+            cd ./satsquare
+            npm ci
 
       - name: Run Jest Unit Tests
         run: npm run test:watch
@@ -67,10 +72,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: npm install
+        run: |
+            cd ./satsquare
+            npm ci
 
       - name: Run tests and generate coverage report
         run: npm run test -- --coverage
@@ -84,7 +91,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
+      - run: |
+            cd ./satsquare
+ 
 
       - name: Run security analysis
         uses: github/codeql-action/analyze@v2
@@ -93,10 +103,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: npm install
+      - run: |
+            cd ./satsquare
+                npm install
 
       - name: Run Lighthouse CI
         run: npx lhci autorun
@@ -105,7 +117,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Login to GitHub Container Registry
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -125,10 +137,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: npm install
+      - run: |
+            cd ./satsquare
+                npm install
 
       - name: Run end-to-end tests
         run: npm run test:e2e
@@ -137,10 +151,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: npm install
+      - run: |
+            cd ./satsquare
+                npm install
 
       - name: Run stress tests
         run: npm run test:stress
