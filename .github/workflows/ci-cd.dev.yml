@@ -186,7 +186,7 @@ jobs:
           
           # Install dependencies
           npm install
-  
+          
           # Set up Prisma and prepare the database
           npx prisma migrate dev --name init # Run migrations
           npx prisma db push # Push the database schema
