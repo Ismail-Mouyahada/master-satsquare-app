@@ -218,8 +218,8 @@ jobs:
         with:
           webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: "On est la les BG"
-          username: "Github"
-          avatar: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+          username: "SatSuqare Developement BOT"
+          # avatar: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
  
       - name: Notify Discord
         if: success()
