@@ -24,8 +24,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd ./satsquare
-          npm i --package-lock-only
+            cd ./satsquare
+            npm install --package-lock-only
+            npm ci
+            npm update
+
 
       - name: Audit npm dependencies
         uses: oke-py/npm-audit-action@v2
