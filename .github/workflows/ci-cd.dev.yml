@@ -22,24 +22,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Create lock file
+        run: |
+          cd ./satsquare
+          npm install --package-lock-only
+
       - name: Install dependencies
         run: |
-            cd ./satsquare
-            npm install --package-lock-only
-            npm ci
-            npm update
-      - name: Audit rentabilities
-        run: npm audit
+          cd ./satsquare
+          npm ci
+          npm update
 
-
-      # - name: Audit npm dependencies
-      #   uses: oke-py/npm-audit-action@v2
-      #   with:
-      #     audit_level: moderate
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     issue_assignees: oke-py
-      #     issue_labels: vulnerability,test
-      #     dedupe_issues: true
+      - name: Audit npm dependencies
+        run: |
+          cd ./satsquare
+          npm audit --audit-level=moderate
 
   lint:
     needs: deps-vulnerability
