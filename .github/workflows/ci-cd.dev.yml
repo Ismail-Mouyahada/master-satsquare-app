@@ -76,7 +76,7 @@ jobs:
       - name: Run Jest Unit Tests
         run: |
           cd ./satsquare
-          npm run test:watch
+          npm run test
 
   codecov:
     needs: unit-tests
