@@ -89,6 +89,7 @@ jobs:
         run: |
           cd ./satsquare
           npm ci
+          npm i jest-environment-jsdom  jest
 
       - name: Run tests and generate coverage report
         run: |
