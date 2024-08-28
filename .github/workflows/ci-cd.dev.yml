@@ -71,7 +71,7 @@ jobs:
         run: |
           cd ./satsquare
           npm ci
-          npm i jest-environment-jsdomnpm jest
+          npm i jest-environment-jsdom  jest
           
       - name: Run Jest Unit Tests
         run: |
