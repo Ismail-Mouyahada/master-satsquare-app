@@ -152,53 +152,15 @@ jobs:
   security:
     # needs: [e2e-tests, build, unit-tests]
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      security-events: write
-      statuses: write
-      contents: write
-      issues: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-  
-      - name: Set status to "in progress"
-        uses: guibranco/github-status-action-v2@v1.1.13
-        with:
-          context: "Mobb Fix Analysis"
-          description: "Mobb fix analysis in progress..."
-          state: "pending"
-          sha: ${{ github.sha }}
-          target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          token: ${{ secrets.GITHUB_TOKEN }}
-  
-      - name: Run Mobb Fixer
-        uses: mobb-dev/codeql-mobb-fixer-action@v1.1
-        with:
-          mobb-api-token: "ifdAADCTnQNVbDFjpWfNY19g1zDGMt"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-  
-      - name: Set status to "success"
-        if: success()
-        uses: guibranco/github-status-action-v2@v1.1.13
-        with:
-          context: "Mobb Fix Analysis"
-          description: "Mobb fix analysis completed successfully."
-          state: "success"
-          sha: ${{ github.sha }}
-          target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          token: ${{ secrets.GITHUB_TOKEN }}
-  
-      - name: Set status to "failure"
-        if: failure()
-        uses: guibranco/github-status-action-v2@v1.1.13
-        with:
-          context: "Mobb Fix Analysis"
-          description: "Mobb fix analysis failed. Click \"Details\" to see console logs"
-          state: "failure"
-          sha: ${{ github.sha }}
-          target_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          - uses: actions/checkout@v4
+            with:
+              # Disabling shallow clone is recommended for improving relevancy of reporting
+              fetch-depth: 0
+          - name: SonarCloud Scan
+            uses: sonarsource/sonarcloud-github-action@v3.0.0 # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
+            env:
+              SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   lighthouse:
     # needs: [codecov, security, deps-vulnerability]
