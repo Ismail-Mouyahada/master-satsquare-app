@@ -171,19 +171,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install dependencies and prepare the environment
         run: |
+          # Set environment variables
           export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
           export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
           export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
           export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
           export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
           export REDIS_URL="redis://localhost:6379"
+          
+          # Change to the project directory
           cd ./satsquare
+          
+          # Install dependencies
           npm install
-          npx prisma migrate
-          npx prisma db push
-          npm run seed
+  
+          # Set up Prisma and prepare the database
+          npx prisma migrate dev --name init # Run migrations
+          npx prisma db push # Push the database schema
+          npm run seed # Seed the database
 
       - name: Run end-to-end tests
         run: |
