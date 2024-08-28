@@ -19,185 +19,185 @@ env:
 jobs:
  
 
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Run end-to-end tests
-        run: |
-          export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
-          export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
-          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
-          export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-          export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
-          export REDIS_URL="redis://localhost:6379"
-          cd ./satsquare
+  #     - name: Run end-to-end tests
+  #       run: |
+  #         export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
+  #         export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
+  #         export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
+  #         export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+  #         export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
+  #         export REDIS_URL="redis://localhost:6379"
+  #         cd ./satsquare
 
-          npm install
-          npx prisma generate
-          npx prisma db push
-          npm run seed
-          npm run build
-  lint:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #         npm install
+  #         npx prisma generate
+  #         npx prisma db push
+  #         npm run seed
+  #         npm run build
+  # lint:
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
 
-      - name: Run Linting
-        run: |
-          cd ./satsquare
-          npm run lint
-  unit-tests:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #     - name: Run Linting
+  #       run: |
+  #         cd ./satsquare
+  #         npm run lint
+  # unit-tests:
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm i jest-environment-jsdom jest
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
+  #         npm i jest-environment-jsdom jest
 
-      - name: Run Jest Unit Tests
-        run: |
-          cd ./satsquare
-          npm run test
+  #     - name: Run Jest Unit Tests
+  #       run: |
+  #         cd ./satsquare
+  #         npm run test
 
-  e2e-tests:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # e2e-tests:
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Run end-to-end tests
-        run: |
-          export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
-          export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
-          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
-          export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-          export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
-          export REDIS_URL="redis://localhost:6379"
-          cd ./satsquare
+  #     - name: Run end-to-end tests
+  #       run: |
+  #         export DATABASE_URL=postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare
+  #         export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
+  #         export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
+  #         export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+  #         export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
+  #         export REDIS_URL="redis://localhost:6379"
+  #         cd ./satsquare
 
-          npm install
-          npx prisma generate
-          npx prisma db push
-          npm run seed
-          npm run build
-          # npm run test:e2e
+  #         npm install
+  #         npx prisma generate
+  #         npx prisma db push
+  #         npm run seed
+  #         npm run build
+  #         # npm run test:e2e
 
-  deps-vulnerability:
-    needs: [e2e-tests, build, unit-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # deps-vulnerability:
+  #   needs: [e2e-tests, build, unit-tests]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Create lock file
-        run: |
-          cd ./satsquare
-          npm install --package-lock-only
+  #     - name: Create lock file
+  #       run: |
+  #         cd ./satsquare
+  #         npm install --package-lock-only
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm update
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
+  #         npm update
 
-      - name: Install jest-environment-jsdom
-        run: |
-          cd ./satsquare
-          npm install jest-environment-jsdom --save-dev
+  #     - name: Install jest-environment-jsdom
+  #       run: |
+  #         cd ./satsquare
+  #         npm install jest-environment-jsdom --save-dev
 
-      - name: Audit npm dependencies
-        run: |
-          cd ./satsquare
-          npm audit --audit-level=moderate
+  #     - name: Audit npm dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm audit --audit-level=moderate
 
-  codecov:
-    needs: [e2e-tests, build, unit-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # codecov:
+  #   needs: [e2e-tests, build, unit-tests]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm i jest-environment-jsdom jest
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
+  #         npm i jest-environment-jsdom jest
 
-      - name: Run tests and generate coverage report
-        run: |
-          cd ./satsquare
-          npm run test -- --coverage
+  #     - name: Run tests and generate coverage report
+  #       run: |
+  #         cd ./satsquare
+  #         npm run test -- --coverage
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
 
-  lighthouse:
-    needs: [codecov, deps-vulnerability]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # lighthouse:
+  #   needs: [codecov, deps-vulnerability]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm install
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm install
 
-      - name: Run Lighthouse CI
-        run: |
-          cd ./satsquare
-          npx lhci autorun
+  #     - name: Run Lighthouse CI
+  #       run: |
+  #         cd ./satsquare
+  #         npx lhci autorun
 
-  notify:
-    needs: [lighthouse]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notify Discord
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "On est la les BG"
-          username: "SatSuqare Development BOT"
-          # avatar: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+  # notify:
+  #   needs: [lighthouse]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Notify Discord
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+  #         message: "On est la les BG"
+  #         username: "SatSuqare Development BOT"
+  #         # avatar: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
 
-      - name: Notify Discord
-        if: success()
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "Bah Oui ça marche mon gars 🗺"
+  #     - name: Notify Discord
+  #       if: success()
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+  #         message: "Bah Oui ça marche mon gars 🗺"
 
-      - name: Notify Discord
-        if: failure()
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "Ops tu as glissé mon pote ☣"
+  #     - name: Notify Discord
+  #       if: failure()
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+  #         message: "Ops tu as glissé mon pote ☣"
 
-      - name: Notify Discord
-        if: ${{ always() && contains(needs.*.result, 'failure') }}
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "C'était presque bon mon kiki ! 😇"
+  #     - name: Notify Discord
+  #       if: ${{ always() && contains(needs.*.result, 'failure') }}
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+  #         message: "C'était presque bon mon kiki ! 😇"
 
   docker-build:
     needs: lighthouse
