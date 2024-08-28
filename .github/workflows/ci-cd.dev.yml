@@ -19,6 +19,11 @@ env:
   NEXT_PUBLIC_SOCKET_URL: ${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true # Annule toute exécution précédente du même workflow si un nouveau est déclenché
+
+
 jobs:
   # Job de construction de l'application
   build:
