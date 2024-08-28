@@ -207,8 +207,12 @@ jobs:
         uses: actions/checkout@v3
   
       - name: Login to GitHub Container Registry
-        run: echo "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" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-  
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: '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'
+   
       - name: Build Docker image
         run: |
           cd ./satsquare
