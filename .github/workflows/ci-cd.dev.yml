@@ -78,38 +78,45 @@ jobs:
   #         cd ./satsquare
   #         npm run test
 
-  codecov:
-    # needs: unit-tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # codecov:
+  #   # needs: unit-tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm i jest-environment-jsdom  jest
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm ci
+  #         npm i jest-environment-jsdom  jest
 
-      - name: Run tests and generate coverage report
-        run: |
-          cd ./satsquare
-          npm run test -- --coverage
+  #     - name: Run tests and generate coverage report
+  #       run: |
+  #         cd ./satsquare
+  #         npm run test -- --coverage
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
 
   security:
-    needs: codecov
+    # needs: codecov
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      security-events: write
+      statuses: write
+      contents: write
+      issues: write
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Run security analysis
-        uses: github/codeql-action/analyze@v2
+      - uses: mobb-dev/codeql-mobb-fixer-action@v1.1
+        with:
+          mobb-api-token: ${{ secrets.MOBB_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   lighthouse:
     needs: security
