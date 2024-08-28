@@ -211,7 +211,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: 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  
+          password: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Build Docker image
         run: |
