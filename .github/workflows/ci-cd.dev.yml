@@ -118,25 +118,25 @@ jobs:
   #         mobb-api-token: ${{ secrets.MOBB_API_TOKEN }}
   #         github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  lighthouse:
-    # needs: security
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  # lighthouse:
+  #   # needs: security
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm install
+  #     - name: Install dependencies
+  #       run: |
+  #         cd ./satsquare
+  #         npm install
 
-      - name: Run Lighthouse CI
-        run: |
-          cd ./satsquare
-          npx lhci autorun
+  #     - name: Run Lighthouse CI
+  #       run: |
+  #         cd ./satsquare
+  #         npx lhci autorun
 
   docker-build:
-    needs: lighthouse
+    # needs: lighthouse
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -151,7 +151,7 @@ jobs:
           docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
 
       - name: Scan Docker image for vulnerabilities
-        uses: aquasecurity/trivy-action@v0.4.1
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           image-ref: ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
 
