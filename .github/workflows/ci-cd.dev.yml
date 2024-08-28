@@ -21,14 +21,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         
       - name: Install dependencies
         run: |
             cd ./satsquare
-            npm install
-        
-      - uses: oke-py/npm-audit-action@v2
+            npm ci
+    
+      - uses: oke-py/npm-audit-action@v2.4
         with:
           audit_level: moderate
           github_token: ${{ secrets.GITHUB_TOKEN }}
