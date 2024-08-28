@@ -1,20 +1,19 @@
 name: CI/CD Dev Pipeline
 
 on:
-    push:
-      branches:
-        - develop
-    pull_request:
-      branches:
-        - develop
-  
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
 env:
   ENVIRONMENT: dev
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-  NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXTAUTH_SECRET }}
+  NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
   NEXT_PUBLIC_SOCKET_URL: ${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
-
 
 jobs:
   deps-vulnerability:
@@ -22,23 +21,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+
       - name: Install dependencies
         run: |
-            cd ./satsquare
-            npm ci
-            npm update
-    
-      - uses: oke-py/npm-audit-action@v2
+          cd ./satsquare
+          npm ci
+          npm update
+
+      - name: Audit npm dependencies
+        uses: oke-py/npm-audit-action@v2
         with:
           audit_level: moderate
           github_token: ${{ secrets.GITHUB_TOKEN }}
           issue_assignees: oke-py
           issue_labels: vulnerability,test
           dedupe_issues: true
-      
+
   lint:
-    needs: [deps-vulnerability]
+    needs: deps-vulnerability
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -46,14 +46,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-            cd ./satsquare
-            npm ci
+          cd ./satsquare
+          npm ci
 
       - name: Run Linting
-        run: npm run lint
-        
+        run: |
+          cd ./satsquare
+          npm run lint
+
   unit-tests:
-    needs: [deps-vulnerability]
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -61,14 +63,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-            cd ./satsquare
-            npm ci
+          cd ./satsquare
+          npm ci
 
       - name: Run Jest Unit Tests
-        run: npm run test:watch
-        
+        run: |
+          cd ./satsquare
+          npm run test:watch
+
   codecov:
-    needs: [deps-vulnerability,unit-tests]
+    needs: unit-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -76,11 +80,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-            cd ./satsquare
-            npm ci
+          cd ./satsquare
+          npm ci
 
       - name: Run tests and generate coverage report
-        run: npm run test -- --coverage
+        run: |
+          cd ./satsquare
+          npm run test -- --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -88,32 +94,34 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   security:
+    needs: codecov
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - run: |
-            cd ./satsquare
- 
 
       - name: Run security analysis
         uses: github/codeql-action/analyze@v2
-        
+
   lighthouse:
+    needs: security
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install dependencies
-      - run: |
-            cd ./satsquare
-                npm install
+        run: |
+          cd ./satsquare
+          npm install
 
       - name: Run Lighthouse CI
-        run: npx lhci autorun
+        run: |
+          cd ./satsquare
+          npx lhci autorun
 
   docker-build:
+    needs: lighthouse
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -123,7 +131,9 @@ jobs:
         run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
+        run: |
+          cd ./satsquare
+          docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
 
       - name: Scan Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@v0.4.1
@@ -134,36 +144,42 @@ jobs:
         run: docker push ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }}
 
   e2e-tests:
+    needs: docker-build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install dependencies
-      - run: |
-            cd ./satsquare
-                npm install
+        run: |
+          cd ./satsquare
+          npm install
 
       - name: Run end-to-end tests
-        run: npm run test:e2e
-        
+        run: |
+          cd ./satsquare
+          npm run test:e2e
+
   stress-test:
+    needs: e2e-tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install dependencies
-      - run: |
-            cd ./satsquare
-                npm install
+        run: |
+          cd ./satsquare
+          npm install
 
       - name: Run stress tests
-        run: npm run test:stress
+        run: |
+          cd ./satsquare
+          npm run test:stress
 
   notify:
     runs-on: ubuntu-latest
-    needs: [deps-vulnerability, lint, unit-tests, codecov, security, lighthouse, docker-build, e2e-tests, stress-test]
+    needs: [stress-test]
     steps:
       - name: Send Discord notification on success
         if: success()
@@ -171,7 +187,7 @@ jobs:
           curl -X POST -H "Content-Type: application/json" \
           -d '{"content": "CI/CD Dev Pipeline succeeded!"}' \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
-          
+
       - name: Send Discord notification on failure
         if: failure()
         run: |
