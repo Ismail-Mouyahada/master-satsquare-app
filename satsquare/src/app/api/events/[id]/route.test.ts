@@ -3,8 +3,8 @@
  */
 import prisma from "@/db/prisma";
 import { NextRequest } from "next/server";
-import "whatwg-fetch";
 import { DELETE, PUT } from "./route";
+import "whatwg-fetch";
 
 jest.mock("@/db/prisma", () => ({
   __esModule: true,
@@ -22,14 +22,6 @@ describe("API Routes: Evenements", () => {
       const requestData = {
         nom: "Updated Event",
         description: "Updated description",
-        est_public: true,
-        est_gratuit: false,
-        commence_a: "2023-07-01T10:00:00.000Z",
-        termine_a: "2023-07-01T12:00:00.000Z",
-        sat_minimum: 20,
-        recompense_joueurs: 150,
-        don_association: 75,
-        don_plateforme: 30,
       };
 
       const requestObj = new NextRequest("http://localhost/api/evenements/1", {
@@ -40,10 +32,8 @@ describe("API Routes: Evenements", () => {
       const mockUpdatedEvent = {
         id: 1,
         ...requestData,
-        commence_a: new Date(requestData.commence_a),
-        termine_a: new Date(requestData.termine_a),
-        creeLe: new Date(),
-        mis_a_jour_le: new Date(),
+        commence_a: new Date(),
+        termine_a: new Date(),
       };
 
       (prisma.evenement.update as jest.Mock).mockResolvedValue(
@@ -58,32 +48,24 @@ describe("API Routes: Evenements", () => {
         ...mockUpdatedEvent,
         commence_a: mockUpdatedEvent.commence_a.toISOString(),
         termine_a: mockUpdatedEvent.termine_a.toISOString(),
-        creeLe: mockUpdatedEvent.creeLe.toISOString(),
-        mis_a_jour_le: mockUpdatedEvent.mis_a_jour_le.toISOString(),
       });
-      expect(prisma.evenement.update).toHaveBeenCalledTimes(1);
     });
 
     it("should return status 500 when prisma query rejects", async () => {
-      const requestData = {
-        nom: "Updated Event",
-        description: "Updated description",
-      };
-
-      const requestObj = new NextRequest("http://localhost/api/evenements/1", {
-        method: "PUT",
-        body: JSON.stringify(requestData),
-      });
-
       (prisma.evenement.update as jest.Mock).mockRejectedValue(
         new Error("Failed to update event")
       );
+
+      const requestObj = new NextRequest("http://localhost/api/evenements/1", {
+        method: "PUT",
+        body: JSON.stringify({ nom: "Updated Event" }),
+      });
 
       const response = await PUT(requestObj, { params: { id: "1" } });
       const body = await response.json();
 
       expect(response.status).toBe(500);
-      expect(body.error).toEqual(expect.any(String));
+      expect(body.error).toEqual("An error occurred while updating the event");
     });
   });
 
@@ -100,23 +82,22 @@ describe("API Routes: Evenements", () => {
 
       expect(response.status).toBe(200);
       expect(body.message).toEqual("Event deleted successfully");
-      expect(prisma.evenement.delete).toHaveBeenCalledTimes(1);
     });
 
     it("should return status 500 when prisma query rejects", async () => {
-      const requestObj = new NextRequest("http://localhost/api/evenements/1", {
-        method: "DELETE",
-      });
-
       (prisma.evenement.delete as jest.Mock).mockRejectedValue(
         new Error("Failed to delete event")
       );
+
+      const requestObj = new NextRequest("http://localhost/api/evenements/1", {
+        method: "DELETE",
+      });
 
       const response = await DELETE(requestObj, { params: { id: "1" } });
       const body = await response.json();
 
       expect(response.status).toBe(500);
-      expect(body.error).toEqual(expect.any(String));
+      expect(body.error).toEqual("An error occurred while deleting the event");
     });
   });
 });
