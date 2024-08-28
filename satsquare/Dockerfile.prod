@@ -1,3 +1,4 @@
+# Use a Node.js image as the base
 FROM node:18-alpine
 
 # Set the working directory in the container
@@ -12,8 +13,21 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Set environment variables for production
-ENV NODE_ENV=production
+# Build-time arguments for environment variables
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET
+ARG NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY
+ARG NEXT_PUBLIC_SITE_URL="https://production-site.com"
+ARG NEXT_PUBLIC_SOCKET_URL="wss://production-site.com/ws"
+ARG REDIS_URL
+
+# Set environment variables based on build-time arguments
+ENV DATABASE_URL=${DATABASE_URL} \
+    NEXT_AUTH_SECRET=${NEXT_AUTH_SECRET} \
+    NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY=${NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY} \
+    NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL} \
+    NEXT_PUBLIC_SOCKET_URL=${NEXT_PUBLIC_SOCKET_URL} \
+    REDIS_URL=${REDIS_URL}
 
 # Generate Prisma client
 RUN npx prisma generate
@@ -22,14 +36,14 @@ RUN npx prisma generate
 RUN npx prisma db push
 
 # Seed the database
-RUN npm run seed
+#RUN npm run seed
 
 # Build the Next.js application
 RUN npm run build
 
-# Expose port 3000 for Next.js and 5157 for any other service
+
+# Expose port 3000 for Next.js and 5157 for WebSocket
 EXPOSE 3000 5157
 
-# Start the application
-ENTRYPOINT ["npm", "run","all"]
-
+# Start the application in production mode
+CMD ["npm", "run", "all"]
