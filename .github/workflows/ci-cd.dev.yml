@@ -24,7 +24,9 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Install dependencies
-        run: npm install
+        run: | 
+            cd ./satsquare
+            npm install
         
       - name: Run dependency vulnerability scan
         uses: oke-py/npm-audit-action@v2
