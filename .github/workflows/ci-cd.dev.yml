@@ -28,16 +28,18 @@ jobs:
             npm install --package-lock-only
             npm ci
             npm update
+      - name: Audit rentabilities
+        run: npm audit
 
 
-      - name: Audit npm dependencies
-        uses: oke-py/npm-audit-action@v2
-        with:
-          audit_level: moderate
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          issue_assignees: oke-py
-          issue_labels: vulnerability,test
-          dedupe_issues: true
+      # - name: Audit npm dependencies
+      #   uses: oke-py/npm-audit-action@v2
+      #   with:
+      #     audit_level: moderate
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     issue_assignees: oke-py
+      #     issue_labels: vulnerability,test
+      #     dedupe_issues: true
 
   lint:
     needs: deps-vulnerability
