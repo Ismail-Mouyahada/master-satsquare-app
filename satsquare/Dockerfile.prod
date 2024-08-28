@@ -1,10 +1,9 @@
-# Dockerfile.prod
 FROM node:18-alpine
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json (if they exist)
 COPY package*.json ./
 
 # Install dependencies
@@ -14,13 +13,23 @@ RUN npm install
 COPY . .
 
 # Set environment variables for production
-# ENV NODE_ENV=production
+ENV NODE_ENV=production
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Push database schema changes
+RUN npx prisma db push
+
+# Seed the database
+RUN npm run seed
 
 # Build the Next.js application
 RUN npm run build
 
-# Expose ports for Next.js and WebSocket
+# Expose port 3000 for Next.js and 5157 for any other service
 EXPOSE 3000 5157
 
-# Start the application in production mode
-CMD ["npm", "run", "all"]
+# Start the application
+ENTRYPOINT ["npm", "run","all"]
+
