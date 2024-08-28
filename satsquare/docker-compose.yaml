@@ -2,8 +2,9 @@ version: '3.8'
 
 services:
   nextjs:
-    image: ismailmouyahada/satsquare:latest
-    container_name: nextjs-app
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
     ports:
       - "3000:3000"

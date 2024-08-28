@@ -1,0 +1,35 @@
+# Étape 1 : Construction de l'application
+FROM node:20-alpine3.19 AS build
+
+# Copier tout le code source dans le conteneur
+COPY . /app/
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Installer les dépendances
+RUN npm install
+
+# Construire l'application
+RUN npm run build
+
+# Étape 2 : Préparation de l'image finale avec support HTTPS
+FROM node:20-alpine3.19 AS next
+
+# Installer les certificats CA pour les connexions HTTPS
+RUN apk add --no-cache ca-certificates && update-ca-certificates
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers nécessaires depuis l'étape de construction
+COPY --from=build /app/package.json .
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/socket /app/socket
+
+# Exposer les ports nécessaires
+EXPOSE 3000 5157
+
+# Commande par défaut pour lancer l'application
+CMD ["npm", "run", "all"]
