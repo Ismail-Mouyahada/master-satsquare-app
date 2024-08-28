@@ -18,10 +18,9 @@ import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { UserDTO } from "@/types/userDto";
 import QRCode from "qrcode.react"; // Import QRCode from the library
-import { useApiHook } from "@/hook/useApiHook";
 
 const ProfileDetail: React.FC = () => {
-  const { data, error, loading, fetchData, postData } = useApiHook<any>();
+ 
   const { data: session } = useSession();
   const [userData, setUserData] = useState<UserDTO | null>(null);
   const [oldPassword, setOldPassword] = useState<string>("");

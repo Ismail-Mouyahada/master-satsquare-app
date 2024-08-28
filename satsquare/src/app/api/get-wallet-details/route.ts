@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/db/prisma';
-import { getToken } from 'next-auth/jwt'; // Import getToken for NextRequest context
+import { getToken } from 'next-auth/jwt';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function GET(req: NextRequest) {
   try {
-    // Get the user session token
+    // Get the user session token immediately
     const token = await getToken({ req, secret });
 
     if (!token || !token.email) {
@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Make the external API call immediately after the context-dependent operation
     const response = await fetch(`https://lightning.ismail-mouyahada.com/api/v1/wallet`, {
       method: 'GET',
       headers: {
