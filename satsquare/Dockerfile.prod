@@ -17,8 +17,8 @@ COPY . .
 ARG DATABASE_URL
 ARG NEXTAUTH_SECRET
 ARG NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY
-ARG NEXT_PUBLIC_SITE_URL="https://production-site.com"
-ARG NEXT_PUBLIC_SOCKET_URL="wss://production-site.com/ws"
+ARG NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+ARG NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
 ARG REDIS_URL
 
 # Set environment variables based on build-time arguments
