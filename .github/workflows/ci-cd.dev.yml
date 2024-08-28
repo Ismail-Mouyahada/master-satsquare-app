@@ -221,7 +221,8 @@ jobs:
           export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
           export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
           export REDIS_URL="redis://localhost:6379"
-          docker-compose up -d
+          cd ./satsquare
+          docker compose up -d
           docker build -t ghcr.io/ismail-mouyahada/master-satsquare-app:dev-${{ github.sha }} -f Dockerfile  .
   
       - name: Scan Docker image for vulnerabilities
