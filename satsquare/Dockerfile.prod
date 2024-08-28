@@ -33,7 +33,7 @@ ENV DATABASE_URL=${DATABASE_URL} \
 RUN npx prisma generate
 
 # Push database schema changes
-RUN npx prisma db push
+# RUN npx prisma db push
 
 # Seed the database
 #RUN npm run seed
