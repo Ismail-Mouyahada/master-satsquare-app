@@ -230,6 +230,8 @@ jobs:
         with:
           webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: "l'application tourne en production, félicitations 🎊 "
+          username: "Pré-production BOT Satsquare"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
       - name: Notify Discord
         if: failure() # Notifie en cas d'échec
@@ -237,6 +239,8 @@ jobs:
         with:
           webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: " Attention il y a un soucis dans la mis en PROD ☣"
+          username: "Pré-production BOT Satsquare"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
       - name: Notify Discord
         if: ${{ always() && contains(needs.*.result, 'failure') }} # Notifie si une partie du pipeline a échoué
@@ -244,3 +248,5 @@ jobs:
         with:
           webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
           message: "Une des étapes a due échouée ! 😇"
+          username: "Pré-production BOT Satsquare"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
