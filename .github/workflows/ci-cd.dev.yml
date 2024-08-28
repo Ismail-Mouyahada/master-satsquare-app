@@ -21,15 +21,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         
       - name: Install dependencies
         run: |
             cd ./satsquare
             npm install
         
-      - name: Run dependency vulnerability scan
-        uses: advanced-security/npm-audit-action@v1
+      - uses: oke-py/npm-audit-action@v2
+        with:
+          audit_level: moderate
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_assignees: oke-py
+          issue_labels: vulnerability,test
+          dedupe_issues: true
       
   lint:
     runs-on: ubuntu-latest
