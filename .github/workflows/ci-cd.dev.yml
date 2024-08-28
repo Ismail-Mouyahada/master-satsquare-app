@@ -148,6 +148,11 @@ jobs:
       - name: Build Docker image
         run: |
           cd ./satsquare
+          docker run -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+           -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+           -e NEXT_PUBLIC_SITE_URL="${{ secrets.NEXT_PUBLIC_SITE_URL }}" \
+           -e NEXT_PUBLIC_SOCKET_URL="${{ secrets.NEXT_PUBLIC_SOCKET_URL }}" \
+           -p 3000:3000 -p 5157:5157
           docker build -t ghcr.io/ismail-mouyahada/sat-square:dev-${{ github.sha }} -f Dockerfile.dev .
 
       - name: Scan Docker image for vulnerabilities
