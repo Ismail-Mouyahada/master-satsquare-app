@@ -189,7 +189,7 @@ jobs:
     
       - name: Run end-to-end tests
         run: |
-              cd ./satsquare
+              npm run build
               npm run test:e2e
 
   stress-test:
