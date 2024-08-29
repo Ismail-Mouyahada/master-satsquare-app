@@ -186,11 +186,11 @@ jobs:
 
   # Job pour construire l'image Docker et la pousser vers le registre
   docker-build:
+    # needs: lighthouse
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -200,59 +200,51 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Build and Push Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./satsquare
-          file: ./satsquare/Dockerfile.prod
-          build-args: |
-            DATABASE_URL="postgresql://prod:2bjPlCNBTvatIwdMbksGeAc6E7ECClP6@dpg-cr7et0bqf0us73beattg-a.frankfurt-postgres.render.com/prod_db_satsquare"
-            NEXTAUTH_SECRET="${{ github.sha }}"
-          tags: ghcr.io/ismail-mouyahada/master-satsquare-app:latest
-          push: true
-
+          password: ${{ secrets.GITHUB_TOKEN }} # Se connecte au registre de conteneurs GitHub
+          
+      - name: Build Docker image
+        run: |
+          cd ./satsquare 
+          docker build -f Dockerfile.prod --build-arg DATABASE_URL="postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare" --build-arg NEXTAUTH_SECRET="${{ github.sha }}" -t ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} .
+  
       - name: Scan Docker image for vulnerabilities
         uses: aquasecurity/trivy-action@0.20.0
         with:
-          image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:latest
-
+          image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Scanne l'image Docker pour les vulnérabilités
+  
       - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:latest
+        run: ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Pousse l'image Docker vers le registre
 
-  # Job pour notifier l'état de la pipeline sur Discord
-  notify:
-    # needs: [docker-build,lighthouse]
-    runs-on: ubuntu-latest
-    steps:
+ 
+  # # Job pour notifier l'état de la pipeline sur Discord
+  # notify:
+  #   # needs: [docker-build,lighthouse]
+  #   runs-on: ubuntu-latest
+  #   steps:
     
-      - name: Notify Discord
-        if: success() # Notifie en cas de succès
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "l'application tourne en production, félicitations 🎊 "
-          username: "Pré-production BOT Satsquare"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+  #     - name: Notify Discord
+  #       if: success() # Notifie en cas de succès
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+  #         message: "l'application tourne en production, félicitations 🎊 "
+  #         username: "Pré-production BOT Satsquare"
+  #         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
-      - name: Notify Discord
-        if: failure() # Notifie en cas d'échec
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: " Attention il y a un soucis dans la mis en PROD ☣"
-          username: "Pré-production BOT Satsquare"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+  #     - name: Notify Discord
+  #       if: failure() # Notifie en cas d'échec
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+  #         message: " Attention il y a un soucis dans la mis en PROD ☣"
+  #         username: "Pré-production BOT Satsquare"
+  #         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
-      - name: Notify Discord
-        if: ${{ always() && contains(needs.*.result, 'failure') }} # Notifie si une partie du pipeline a échoué
-        uses: discord-actions/message@v2
-        with:
-          webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
-          message: "Une des étapes a due échouée ! 😇"
-          username: "Pré-production BOT Satsquare"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+  #     - name: Notify Discord
+  #       if: ${{ always() && contains(needs.*.result, 'failure') }} # Notifie si une partie du pipeline a échoué
+  #       uses: discord-actions/message@v2
+  #       with:
+  #         webhookUrl: "https://discord.com/api/webhooks/1278096229351293008/UdVm3whQn9wb_neR4tuS5TGFfFzaiAo4Jijwa0yuEks1GwoVdrV-lcsdvw5qlA0Kq9CN"
+  #         message: "Une des étapes a due échouée ! 😇"
+  #         username: "Pré-production BOT Satsquare"
+  #         avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
