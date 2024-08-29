@@ -18,7 +18,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:e2e": "npm run build && start-server-and-test start http://localhost:3000 test:e2e:run",
-    "test:e2e:run": "jest --config=jest.e2e.config.js"
+    "test:e2e:run": "npx cypress run"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
