@@ -213,8 +213,7 @@ jobs:
           image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Scanne l'image Docker pour les vulnérabilités
   
       - name: Push Docker image to GitHub Container Registry
-        run: ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Pousse l'image Docker vers le registre
-
+        run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Pousse l'image Docker vers le registre
  
   # # Job pour notifier l'état de la pipeline sur Discord
   # notify:
