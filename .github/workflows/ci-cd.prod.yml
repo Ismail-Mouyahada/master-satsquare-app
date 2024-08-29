@@ -1,243 +1,243 @@
-name: CI/CD Production Pipeline
+# name: CI/CD Production Pipeline
 
-on:
-  # Déclenche le workflow sur les pushes vers la branche "main"
-  push:
-    branches:
-      - main
-  # Déclenche le workflow sur les pull requests vers la branche "main"
-  pull_request:
-    branches:
-      - main
+# on:
+#   # Déclenche le workflow sur les pushes vers la branche "main"
+#   push:
+#     branches:
+#       - main
+#   # Déclenche le workflow sur les pull requests vers la branche "main"
+#   pull_request:
+#     branches:
+#       - main
 
-env:
-  # Variables d'environnement pour l'environnement de production
-  ENVIRONMENT: production
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-  NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-  NEXT_PUBLIC_SOCKET_URL: ${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
-  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+# env:
+#   # Variables d'environnement pour l'environnement de production
+#   ENVIRONMENT: production
+#   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+#   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+#   NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+#   NEXT_PUBLIC_SOCKET_URL: ${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
+#   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
   
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true # Annule toute exécution précédente du même workflow si un nouveau est déclenché
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true # Annule toute exécution précédente du même workflow si un nouveau est déclenché
 
-jobs:
-  # Job de construction de l'application
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3 # Vérifie le code source de la branche cible
+# jobs:
+#   # Job de construction de l'application
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3 # Vérifie le code source de la branche cible
 
-      - name: Run end-to-end tests
-        run: |
-          # Définit les variables d'environnement nécessaires pour les tests end-to-end
-          export DATABASE_URL=postgresql://prod:2bjPlCNBTvatIwdMbksGeAc6E7ECClP6@dpg-cr7et0bqf0us73beattg-a.frankfurt-postgres.render.com/prod_db_satsquare
-          export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
-          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
-          export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-          export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
-          export REDIS_URL="redis://localhost:6379"
-          cd ./satsquare
+#       - name: Run end-to-end tests
+#         run: |
+#           # Définit les variables d'environnement nécessaires pour les tests end-to-end
+#           export DATABASE_URL=postgresql://prod:2bjPlCNBTvatIwdMbksGeAc6E7ECClP6@dpg-cr7et0bqf0us73beattg-a.frankfurt-postgres.render.com/prod_db_satsquare
+#           export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJXCPISJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
+#           export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
+#           export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+#           export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
+#           export REDIS_URL="redis://localhost:6379"
+#           cd ./satsquare
 
-          # Installation des dépendances et préparation de l'application
-          npm install
-          npx prisma generate
-          npx prisma db push
-          npm run seed
-          npm run build
+#           # Installation des dépendances et préparation de l'application
+#           npm install
+#           npx prisma generate
+#           npx prisma db push
+#           npm run seed
+#           npm run build
 
-  # Job de linting du code source
-  lint:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job de linting du code source
+#   lint:
+#     needs: [build]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci # Installation des dépendances
+#       - name: Install dependencies
+#         run: |
+#           cd ./satsquare
+#           npm ci # Installation des dépendances
 
-      - name: Run Linting
-        run: |
-          cd ./satsquare
-          npm run lint # Exécute le linting
+#       - name: Run Linting
+#         run: |
+#           cd ./satsquare
+#           npm run lint # Exécute le linting
 
-  # Job pour les tests unitaires
-  unit-tests:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job pour les tests unitaires
+#   unit-tests:
+#     needs: [build]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm i jest-environment-jsdom jest # Installe Jest pour les tests unitaires
+#       - name: Install dependencies
+#         run: |
+#           cd ./satsquare
+#           npm ci
+#           npm i jest-environment-jsdom jest # Installe Jest pour les tests unitaires
 
-      - name: Run Jest Unit Tests
-        run: |
-          cd ./satsquare
-          npm run test # Exécute les tests unitaires
+#       - name: Run Jest Unit Tests
+#         run: |
+#           cd ./satsquare
+#           npm run test # Exécute les tests unitaires
 
-  # Job pour les tests end-to-end
-  e2e-tests:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job pour les tests end-to-end
+#   e2e-tests:
+#     needs: [build]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Run end-to-end tests
-        run: |
-          # Définit les variables d'environnement nécessaires pour les tests end-to-end
-          export DATABASE_URL=postgresql://prod:2bjPlCNBTvatIwdMbksGeAc6E7ECClP6@dpg-cr7et0bqf0us73beattg-a.frankfurt-postgres.render.com/prod_db_satsquare
-          export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
-          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
-          export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
-          export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
-          export REDIS_URL="redis://localhost:6379"
-          cd ./satsquare
+#       - name: Run end-to-end tests
+#         run: |
+#           # Définit les variables d'environnement nécessaires pour les tests end-to-end
+#           export DATABASE_URL=postgresql://prod:2bjPlCNBTvatIwdMbksGeAc6E7ECClP6@dpg-cr7et0bqf0us73beattg-a.frankfurt-postgres.render.com/prod_db_satsquare
+#           export NEXTAUTH_SECRET="CP912ECDSClsdezoPDZCMSJCIY20SmfdsFOYDflHZORdsvdsFOZIRGOIZHGOURHZ"
+#           export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY="02c3b844b8104f0c1b15c507774c9ba7fc609f58f343b9b149122e944dd20c9362"
+#           export NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+#           export NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
+#           export REDIS_URL="redis://localhost:6379"
+#           cd ./satsquare
 
-          # Installation des dépendances et préparation de l'application pour les tests end-to-end
-          npm install
-          npx prisma generate
-          npx prisma db push
-          npm run seed
-          npm run build
-          # npm run test:e2e # Désactivé pour l'instant
+#           # Installation des dépendances et préparation de l'application pour les tests end-to-end
+#           npm install
+#           npx prisma generate
+#           npx prisma db push
+#           npm run seed
+#           npm run build
+#           # npm run test:e2e # Désactivé pour l'instant
 
-  # Job pour la vérification des vulnérabilités des dépendances
-  deps-vulnerability:
-    needs: [e2e-tests, build, unit-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job pour la vérification des vulnérabilités des dépendances
+#   deps-vulnerability:
+#     needs: [e2e-tests, build, unit-tests]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Create lock file
-        run: |
-          cd ./satsquare
-          npm install --package-lock-only # Génère uniquement le fichier package-lock
+#       - name: Create lock file
+#         run: |
+#           cd ./satsquare
+#           npm install --package-lock-only # Génère uniquement le fichier package-lock
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm update # Met à jour les dépendances
+#       - name: Install dependencies
+#         run: |
+#           cd ./satsquare
+#           npm ci
+#           npm update # Met à jour les dépendances
 
-      - name: Install jest-environment-jsdom
-        run: |
-          cd ./satsquare
-          npm install jest-environment-jsdom --save-dev # Installe une dépendance spécifique pour les tests
+#       - name: Install jest-environment-jsdom
+#         run: |
+#           cd ./satsquare
+#           npm install jest-environment-jsdom --save-dev # Installe une dépendance spécifique pour les tests
 
-      - name: Audit npm dependencies
-        run: |
-          cd ./satsquare
-          npm audit --audit-level=moderate # Audite les dépendances npm pour les vulnérabilités
+#       - name: Audit npm dependencies
+#         run: |
+#           cd ./satsquare
+#           npm audit --audit-level=moderate # Audite les dépendances npm pour les vulnérabilités
 
-  # Job pour la couverture de code avec Codecov
-  codecov:
-    needs: [e2e-tests, build, unit-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job pour la couverture de code avec Codecov
+#   codecov:
+#     needs: [e2e-tests, build, unit-tests]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm ci
-          npm i jest-environment-jsdom jest # Installe les dépendances nécessaires pour les tests
+#       - name: Install dependencies
+#         run: |
+#           cd ./satsquare
+#           npm ci
+#           npm i jest-environment-jsdom jest # Installe les dépendances nécessaires pour les tests
 
-      - name: Run tests and generate coverage report
-        run: |
-          cd ./satsquare
-          npm run test -- --coverage # Exécute les tests avec rapport de couverture
+#       - name: Run tests and generate coverage report
+#         run: |
+#           cd ./satsquare
+#           npm run test -- --coverage # Exécute les tests avec rapport de couverture
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Utilise le token secret pour l'authentification
+#       - name: Upload coverage to Codecov
+#         uses: codecov/codecov-action@v3
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }} # Utilise le token secret pour l'authentification
 
-  # Job pour l'analyse de performance avec Lighthouse
-  lighthouse:
-    needs: [codecov, deps-vulnerability]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#   # Job pour l'analyse de performance avec Lighthouse
+#   lighthouse:
+#     needs: [codecov, deps-vulnerability]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm install # Installe les dépendances nécessaires
+#       - name: Install dependencies
+#         run: |
+#           cd ./satsquare
+#           npm install # Installe les dépendances nécessaires
 
-      - name: Run Lighthouse CI
-        run: |
-          cd ./satsquare
-          npx lhci autorun # Exécute Lighthouse CI pour l'analyse de performance
+#       - name: Run Lighthouse CI
+#         run: |
+#           cd ./satsquare
+#           npx lhci autorun # Exécute Lighthouse CI pour l'analyse de performance
 
-# Job pour construire l'image Docker et la pousser vers le registre
-  docker-build:
-    needs: [lighthouse]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# # Job pour construire l'image Docker et la pousser vers le registre
+#   docker-build:
+#     needs: [lighthouse]
+#     runs-on: ubuntu-latest
+#     permissions:
+#       contents: read
+#       packages: write
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
   
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }} # Se connecte au registre de conteneurs GitHub
+#       - name: Login to GitHub Container Registry
+#         uses: docker/login-action@v3
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }} # Se connecte au registre de conteneurs GitHub
           
-      - name: Build Docker image
-        run: |
-          cd ./satsquare 
-          docker build -f Dockerfile.prod --build-arg DATABASE_URL="postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare" --build-arg NEXTAUTH_SECRET="${{ github.sha }}" -t ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} .
+#       - name: Build Docker image
+#         run: |
+#           cd ./satsquare 
+#           docker build -f Dockerfile.prod --build-arg DATABASE_URL="postgresql://dev:tT8s758l79WDINR8tKHtfKBr1oiWXpWY@dpg-cr7ervi3esus7388bamg-a.frankfurt-postgres.render.com/dev_db_satsquare" --build-arg NEXTAUTH_SECRET="${{ github.sha }}" -t ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} .
   
-      - name: Scan Docker image for vulnerabilities
-        uses: aquasecurity/trivy-action@0.20.0
-        with:
-          image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Scanne l'image Docker pour les vulnérabilités
+#       - name: Scan Docker image for vulnerabilities
+#         uses: aquasecurity/trivy-action@0.20.0
+#         with:
+#           image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Scanne l'image Docker pour les vulnérabilités
   
-      - name: Push Docker image to GitHub Container Registry
-        run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Pousse l'image Docker vers le registre
+#       - name: Push Docker image to GitHub Container Registry
+#         run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Pousse l'image Docker vers le registre
 
-  notify:
-    needs: [docker-build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Notification de succès 🎉
-        uses: containrrr/shoutrrr-action@v1
-        if: success() # Notifie en cas de succès
-        with:
-          url: "discord://4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz@1278522710825238548"
-          title: "🚀 Déploiement réussi : ${{ github.sha }} sur PRODUCTION 🎉"
-          message: "Voir les modifications : ${{ github.event.compare }}."
-          username: "PreproductionBOT"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+#   notify:
+#     needs: [docker-build]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Notification de succès 🎉
+#         uses: containrrr/shoutrrr-action@v1
+#         if: success() # Notifie en cas de succès
+#         with:
+#           url: "discord://4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz@1278522710825238548"
+#           title: "🚀 Déploiement réussi : ${{ github.sha }} sur PRODUCTION 🎉"
+#           message: "Voir les modifications : ${{ github.event.compare }}."
+#           username: "PreproductionBOT"
+#           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
   
-      - name: Notification d'échec 💥
-        uses: containrrr/shoutrrr-action@v1
-        if: failure() # Notifie en cas d'échec
-        with:
-          url: "discord://4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz@1278522710825238548"
-          title: "💥 Échec du déploiement : ${{ github.sha }} sur PRODUCTION 💥"
-          message: "❗ Consultez les logs pour plus de détails. Voir les modifications : ${{ github.event.compare }}."
-          username: "PreproductionBOT"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+#       - name: Notification d'échec 💥
+#         uses: containrrr/shoutrrr-action@v1
+#         if: failure() # Notifie en cas d'échec
+#         with:
+#           url: "discord://4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz@1278522710825238548"
+#           title: "💥 Échec du déploiement : ${{ github.sha }} sur PRODUCTION 💥"
+#           message: "❗ Consultez les logs pour plus de détails. Voir les modifications : ${{ github.event.compare }}."
+#           username: "PreproductionBOT"
+#           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
  
 
