@@ -104,7 +104,7 @@ jobs:
           npm audit --audit-level=moderate
 
   codecov:
-    needs: unit-tests
+    needs: deps-vulnerability
     runs-on: ubuntu-latest
     environment: production
     steps:
