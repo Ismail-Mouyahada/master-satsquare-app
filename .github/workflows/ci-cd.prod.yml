@@ -216,15 +216,31 @@ jobs:
 #         run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }} # Pousse l'image Docker vers le registre
 
   notify:
-    # needs: [docker-build]
     runs-on: ubuntu-latest
     steps:
-        - name: Shoutrrr
-          uses: containrrr/shoutrrr-action@v1
-          with:
-              url: "discord://4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz@1278522710825238548"
-              title: Deployed ${{ github.sha }} on PRODUCTION
-              message: See changes at ${{ github.event.compare }}.
+      - name: Notification de succès 🎉
+        uses: containrrr/shoutrrr-action@v1
+        if: success() # Notifie en cas de succès
+        with:
+          url: "discord://4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz@1278522710825238548"
+          title: "🚀 Déploiement réussi : ${{ github.sha }} sur PRODUCTION 🎉"
+          message: "Voir les modifications : ${{ github.event.compare }}."
+          username: "PreproductionBOT"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+  
+      - name: Notification d'échec 💥
+        uses: containrrr/shoutrrr-action@v1
+        if: failure() # Notifie en cas d'échec
+        with:
+          url: "discord://4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz@1278522710825238548"
+          title: "💥 Échec du déploiement : ${{ github.sha }} sur PRODUCTION 💥"
+          message: "❗ Consultez les logs pour plus de détails. Voir les modifications : ${{ github.event.compare }}."
+          username: "PreproductionBOT"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+
+
+
+  
   # Job pour notifier l'état de la pipeline sur Discord
   # notify:
   #   # needs: [docker-build]
