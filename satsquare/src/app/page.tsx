@@ -1,15 +1,12 @@
 "use client";
 
-import { Button, Card, FloatingLabel } from "flowbite-react";
-import Logo from "../components/Logo/Logo";
-import { FaBeer, FaGamepad, FaLightbulb } from "react-icons/fa";
+import { Button, Card } from "flowbite-react";
+import { FaGamepad, FaLightbulb } from "react-icons/fa";
 import LogoHeader from "../components/LogoHeader/LogoHeader";
 import { usePlayerContext } from "@/context/player";
 import { useSocketContext } from "@/context/socket";
 import { useEffect, useState } from "react";
 import toast, { Renderable, Toast, ValueFunction } from "react-hot-toast";
-import Input from "@/components/Input";
-import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
@@ -38,9 +35,12 @@ export default function Home() {
   }, [dispatch, socket]);
 
   useEffect(() => {
-    socket.on("game:errorMessage", (message: Renderable | ValueFunction<Renderable, Toast>) => {
-      toast.error(message);
-    });
+    socket.on(
+      "game:errorMessage",
+      (message: Renderable | ValueFunction<Renderable, Toast>) => {
+        toast.error(message);
+      }
+    );
 
     return () => {
       socket.off("game:errorMessage");
@@ -49,14 +49,11 @@ export default function Home() {
 
   return (
     <main className="flex flex-col w-full min-h-screen px-10 pt-10 survey-main justify-evenly item">
-      {/* <div className="w-full h-1/8">
-        <Logo />
-      </div> */}
       <div className="flex flex-col items-center justify-center w-full h-full gap-4">
         <div className="mb-5">
           <LogoHeader />
         </div>
-        <div className="flex gap-4 flex-col lg:flex-row  md:flex-row  sm:flex-col  xs:flex-col ">
+        <div className="flex gap-4 flex-col lg:flex-row md:flex-row sm:flex-col xs:flex-col">
           {/* Game Form */}
           <Card className="p-6 bg-opacity-90 bg-white">
             <div className="flex flex-col items-center justify-center">
@@ -64,19 +61,19 @@ export default function Home() {
                 <FaGamepad className="text-5xl text-white" />
               </div>
             </div>
-            <Link href="/home" target="_blank" rel="noopener noreferrer"
-
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
+            <Button
+              onClick={() => window.open("/home", "_blank")}
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 font-semibold text-center shadow-sm"
             >
               Rejoindre
-            </Link>
+            </Button>
 
-            <Link href="lightning" target="_blank" rel="noopener noreferrer"
-
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
+            <Button
+              onClick={() => window.open("/lightning", "_blank")}
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 font-semibold text-center shadow-sm"
             >
               Connexion lightning
-            </Link>
+            </Button>
           </Card>
           {/* Registration Form */}
           <Card className="p-6 bg-opacity-90">
@@ -85,28 +82,26 @@ export default function Home() {
                 <FaLightbulb className="text-5xl text-white" />
               </div>
             </div>
-            <Link
-              href="/auth/signin"
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
+            <Button
+              onClick={() => (window.location.href = "/auth/signin")}
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 font-semibold text-center shadow-sm"
             >
               Se connecter
-            </Link>
-            <Link
-              href="/auth/signup"
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
+            </Button>
+            <Button
+              onClick={() => (window.location.href = "/auth/signup")}
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 font-semibold text-center shadow-sm"
             >
               S'inscrire
-            </Link>
+            </Button>
 
-            <Link
-              href="/manager" target="_blank" rel="noopener noreferrer"
-              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20   font-semibold text-center shadow-sm"
+            <Button
+              onClick={() => window.open("/manager", "_blank")}
+              className="outline-none py-3 rounded-md ring-[#6a6b74!important] bg-action hover:bg-[#c9aa6c!important] text-[#6a6b74] px-20 font-semibold text-center shadow-sm"
             >
               Manager de session
-            </Link>
+            </Button>
           </Card>
-
-
         </div>
       </div>
     </main>
