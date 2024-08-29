@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FC, useState, useEffect } from "react";
 import { FaPlus, FaSearch } from "react-icons/fa";
- 
 
 interface RoleSearchBarProps {
   onAdd: () => void;
@@ -9,25 +8,11 @@ interface RoleSearchBarProps {
 }
 
 const RoleSearchBar: FC<RoleSearchBarProps> = ({ onAdd, onSearch }) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState<string>(searchTerm);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 300); // Delay of 300ms
-
-    return () => {
-      clearTimeout(handler); // Cleanup timeout if user continues typing
-    };
-  }, [searchTerm]); // Dependency array updated to include searchTerm
-
-  useEffect(() => {
-    onSearch(debouncedSearchTerm); // Trigger search with debounced term
-  }, [debouncedSearchTerm, onSearch]); // Dependency array updated to include onSearch
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
+    onSearch(e.target.value); // Trigger search as user types
   };
 
   return (

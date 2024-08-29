@@ -7,7 +7,6 @@ import Loader from "@/components/Loader";
 import { FaShieldAlt } from "react-icons/fa";
 import RolesearchBar from "@/components/Role/RoleSearchBar";
 import PageHeader from "@/components/PageHeader/PageHeader";
-// import { Role } from "@/types/main-types/main";
 import { Role } from "@/types/main-types/main";
 
 const RolePage: FC = () => {

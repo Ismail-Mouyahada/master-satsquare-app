@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { FaBox, FaPlus, FaCopy, FaTrash, FaTimes } from "react-icons/fa";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast"; // For error handling
+import toast from "react-hot-toast";
 
 interface Question {
   id: number;
@@ -17,16 +17,14 @@ interface Question {
 interface UserDTO {
   id: string;
   email: string;
-  // Add other fields as necessary
 }
 
 const QuizForm = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const { id } = params;
-  const { data: session } = useSession(); // Get session data
-  const [userData, setUserData] = useState<UserDTO | null>(null); // Store user data
+  const { data: session } = useSession();
+  const [userData, setUserData] = useState<UserDTO | null>(null);
 
-  // Start with one empty question if in creation mode (id === "create")
   const [questions, setQuestions] = useState<Question[]>(
     id === "create"
       ? [
@@ -42,12 +40,12 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
   );
 
   const [quizName, setQuizName] = useState("");
+  const [password, setPassword] = useState(""); // New state for password
   const [selectedQuestion, setSelectedQuestion] = useState<number | null>(
     id === "create" ? 1 : null
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch user data based on email in session
   useEffect(() => {
     const fetchUserData = async () => {
       if (session?.user?.email) {
@@ -59,7 +57,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
             throw new Error("Failed to fetch user data.");
           }
           const data: UserDTO = await response.json();
-          setUserData(data); // Set user data
+          setUserData(data);
         } catch (error: any) {
           console.error(
             "Erreur lors de la récupération des données utilisateur:",
@@ -89,7 +87,8 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
         throw new Error("Failed to fetch quiz");
       }
       const quiz = await response.json();
-      setQuizName(quiz.subject); // Set quiz name
+      setQuizName(quiz.subject);
+      setPassword(quiz.password); // Set the password if it exists
       const loadedQuestions = quiz.questions.map((q: any, index: number) => ({
         id: index + 1,
         text: q.question,
@@ -98,7 +97,7 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
         imageUrl: q.image || "",
       }));
       setQuestions(loadedQuestions);
-      setSelectedQuestion(loadedQuestions[0]?.id || null); // Select the first question
+      setSelectedQuestion(loadedQuestions[0]?.id || null);
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -202,7 +201,6 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
   const handleSubmit = async () => {
     setIsLoading(true);
 
-    // Ensure we have the user ID before proceeding
     if (!userData?.id) {
       toast.error("User data not loaded yet.");
       setIsLoading(false);
@@ -211,8 +209,8 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
 
     const payload = {
       subject: quizName,
-      utilisateurId: userData.id, // Add user ID here
-      password: "PASSWORD",
+      utilisateurId: userData.id,
+      password: password, // Include password in the payload
       questions: questions.map((q) => ({
         question: q.text,
         answers: q.answers,
@@ -273,8 +271,15 @@ const QuizForm = ({ params }: { params: { id: string } }) => {
                 type="text"
                 value={quizName}
                 onChange={handleQuizNameChange}
-                placeholder="Nom de Quiz"
-                className="font-bold text-left border border-none rounded-lg px-4 py-2 w-full bg-transparent text-white placeholder-[#e0e1e7]"
+                placeholder="Nom du Quiz"
+                className="font-bold text-left border border-none rounded-lg px-4 py-2 w-full bg-transparent text-white "
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mot de passe"
+                className="font-bold text-left border border-none rounded-lg px-4 py-2 w-full bg-transparent text-white "
               />
               <a
                 href="/quizzes"
