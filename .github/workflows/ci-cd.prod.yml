@@ -10,14 +10,7 @@ on:
     branches:
       - main
 
-env:
-  # Variables d'environnement pour l'environnement de production
-  ENVIRONMENT: production
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-  NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
-  NEXT_PUBLIC_SOCKET_URL: ${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
-  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+ 
   
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -36,8 +29,8 @@ jobs:
         run: |
           # Définit les variables d'environnement nécessaires pour les tests end-to-end
           export DATABASE_URL=${{ secrets.DATABASE_URL }}
-          export NEXTAUTH_SECRET=${{ github.sha }}${{ github.sha }}${{ github.sha }}
-          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY=${{ github.sha }}${{ github.sha }}
+          export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY }}
           export NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
           export NEXT_PUBLIC_SOCKET_URL=${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
           export REDIS_URL= ${{ secrets.REDIS_URL }}
