@@ -90,7 +90,7 @@ jobs:
           export REDIS_URL=${{ secrets.REDIS_URL }}
           cd ./satsquare
           npm ci
-          # npm run test:e2e  #checking the health of the CICD only for testing porposes 
+          npm run test:e2e  
 
   deps-vulnerability:
     needs: [e2e-tests, unit-tests]
@@ -177,7 +177,7 @@ jobs:
           username: "PreproductionBOT"
           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
-      - name: Notification d'échec 💥
+      - name: Notification échec 💥
         uses: containrrr/shoutrrr-action@v1
         if: failure()
         with:
