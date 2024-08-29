@@ -41,7 +41,7 @@ RUN npx prisma generate
 #RUN npm run seed
 
 # Build the Next.js application
-# RUN npm run build
+RUN npm run build
 
  
 # Expose port 3000 for Next.js and 5157 for WebSocket
