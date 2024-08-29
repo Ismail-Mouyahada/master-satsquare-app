@@ -33,17 +33,19 @@ ENV DATABASE_URL=${DATABASE_URL} \
 RUN npx prisma generate
 
 # Push database schema changes
-RUN npx prisma db push
+ 
+# RUN npx prisma db push
+ 
 
 # Seed the database
 #RUN npm run seed
 
 # Build the Next.js application
-RUN npm run build
+# RUN npm run build
 
-
+ 
 # Expose port 3000 for Next.js and 5157 for WebSocket
 EXPOSE 3000 5157
 
 # Start the application in production mode
-CMD ["npm", "run", "all"]
+CMD ["npm", "run", "all-dev"]

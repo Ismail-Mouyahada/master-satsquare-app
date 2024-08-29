@@ -42,7 +42,7 @@ export const getGameState = async (quizId: number): Promise<GameState> => {
     players: [],
     subject: quiz.subject,
     password: quiz.password,
-    questions: quiz.questions.map((q:any) => ({
+    questions: quiz.questions.map((q: { id: any; question: any; answers: any; cooldown: any; time: any; solution: any; image: any; }) => ({
       id: q.id,
       question: q.question,
       answers: q.answers,

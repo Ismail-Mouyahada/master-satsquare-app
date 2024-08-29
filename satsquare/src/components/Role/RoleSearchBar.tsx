@@ -1,5 +1,7 @@
-import React, { FC, useState, useEffect } from 'react';
-import { FaPlus } from 'react-icons/fa';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { FC, useState, useEffect } from "react";
+import { FaPlus, FaSearch } from "react-icons/fa";
+ 
 
 interface RoleSearchBarProps {
   onAdd: () => void;

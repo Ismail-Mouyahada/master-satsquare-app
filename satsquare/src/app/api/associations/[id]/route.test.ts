@@ -19,6 +19,10 @@ jest.mock("@/db/prisma", () => ({
 }));
 
 describe("API Routes: Associations", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe("PUT /api/associations/:id", () => {
     it("should update association with status 200", async () => {
       const requestObj = new NextRequest(
@@ -28,6 +32,9 @@ describe("API Routes: Associations", () => {
           body: JSON.stringify({
             nom: "Updated Association",
           }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -66,6 +73,9 @@ describe("API Routes: Associations", () => {
           body: JSON.stringify({
             nom: "Updated Association",
           }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -77,7 +87,9 @@ describe("API Routes: Associations", () => {
       const body = await response.json();
 
       expect(response.status).toBe(500);
-      expect(body.error).toEqual(expect.any(String));
+      expect(body.error).toEqual(
+        "An error occurred while updating the association"
+      );
     });
   });
 
@@ -116,7 +128,9 @@ describe("API Routes: Associations", () => {
       const body = await response.json();
 
       expect(response.status).toBe(500);
-      expect(body.error).toEqual(expect.any(String));
+      expect(body.error).toEqual(
+        "An error occurred while deleting the association"
+      );
     });
   });
 });

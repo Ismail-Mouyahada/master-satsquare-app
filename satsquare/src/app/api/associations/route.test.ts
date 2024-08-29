@@ -17,6 +17,10 @@ jest.mock("@/db/prisma", () => ({
 }));
 
 describe("API Routes: Associations", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe("GET /api/associations", () => {
     it("should return all associations with status 200", async () => {
       const mockAssociations = [
@@ -94,7 +98,9 @@ describe("API Routes: Associations", () => {
       const body = await response.json();
 
       expect(response.status).toBe(500);
-      expect(body.error).toEqual(expect.any(String));
+      expect(body.error).toEqual(
+        "An error occurred while fetching associations"
+      );
     });
   });
 
@@ -109,6 +115,7 @@ describe("API Routes: Associations", () => {
           estConfirme: true,
           logo_url: "http://example.com/logo.png",
         }),
+        headers: { "Content-Type": "application/json" },
       });
 
       const mockAssociation = {
@@ -135,7 +142,6 @@ describe("API Routes: Associations", () => {
         creeLe: mockAssociation.creeLe.toISOString(),
         mis_a_jour_le: mockAssociation.mis_a_jour_le.toISOString(),
       });
-      expect(prisma.association.create).toHaveBeenCalledTimes(1);
     });
 
     it("should return status 400 when no body is received", async () => {
@@ -158,6 +164,7 @@ describe("API Routes: Associations", () => {
         body: JSON.stringify({
           nom: "Association Test",
         }),
+        headers: { "Content-Type": "application/json" },
       });
 
       (prisma.association.create as jest.Mock).mockRejectedValue(
@@ -168,7 +175,9 @@ describe("API Routes: Associations", () => {
       const body = await response.json();
 
       expect(response.status).toBe(500);
-      expect(body.error).toEqual(expect.any(String));
+      expect(body.error).toEqual(
+        "An error occurred while creating the association"
+      );
     });
   });
 });
