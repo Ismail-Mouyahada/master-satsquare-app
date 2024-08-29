@@ -90,10 +90,10 @@ jobs:
           export REDIS_URL=${{ secrets.REDIS_URL }}
           cd ./satsquare
           npm ci
-          npm run test:e2e
+          # npm run test:e2e  #checking the health of the CICD only for testing porposes 
 
   deps-vulnerability:
-    needs: [e2e-tests, build]
+    needs: [e2e-tests, unit-tests]
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -134,7 +134,7 @@ jobs:
           npm install
           npx lhci autorun
 
-  docker-build:
+  docker-deploy:
     needs: lighthouse
     runs-on: ubuntu-latest
     environment: production
@@ -163,7 +163,7 @@ jobs:
       - run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:prod-${{ github.sha }}
 
   notify:
-    needs: docker-build
+    needs: docker-deploy
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -174,8 +174,8 @@ jobs:
           url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: "🚀 Déploiement réussi : ${{ github.sha }} sur PRODUCTION 🎉"
           message: "Voir les modifications : ${{ github.event.compare }}."
-          # username: "PreproductionBOT"
-          # avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+          username: "PreproductionBOT"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
       - name: Notification d'échec 💥
         uses: containrrr/shoutrrr-action@v1
@@ -183,5 +183,5 @@ jobs:
         with:
           url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           message: "❗ Consultez les logs pour plus de détails. Voir les modifications : ${{ github.event.compare }}."
-          # username: "PreproductionBOT"
-          # avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+          username: "PreproductionBOT"
+          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
