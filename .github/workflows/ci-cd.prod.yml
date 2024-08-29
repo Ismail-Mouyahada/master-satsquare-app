@@ -90,10 +90,10 @@ jobs:
           export REDIS_URL=${{ secrets.REDIS_URL }}
           cd ./satsquare
           npm ci
-         # npm run test:e2e
+          npm run test:e2e
 
   deps-vulnerability:
-    needs: e2e-tests
+    needs: [e2e-tests, build]
     runs-on: ubuntu-latest
     environment: production
     steps:
