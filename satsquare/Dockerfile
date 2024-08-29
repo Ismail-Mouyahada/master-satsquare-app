@@ -38,7 +38,7 @@ RUN npx prisma generate
 RUN npx prisma db push
 
 # Seed the database
-RUN npm run seed
+#RUN npm run seed
 
 # Build the Next.js application
 RUN npm run build
@@ -47,4 +47,4 @@ RUN npm run build
 EXPOSE 3000 5157
 
 # Start the application
-ENTRYPOINT ["npm", "run","all-start"]
+ENTRYPOINT ["npm", "run","all-dev"]

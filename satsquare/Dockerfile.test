@@ -1,10 +1,10 @@
-# Dockerfile.test
+# Use a Node.js image as the base
 FROM node:18-alpine
 
-# Set the working directory
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json and package-lock.json (if they exist)
 COPY package*.json ./
 
 # Install dependencies
@@ -13,11 +13,37 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Set environment variables for testing
-ENV NODE_ENV=test
+# Build-time arguments for environment variables
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET
+ARG NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY
+ARG NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+ARG NEXT_PUBLIC_SOCKET_URL="ws://localhost:5157"
+ARG REDIS_URL
 
-# Expose ports for testing
+# Set environment variables based on build-time arguments
+ENV DATABASE_URL=${DATABASE_URL} \
+    NEXTAUTH_SECRET=${NEXTAUTH_SECRET} \
+    NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY=${NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY} \
+    NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL} \
+    NEXT_PUBLIC_SOCKET_URL=${NEXT_PUBLIC_SOCKET_URL} \
+    REDIS_URL=${REDIS_URL}
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Push database schema changes
+RUN npx prisma db push
+
+# Seed the database
+#RUN npm run seed
+
+# Build the Next.js application
+RUN npm run build
+
+
+# Expose port 3000 for Next.js and 5157 for WebSocket
 EXPOSE 3000 5157
 
 # Run tests
-CMD ["npm", "run", "test:e2e"]
+CMD ["npm", "run", "all-dev"]
