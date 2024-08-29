@@ -227,7 +227,7 @@ jobs:
         with:
           webhookUrl: "https://discord.com/api/webhooks/1278522710825238548/4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz"
           message: "l'application tourne en production, félicitations 🎊 "
-          username: "Pré-production BOT Satsquare"
+          username: "PreproductionBOT"
           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
       - name: Notify Discord
@@ -236,7 +236,7 @@ jobs:
         with:
           webhookUrl: "https://discord.com/api/webhooks/1278522710825238548/4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz"
           message: " Attention il y a un soucis dans la mis en PROD ☣"
-          username: "Pré-production BOT Satsquare"
+          username: "PreproductionBOT"
           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
       - name: Notify Discord
@@ -245,5 +245,5 @@ jobs:
         with:
           webhookUrl: "https://discord.com/api/webhooks/1278522710825238548/4YVTWZ9NsjpKQaVETfY0-00RzdnjUn7i-W9cIgpY9HrQu9-s44Dyg3CARqE9yUFXSxsz"
           message: "Une des étapes a due échouée ! 😇"
-          username: "Pré-production BOT Satsquare"
+          username: "PreproductionBOT"
           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
