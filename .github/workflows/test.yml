@@ -1,0 +1,41 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - test
+  pull_request:
+    branches:
+      - main
+      - develop
+      - test
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set environment variables
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+            echo "DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}" >> $GITHUB_ENV
+            # Ajouter d'autres variables d'environnement de production si nécessaire
+          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+            echo "ENVIRONMENT=development" >> $GITHUB_ENV
+            echo "DATABASE_URL=${{ secrets.DEV_DATABASE_URL }}" >> $GITHUB_ENV
+            # Ajouter d'autres variables d'environnement de développement si nécessaire
+          elif [ "${{ github.ref }}" == "refs/heads/test" ]; then
+            echo "ENVIRONMENT=test" >> $GITHUB_ENV
+            echo "DATABASE_URL=${{ secrets.TEST_DATABASE_URL }}" >> $GITHUB_ENV
+            # Ajouter d'autres variables d'environnement de test si nécessaire
+          fi
+
+      - name: Build and Deploy
+        run: |
+          echo "Running deployment for $ENVIRONMENT environment..."
+          # Ajouter les commandes pour construire et déployer l'application
