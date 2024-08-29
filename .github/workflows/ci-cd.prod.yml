@@ -177,7 +177,7 @@ jobs:
           username: "PreproductionBOT"
           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
-      - name: Notification d'échec 💥
+      - name: Notification échec 💥
         uses: containrrr/shoutrrr-action@v1
         if: failure()
         with:
