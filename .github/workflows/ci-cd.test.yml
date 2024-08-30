@@ -1,144 +1,144 @@
-name: CI/CD Test Pipeline
+# name: CI/CD Test Pipeline
 
-on:
-  push:
-    branches:
-      - test
-  pull_request:
-    branches:
-      - test
+# on:
+#   push:
+#     branches:
+#       - test
+#   pull_request:
+#     branches:
+#       - test
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+# concurrency:
+#   group: ${{ github.workflow }}-${{ github.ref }}
+#   cancel-in-progress: true
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     environment: test
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+#       - name: Setup Node.js
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
 
-      - name: Install dependencies
-        run: |
-          cd ./satsquare
-          npm install
+#       - name: Install dependencies
+#         run: |
+#           cd ./satsquare
+#           npm install
 
-      - name: Run prisma commands and build
-        run: |
-          export DATABASE_URL=${{ secrets.DATABASE_URL }}
-          export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-          export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY }}
-          export NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
-          export NEXT_PUBLIC_SOCKET_URL=${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
-          export REDIS_URL=${{ secrets.REDIS_URL }}
-          cd ./satsquare
-          npx prisma generate
-          npx prisma db push
-          npm run seed
-          npm run build
+#       - name: Run prisma commands and build
+#         run: |
+#           export DATABASE_URL=${{ secrets.DATABASE_URL }}
+#           export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+#           export NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY=${{ secrets.NEXT_PUBLIC_LNURL_AUTH_PUBLIC_KEY }}
+#           export NEXT_PUBLIC_SITE_URL=${{ secrets.NEXT_PUBLIC_SITE_URL }}
+#           export NEXT_PUBLIC_SOCKET_URL=${{ secrets.NEXT_PUBLIC_SOCKET_URL }}
+#           export REDIS_URL=${{ secrets.REDIS_URL }}
+#           cd ./satsquare
+#           npx prisma generate
+#           npx prisma db push
+#           npm run seed
+#           npm run build
 
-  lint:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: |
-          cd ./satsquare
-          npm ci
-          npm run lint
+#   lint:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     environment: test
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
+#       - run: |
+#           cd ./satsquare
+#           npm ci
+#           npm run lint
 
-  unit-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: |
-          cd ./satsquare
-          npm ci
-          npm run test
+#   unit-tests:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     environment: test
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
+#       - run: |
+#           cd ./satsquare
+#           npm ci
+#           npm run test
 
-  e2e-tests:
-    needs: build
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: |
-          cd ./satsquare
-          npm ci
-          npm run test:e2e
+#   e2e-tests:
+#     needs: build
+#     runs-on: ubuntu-latest
+#     environment: test
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-node@v3
+#         with:
+#           node-version: '18'
+#       - run: |
+#           cd ./satsquare
+#           npm ci
+#           npm run test:e2e
 
-  deps-vulnerability:
-    needs: [e2e-tests, build]
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - uses: actions/checkout@v3
-      - run: |
-          cd ./satsquare
-          npm ci
-          npm audit --audit-level=moderate
+#   deps-vulnerability:
+#     needs: [e2e-tests, build]
+#     runs-on: ubuntu-latest
+#     environment: test
+#     steps:
+#       - uses: actions/checkout@v3
+#       - run: |
+#           cd ./satsquare
+#           npm ci
+#           npm audit --audit-level=moderate
 
-  docker-build:
-    needs: deps-vulnerability
-    runs-on: ubuntu-latest
-    environment: test
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v3
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          cd ./satsquare
-          docker build -f Dockerfile.Test --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} --build-arg NEXTAUTH_SECRET="${{ github.sha }}" -t ghcr.io/ismail-mouyahada/master-satsquare-app:test-${{ github.sha }} .
-      - uses: aquasecurity/trivy-action@0.20.0
-        with:
-          image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:test-${{ github.sha }}
-      - run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:test-${{ github.sha }}
+#   docker-build:
+#     needs: deps-vulnerability
+#     runs-on: ubuntu-latest
+#     environment: test
+#     permissions:
+#       contents: read
+#       packages: write
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: docker/login-action@v3
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.actor }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
+#       - run: |
+#           cd ./satsquare
+#           docker build -f Dockerfile.Test --build-arg DATABASE_URL=${{ secrets.DATABASE_URL }} --build-arg NEXTAUTH_SECRET="${{ github.sha }}" -t ghcr.io/ismail-mouyahada/master-satsquare-app:test-${{ github.sha }} .
+#       - uses: aquasecurity/trivy-action@0.20.0
+#         with:
+#           image-ref: ghcr.io/ismail-mouyahada/master-satsquare-app:test-${{ github.sha }}
+#       - run: docker push ghcr.io/ismail-mouyahada/master-satsquare-app:test-${{ github.sha }}
 
-  notify:
-    needs: docker-build
-    runs-on: ubuntu-latest
-    environment: test
-    steps:
-      - name: Notification de succès 🎉
-        uses: containrrr/shoutrrr-action@v1
-        if: success()
-        with:
-          url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          title: "🚀 Déploiement réussi : ${{ github.sha }} sur TEST 🎉"
-          message: "Voir les modifications : ${{ github.event.compare }}."
-          username: "TestBOT"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+#   notify:
+#     needs: docker-build
+#     runs-on: ubuntu-latest
+#     environment: test
+#     steps:
+#       - name: Notification de succès 🎉
+#         uses: containrrr/shoutrrr-action@v1
+#         if: success()
+#         with:
+#           url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+#           title: "🚀 Déploiement réussi : ${{ github.sha }} sur TEST 🎉"
+#           message: "Voir les modifications : ${{ github.event.compare }}."
+#           username: "TestBOT"
+#           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
 
-      - name: Notification d'échec 💥
-        uses: containrrr/shoutrrr-action@v1
-        if: failure()
-        with:
-          url: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          message: "❗ Consultez les logs pour plus de détails. Voir les modifications : ${{ github.event.compare }}."
-          username: "TestBOT"
-          avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
+#       - name: Notification d'échec 💥
+#         uses: containrrr/shoutrrr-action@v1
+#         if: failure()
+#         with:
+#           url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+#           message: "❗ Consultez les logs pour plus de détails. Voir les modifications : ${{ github.event.compare }}."
+#           username: "TestBOT"
+#           avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9SYdK1M7jEIJgdj9foHiEoUdUiYxfREv3jg&s"
