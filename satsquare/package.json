@@ -24,7 +24,7 @@
     "@emotion/cache": "^11.11.0",
     "@faker-js/faker": "^8.4.1",
     "@mui/material-nextjs": "^5.15.11",
-    "@nextui-org/theme": "^2.2.6",
+    "@nextui-org/theme": "^2.4.3",
     "@nextui-org/tooltip": "^2.0.34",
     "@prisma/client": "^5.14.0",
     "@vercel/kv": "^2.0.0",
